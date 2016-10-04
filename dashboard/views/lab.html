@@ -1,0 +1,141 @@
+
+<!-- BEGIN PAGE CONTENT-->
+<div class="row">
+    <div class="col-md-3 col-sm-6">
+        <!-- BEGIN TODO SIDEBAR -->
+        <div class="portlet patac-portlet">
+            <div class="portlet-title">
+                <div class="caption">
+                    <span class="caption-subject font-white uppercase">重点设备完好率 </span>
+                </div>
+                
+            </div>
+            <div class="portlet-body">
+                
+                <div id="intactRate" style="height:180px;"></div>
+            </div>
+        </div>
+        <!-- END TODO SIDEBAR -->
+    </div>
+    
+    <div class="col-md-3 col-sm-6">
+        <!-- BEGIN TODO SIDEBAR -->
+        <div class="portlet patac-portlet">
+            <div class="portlet-title">
+                <div class="caption">
+                    <span class="caption-subject font-white uppercase">耐久型设备利用率 </span>
+                </div>
+                
+            </div>
+            <div class="portlet-body">
+                <div id="utilizRate" style="height:180px;"></div>
+            </div>
+        </div>
+        <!-- END TODO SIDEBAR -->
+    </div>
+
+    <div class="col-md-3 col-sm-6">
+        <!-- BEGIN TODO SIDEBAR -->
+        <div class="portlet patac-portlet">
+            <div class="portlet-title">
+                <div class="caption">
+                    <span class="caption-subject font-white uppercase">非耐久型设备利用率 </span>
+                </div>
+                
+            </div>
+            <div class="portlet-body">
+                <div id="durautilizRate" style="height:180px;"></div>
+            </div>
+        </div>
+        <!-- END TODO SIDEBAR -->
+    </div>
+
+    <div class="col-md-3 col-sm-6">
+        <!-- BEGIN TODO SIDEBAR -->
+        <div class="portlet patac-portlet" >
+            <div class="portlet-title">
+                <div class="caption">
+                    <span class="caption-subject font-white uppercase">设备状态统计 </span>
+                </div>
+                
+            </div>
+            <div class="portlet-body">
+
+                <div class="row">
+                <div class="col-md-6  col-sm-6 form-group"><button class="btn btn-lg btn-block green patac-btn"><i class="fa fa-cogs"></i> 运行 <span ng-bind="status[1]">0</span>台</button></div>
+                    <div class="col-md-6  col-sm-6 form-group"><button class="btn btn-lg btn-block red-intense patac-btn"><i class="fa fa-cogs"></i> 故障 <span ng-bind="status[2]">0</span>台</button></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6  col-sm-6 form-group"><button class="btn btn-lg btn-block blue patac-btn"><i class="fa fa-cogs"></i> 占位 <span ng-bind="status[4]">0</span>台</button></div>
+                    <div class="col-md-6  col-sm-6 form-group"><button class="btn btn-lg btn-block yellow patac-btn"><i class="fa fa-cogs"></i> 停止 <span ng-bind="status[0]">0</span>台</button></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6  col-sm-6 form-group"><button class="btn btn-lg btn-block gray patac-btn"><i class="fa fa-cogs"></i> 空闲 <span ng-bind="status[3]">0</span>台</button></div>
+                    <!-- <div class="col-md-6 form-group"><button class="btn btn-lg btn-block red red patac-btn"><i class="fa fa-cogs"></i> 报警 <span ng-bind="status[5]">0</span>台</button></div> -->
+                </div>
+            </div>
+        </div>
+        <!-- END TODO SIDEBAR -->
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-3 col-sm-12">
+        <div class="portlet patac-portlet" >
+            <div class="portlet-title">
+                <div class="caption">
+                    <span class="caption-subject font-white uppercase">在线设备开动率 </span>
+                </div>
+                
+            </div>
+            <div class="portlet-body">
+                <div id="startRate" style="height:180px;"></div>
+            </div>
+        </div>
+
+        <div class="portlet patac-portlet" >
+            <div class="portlet-title">
+                <div class="caption">
+                    <span class="caption-subject font-white uppercase">试验效能系数 </span>
+                </div>
+                
+            </div>
+            <div class="portlet-body">
+                <div id="efficiencyCoeff" style="height:180px;"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div ng-class="{true: 'col-md-4 col-sm-6', false: 'col-md-9 col-sm-12'}[doubleLabel]">
+        
+        <div class="portlet patac-portlet" style="height:550px;">
+            <div class="portlet-title">
+                <div class="caption">
+                    <span class="caption-subject font-white uppercase" ng-bind="areaName[0]">LAB车身试验区 </span>
+                </div>
+                
+            </div>
+            <div class="portlet-body">
+                <div id="3d_view1" ></div>
+            </div>
+        </div>
+    </div>
+
+    <div ng-class="{true: 'col-md-5 col-sm-6', false: 'hide'}[doubleLabel]">
+        
+        <div class="portlet patac-portlet" style="height:550px;">
+            <div class="portlet-title">
+                <div class="caption">
+                    <span class="caption-subject font-white uppercase" ng-bind="areaName[1]">LAB车身试验区 </span>
+                </div>
+                
+            </div>
+            <div class="portlet-body">
+                <div id="3d_view2" ></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- END PAGE CONTENT
