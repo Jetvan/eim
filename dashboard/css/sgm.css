@@ -326,3 +326,59 @@ div.dataTables_wrapper div.dataTables_paginate{
 }
 
 */
+.portlet .m-t-sm>.btn.btn-outline.white:hover,.portlet .portlet-body .btn.btn-outline.white:hover,
+.portlet .m-t-sm>.btn.btn-outline.white:focus,.portlet .portlet-body .btn.btn-outline.white:focus {
+    border-color: #fff;
+    color: #fff;
+    background: 0 0;
+    cursor: default;
+}
+.row{
+	margin-left: -10px;
+	margin-right: -10px;
+}
+.portlet {
+	margin-bottom: 20px;
+}
+.table-scrollable tbody>tr>td{
+	white-space:normal;
+}
+.portlet-body>.btn-block>h4.block{
+	padding-top:8px;
+	padding-bottom:8px;
+}
+.portlet-body>.btn-block>p{
+	margin:4px;
+}
+.col-md-4>.patac-portlet>.portlet-title{
+	margin-bottom:3.5px;
+}
+/*btn style*/
+.btn.green:not(.btn-outline).active, .btn.green:not(.btn-outline):active, .btn.green:not(.btn-outline):hover, .open>.btn.green:not(.btn-outline).dropdown-toggle,.btn.green:not(.btn-outline):active:focus,.btn.green:not(.btn-outline):focus,.btn.green:not(.btn-outline):active:hover {
+	background-color: #32c5d2;
+	border-color: #32c5d2;
+	outline-offset:0;
+}
+.btn.red-intense:not(.btn-outline).active, .btn.red-intense:not(.btn-outline):active, .btn.red-intense:not(.btn-outline):hover, .open>.btn.red-intense:not(.btn-outline).dropdown-toggle,.btn.red-intense:not(.btn-outline):active:focus, .btn.red-intense:not(.btn-outline):active:hover{
+	color: #fff;
+	background-color: #e35b5a;
+	border-color: #e35b5a;
+	outline-offset:0;
+}
+.portlet-body .btn.blue:not(.btn-outline).active, .btn.blue:not(.btn-outline):active, .btn.blue:not(.btn-outline):hover, .open>.btn.blue:not(.btn-outline).dropdown-toggle,.btn.blue:not(.btn-outline):active:focus, .btn.blue:not(.btn-outline):active:hover {
+	color: #FFF;
+	background-color: #3598dc;
+	border-color: #3598dc;
+	outline-offset:0;
+}
+.portlet-body .btn.yellow:not(.btn-outline).active, .btn.yellow:not(.btn-outline):active, .btn.yellow:not(.btn-outline):hover, .open>.btn.yellow:not(.btn-outline).dropdown-toggle,.btn.yellow:not(.btn-outline):active:focus, .btn.yellow:not(.btn-outline):active:hover {
+	color: #fff;
+	background-color: #c49f47;
+	border-color: #c49f47;
+	outline-offset:0;
+}
+.portlet-body .btn:not(.md-skip):active,.portlet-body .btn:not(.md-skip):focus,.portlet-body .btn:not(.md-skip){
+	box-shadow:none;
+	transition: box-shadow .0s cubic-bezier(0,0,0,0);
+}
+
