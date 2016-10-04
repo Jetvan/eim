@@ -120,7 +120,7 @@ angular.module('MetronicApp')
     $http.get($rootScope.settings.apiPath+"/role/list").success(function(json){
 
         //TODO: getRoleResList
-        $http.get($rootScope.settings.apiPath+"/"+ $scope.obj +"/getUserRoleList").success(function(json){
+        $http.post($rootScope.settings.apiPath+"/"+ $scope.obj +"/getUserRoleList",{userId:"9"}).success(function(json){
             console.log(json);
         });
         

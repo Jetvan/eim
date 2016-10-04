@@ -92,7 +92,7 @@ MetronicApp.factory('settings', ['$rootScope', function($rootScope) {
         mode:"server",
         api:{
             dashboard:"http://10.203.97.123:7003/pataceim-rest",
-            local:"http://10.6.96.26:8080/pataceim-rest",
+            // dashboard:"http://10.11.146.12:8080/pataceim-rest",
         },
         debug: {
         	request:false,
@@ -490,7 +490,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
 
 /* Init global settings and run the app */
 MetronicApp.run(["$rootScope", "settings", "$state", "$http", function($rootScope, settings, $state,$http) {
-    $rootScope.time = moment().format('YYYY年 MM月 D日');
+    $rootScope.time = moment().format('YYYY年 MM月D日 hh:mm:ss');
 
     $rootScope.$state = $state; // state to be accessed from view
     $rootScope.$settings = settings; // state to be accessed from view
@@ -552,59 +552,57 @@ MetronicApp.run(["$rootScope", "settings", "$state", "$http", function($rootScop
         //     ]
         };
 
-        $http.post($rootScope.settings.apiPath+"/user/getLoginUser")
+        $http.get($rootScope.settings.apiPath+"/user/getLoginUser")
         .success(function(json){
             console.log(json,json.realName);
             $rootScope.realName = json.realName;
-        })
 
-        $http.post($rootScope.settings.apiPath+"/user/login",{userName:'apptest01'})
-        .success(function(json){
-            var menu = [];
-            for(var i=0;i<json.length;i++){
+            $http.post($rootScope.settings.apiPath+"/user/login",{userName:'apptest01'})
+            .success(function(json){
+                var menu = [];
+                for(var i=0;i<json.length;i++){
 
-                // console.log(json[i]);
-                if(json[i].parentId == undefined){
-                    json[i].parentId=0;
-                }
-
-                if(typeof menu[json[i].parentId] == "undefined"){
-                    menu[json[i].parentId]=[];
-                }
-
-            }
-
-            // menu[0][0].child = menu[1];
-            // menu[0][1].child = menu[2];
-            // menu[0][2].child = menu[3];
-            // menu[0][3].child = menu[4];
-
-            // menu[0][0].child[0].child = menu[5];
-            // menu[0][0].child[0].child[0].child = menu[6];
-            // menu[0][0].child[0].child[1].child = menu[7];
-            var tmp = [];
-            for(var i=json.length-1;i>=0;i--){
-                for(var j=0;j<json.length;j++){
-                    if(json[j].id==json[i].parentId){
-                        if(json[j]['child']==undefined) json[j]['child'] = [];
-                        json[j]['child'].unshift( json[i] );
+                    // console.log(json[i]);
+                    if(json[i].parentId == undefined){
+                        json[i].parentId=0;
                     }
-                }
-               
-            }
 
-            var menuList = [];
-            for(var i=0;i<json.length;i++){
-                if(json[i].parentId==0){
-                    menuList.push(json[i]);
+                    if(typeof menu[json[i].parentId] == "undefined"){
+                        menu[json[i].parentId]=[];
+                    }
+
                 }
 
-            }
+                // menu[0][0].child = menu[1];
+                // menu[0][1].child = menu[2];
+                // menu[0][2].child = menu[3];
+                // menu[0][3].child = menu[4];
 
-            console.log(json);
+                // menu[0][0].child[0].child = menu[5];
+                // menu[0][0].child[0].child[0].child = menu[6];
+                // menu[0][0].child[0].child[1].child = menu[7];
+                var tmp = [];
+                for(var i=json.length-1;i>=0;i--){
+                    for(var j=0;j<json.length;j++){
+                        if(json[j].id==json[i].parentId){
+                            if(json[j]['child']==undefined) json[j]['child'] = [];
+                            json[j]['child'].unshift( json[i] );
+                        }
+                    }
+                   
+                }
 
-            $rootScope.menu = menuList;
-        });
+                var menuList = [];
+                for(var i=0;i<json.length;i++){
+                    if(json[i].parentId==0){
+                        menuList.push(json[i]);
+                    }
 
+                }
 
+                console.log(json);
+
+                $rootScope.menu = menuList;
+            });
+        })
 }]);

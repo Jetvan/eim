@@ -62,8 +62,9 @@ timeData = timeData.map(function (str) {
 angular.module('MetronicApp')
 
 .controller('MTSController', function($rootScope, $scope, $http, $timeout,$state) {
+    
     $scope.$on('ngRepeatFinished2', function(repeatFinishedEvent, element) {
-        
+        console.log('ngRepeatFinished2');
         $("#rpc").removeClass("hide");
         var warningMTSConfig = {
 
@@ -86,21 +87,24 @@ angular.module('MetronicApp')
 
         $.extend($rootScope.tableConfig,warningMTSConfig);
 
-        if(typeof $scope.rpcTable != "undefined"){
-            $scope.rpcTable.Rows.Clear();
-            // $("#station").DataTable().destroy();
-        }
+        // if(typeof $scope.rpcTable != "undefined"){
+        //     $scope.rpcTable.Rows.Clear();
+        //     // $("#station").DataTable().destroy();
+        // }
 
                     
         $scope.rpcTable = $("#rpc").DataTable($rootScope.tableConfig);
     });
 
     $scope.$on('ngRepeatFinished', function(repeatFinishedEvent, element) {
+        console.log('ngRepeatFinished');
+
         $('input').uniform();
         $("#station").removeClass("hide");
 
         var warningMTSConfig = {
 
+            "autoWidth": false,
         "pagingType":'bootstrap_full_number2',
         "bProcessing": true,
         "bLengthChange":false,
@@ -127,13 +131,13 @@ angular.module('MetronicApp')
 
         $.extend($rootScope.tableConfig,warningMTSConfig);
 
-        if(typeof $scope.stationTable != "undefined"){
-            $scope.stationTable.Rows.Clear();
-            // $("#station").DataTable().destroy();
-        }
+        // if(typeof $scope.stationTable != "undefined"){
+        //     $scope.stationTable.Rows.Clear();
+        //     // $("#station").DataTable().destroy();
+        // }
 
                     
-        $scope.stationTable = $("#station").DataTable($rootScope.tableConfig);
+        $scope.stationTable = $("#station").DataTable(warningMTSConfig);
 
         
     });
@@ -356,6 +360,8 @@ angular.module('MetronicApp')
     
 
     $scope.getWarnning = function(param,type){
+        
+        console.log("xxxxx"+param);
 
         type = type || "normal";
         switch(param){
@@ -372,16 +378,15 @@ angular.module('MetronicApp')
                 });
             break;
             case "Station":
-                
 
                 var url = "/equippage/getWarnningMTS";
                 var data = {equipNo:$state.params.id,equipType:"Station",statusType:type};
                 $http.post($rootScope.settings.apiPath + url,JSON.stringify(data)).success(function(json){
                     
-                    if(typeof $scope.stationTable != "undefined"){
-                        $scope.stationTable.Rows.Clear();
-                        // $("#rpc").destroy();
-                    }
+                    // if(typeof $scope.stationTable != "undefined"){
+                    //     $scope.stationTable.Rows.Clear();
+                    //     // $("#rpc").destroy();
+                    // }
                     
                     $scope.station = json;
                     
@@ -689,6 +694,7 @@ angular.module('MetronicApp')
     series: [
         {
             title : {
+                offsetCenter: [0, '118%'],
                 textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
                     fontWeight: 'bolder',
                     fontSize: 14,
@@ -699,6 +705,7 @@ angular.module('MetronicApp')
             type: 'gauge',
             detail: {
                 formatter:'{value} °C',
+                offsetCenter: [2, '78%'],  
                 textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
                     color:'#fff',
                     fontSize:12
@@ -1057,14 +1064,15 @@ oilOut.setOption(gaugeOption);
 .controller('BEPController', function($rootScope, $scope, $http, $timeout,$state) {
     $scope.$on('ngRepeatFinished', function(repeatFinishedEvent, element) {
         var warningBEPConfig = {
+            "autoWidth": false,
         "bLengthChange":false,
         "searching":false,
         "pagingType":'bootstrap_full_number2',
         "aoColumns": [
               {
-                  sWidth: '330px'
+                  sWidth: '240px'
               },{
-                  sWidth: '80px'
+                  sWidth: '160px'
               }
         ],
         "lengthMenu": [
