@@ -202,7 +202,10 @@ th{
 }
 .page-sidebar .page-sidebar-menu .sub-menu, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu .sub-menu{
 	margin:0!important;
-	margin-left: 14px !important;
+	margin-left: 10px !important;
+}
+.page-sidebar .nav-link>span{
+    white-space:nowrap;
 }
 .icon-btn.patac-icon-btn{
 	background:none!important;
