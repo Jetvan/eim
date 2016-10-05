@@ -214,7 +214,7 @@ angular.module('MetronicApp')
             params:{ids:id}
         }).success(function(json){
 
-            // window.location.reload();
+            window.location.reload();
         })
     }
 

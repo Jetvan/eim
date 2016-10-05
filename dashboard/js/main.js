@@ -90,7 +90,7 @@ MetronicApp.factory('settings', ['$rootScope', function($rootScope) {
         layoutPath: '../assets/layouts/layout',
         apiPath:'',
         mode:"server",
-        version:'1.7',
+        version:'1.9',
         api:{
             dashboard:"http://10.203.97.123:7003/pataceim-rest",
             local:"http://10.6.96.2:8080/pataceim-rest", 

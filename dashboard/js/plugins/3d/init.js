@@ -293,11 +293,13 @@ var demo = {
 			var tooltip = tooltipObj.getView();
 			tooltip.style.display = 'none';
 			console.log(type + ":" + object3d.getClient('name'));
-			if (type == "lab" || type == "BEP"|| type == "MTS"|| type == "HPU") {
-				// window.location.href = "#/" + type + "/" + id;
+			
+			if (type == "lab"){
 				if(object3d.getClient('validateLicense') == true){
 					window.open("#/" + type + "/" + id);
 				}
+			}else if (type == "BEP"|| type == "MTS"|| type == "HPU") {
+				window.open("#/" + type + "/" + id);
 			}
 		}
 	},

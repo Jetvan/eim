@@ -67,7 +67,8 @@ angular.module('MetronicApp')
         console.log('ngRepeatFinished2');
         $("#rpc").removeClass("hide");
         var warningMTSConfig = {
-
+            "bStateSave": false,
+            "orderable": false,
             "autoWidth": false,
         "pagingType":'bootstrap_full_number2',
         "bProcessing": true,
@@ -114,7 +115,9 @@ angular.module('MetronicApp')
         $("#station").removeClass("hide");
 
         var warningMTSConfig = {
-
+            "bStateSave": false,
+            "orderable": false,
+            "autoWidth": false,
             "autoWidth": false,
         "pagingType":'bootstrap_full_number2',
         "bProcessing": true,
