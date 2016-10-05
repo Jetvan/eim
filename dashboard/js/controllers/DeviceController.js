@@ -1123,20 +1123,22 @@ angular.module('MetronicApp')
 .controller('BEPController', function($rootScope, $scope, $http, $timeout,$state) {
     $scope.$on('ngRepeatFinished', function(repeatFinishedEvent, element) {
         var warningBEPConfig = {
+            "bStateSave": false,
+            "orderable": false,
             "autoWidth": false,
         "bLengthChange":false,
         "searching":false,
         "pagingType":'bootstrap_full_number2',
         "aoColumns": [
               {
-                  sWidth: '240px'
+                  sWidth: '130px'
               },{
-                  sWidth: '160px'
+                  sWidth: '400px'
               }
         ],
         "lengthMenu": [
-            [3, 5, 10, -1],
-            [3, 5, 10, "All"] // change per page values here
+            [ 7, 10, -1],
+            [ 7, 10, "All"] // change per page values here
         ],
         "columnDefs": [{  // set default column settings
                 'orderable': false,
