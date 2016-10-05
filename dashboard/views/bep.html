@@ -1,4 +1,21 @@
+<style>
 
+    .col-md-4 > .patac-portlet > .portlet-title {
+        margin-bottom: 0px;
+    }
+    .col-md-4 .portlet > .portlet-title{
+        min-height: 10px;
+    }
+    .col-md-4 .portlet > .portlet-title > .caption{
+        padding:0;
+    }
+    .col-md-4 .table-condensed > thead > tr > th{
+        padding: 0;
+    }
+    .col-md-4 .portlet.patac-portlet {
+        padding: 12px 20px 12.1px;
+    }
+</style>
 <!-- BEGIN PAGE CONTENT-->
 <div class="row">
     <div class="col-md-8">
@@ -29,7 +46,7 @@
                     <span style="color:#a6e528;line-height:100px;display:block;margin:0 40px;font-size:24px;text-align:center;font-size:60px;font-weight:bold;">运 行</span>
                     </div>
 
-                    <div id="bar2" style="height:212px;"></div>
+                    <div id="bar2" style="height:188px;"></div>
                 </div>
                 </div>
             </div>
@@ -78,15 +95,44 @@
                 
             </div>
             <div class="portlet-body">
-                <div class="btn btn-outline white btn-block">
+                <!--<div class="btn btn-outline white btn-block">
                     <h4 class="block">VIN:{{getIndexMomentBEP.vin}}</h4>
                     <p > 描述:{{getIndexMomentBEP.desc}}</p>
                 </div>
                 <div class="m-t-sm">
                 <a class="btn btn-lg white btn-outline"><span ng-bind="getIndexMomentBEP.vehicleWeight | number:2"">1000</span> kg<br/>车辆重量</a>
                 <a class="btn btn-lg white btn-outline"><span ng-bind="getIndexMomentBEP.grade | number:2"">33.4</span><br/>坡度</a>
-                </div>
+                </div>-->
+                <table class="hpu-table table-condensed">
+                    <thead>
+                    <tr>
+                        <th width="50%">VIN</th>
+                        <th width="50%">描述</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td><div class="hpu-label"><span ng-bind="getIndexMomentBEP.vin"></span></div></td>
+                        <td><div class="hpu-label"><span ng-bind="getIndexMomentBEP.desc"></span></div></td>
 
+                    </tr>
+                    </tbody>
+                </table>
+                <table class="hpu-table table-condensed">
+                    <thead>
+                    <tr>
+                        <th width="50%">坡度</th>
+                        <th width="50%">车辆重量</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td><div class="hpu-label"><span ng-bind="getIndexMomentBEP.vehicleWeight | number:2"></span>kg</div></td>
+                        <td><div class="hpu-label"><span ng-bind="getIndexMomentBEP.grade | number:2"></span></div></td>
+
+                    </tr>
+                    </tbody>
+                </table>
                 
             </div>
         </div>
@@ -100,7 +146,7 @@
             </div>
             <div class="portlet-body">
                 
-                <table class="table table-bordered patac-table">
+                <table class="table table-bordered patac-table table-condensed">
                     <thead>
                         <tr>
                             <th>  </th>
