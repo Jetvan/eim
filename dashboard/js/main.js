@@ -92,7 +92,7 @@ MetronicApp.factory('settings', ['$rootScope', function($rootScope) {
         mode:"server",
         api:{
             dashboard:"http://10.203.97.123:7003/pataceim-rest",
-            // dashboard:"http://10.11.146.12:8080/pataceim-rest",
+            // dashboard:"http://10.6.96.2:8080/pataceim-rest",
         },
         debug: {
         	request:false,
@@ -557,7 +557,10 @@ MetronicApp.run(["$rootScope", "settings", "$state", "$http", function($rootScop
             console.log(json,json.realName);
             $rootScope.realName = json.realName;
 
-            $http.post($rootScope.settings.apiPath+"/user/login",{userName:'apptest01'})
+            
+        })
+
+        $http.post($rootScope.settings.apiPath+"/user/login",{userName:'apptest01'})
             .success(function(json){
                 var menu = [];
                 for(var i=0;i<json.length;i++){
@@ -603,6 +606,5 @@ MetronicApp.run(["$rootScope", "settings", "$state", "$http", function($rootScop
                 console.log(json);
 
                 $rootScope.menu = menuList;
-            });
-        })
+            }); 
 }]);

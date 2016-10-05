@@ -96,13 +96,13 @@ angular.module('MetronicApp')
 
               });
 
-              $("button[action=edit]", nRow).click(function() {
+              // $("button[action=edit]", nRow).click(function() {
 
-                    $scope.action = "编辑用户";
-                    //$scope.data = $scope.datas[dataIndex];
-                    //console.log($scope.datas.length, dataIndex);
-                    //$scope.$apply();
-              });
+                    
+              //       //$scope.data = $scope.datas[dataIndex];
+              //       //console.log($scope.datas.length, dataIndex);
+              //       //$scope.$apply();
+              // });
 
               return nRow;
             }
@@ -113,43 +113,7 @@ angular.module('MetronicApp')
 
 
     });
-
-
-    
-
-    $http.get($rootScope.settings.apiPath+"/role/list").success(function(json){
-
-        //TODO: getRoleResList
-        $http.post($rootScope.settings.apiPath+"/"+ $scope.obj +"/getUserRoleList",{userId:"9"}).success(function(json){
-            console.log(json);
-        });
-        
-        var data = [];
-        for(var i =0;i<json.length;i++){
-            data.push({text:json[i].roleName,id:parseInt(json[i].id)});
-        }
-        $('#tree_2').jstree({
-            'plugins': ["wholerow", "checkbox", "types"],
-            'core': {
-                "themes" : {
-                    "responsive": false
-                },    
-                'data': data
-            },
-            "types" : {
-                "default" : {
-                    "icon" : "fa fa-user font-green icon-lg"
-                },
-                "file" : {
-                    "icon" : "fa fa-file icon-state-warning icon-lg"
-                }
-            }
-        });
-
-        $('#tree_2').on("changed.jstree", function (e, data) {
-          console.log(data.selected);
-        });
-    })
+   
 
     $scope.getUserList = function(){
         $http.get($rootScope.settings.apiPath+"/"+ $scope.obj +"/list").success(function(json){
@@ -172,7 +136,7 @@ angular.module('MetronicApp')
         $(".modal").modal('hide');
         $http.post($rootScope.settings.apiPath+"/"+ $scope.obj +"/addOrUpdate",$scope.data).success(function(json){
             
-            // window.location.reload();
+            window.location.reload();
         });
     }
 
@@ -181,12 +145,19 @@ angular.module('MetronicApp')
         $scope.data = {};
         $(".modal").modal('show');
     }
+
+    $('#tree_2').on("changed.jstree", function (e, data) {
+      // console.log(data.selected);
+    });
+
     /*
     * 修改按钮
     * 获取点击当条数据
     * */
     $scope.upDataUser=function(ev){
 
+        $scope.action = "编辑用户";
+        
         var srcEl=ev.target,
             id=srcEl.getAttribute("data-id");
         for(var i= 0,len=$scope.datas.length;i<len;i++){
@@ -194,6 +165,56 @@ angular.module('MetronicApp')
                $scope.data=$scope.datas[i];
            }
         }
+
+        $http.get($rootScope.settings.apiPath+"/role/list").success(function(json){
+            $http.post($rootScope.settings.apiPath+"/user/getUserRoleList",{userId:$scope.data.id}).success(function(result){
+
+                // $('#tree_2').html('');
+
+                var roleList = [];
+                for(var i=0;i<result[0].userRoleList.length;i++){
+                    roleList.push(result[0].userRoleList[i].roleId);
+                }
+
+                // console.log(roleList);
+
+                var data = [];
+                for(var i =0;i<json.length;i++){
+                    
+                    if(roleList.indexOf(json[i].id) > -1){
+                        data.push({text:json[i].roleName,id:parseInt(json[i].id),state:{selected:true}});
+                        console.log(json[i].roleName+":"+true);
+                    }else{
+                        data.push({text:json[i].roleName,id:parseInt(json[i].id),state:{selected:false}});
+                        console.log(json[i].roleName+":"+false);
+                    }
+                }
+
+
+                $('#tree_2').data('jstree', false).empty();
+                $('#tree_2').jstree({
+                    'plugins': ["wholerow", "checkbox", "types"],
+                    'core': {
+                        "themes" : {
+                            "responsive": false
+                        },    
+                        'data': data
+                    },
+                    "types" : {
+                        "default" : {
+                            "icon" : "fa fa-user font-green icon-lg"
+                        },
+                        "file" : {
+                            "icon" : "fa fa-file icon-state-warning icon-lg"
+                        }
+                    }
+                });
+
+                // $('#tree_2').jstree(true).settings.core.data = data;
+                // $('#tree_2').jstree(true).refresh();
+
+            });
+        });
 
     }
 })
@@ -277,12 +298,12 @@ angular.module('MetronicApp')
               });
 
 
-              $("button[action=edit]", nRow).click(function() {
+              // $("button[action=edit]", nRow).click(function() {
 
-                    //$scope.data = $scope.datas[dataIndex];
-                    $scope.action = "编辑角色 id:"+$scope.data.id;
-                    //$scope.$apply();
-              });
+              //       //$scope.data = $scope.datas[dataIndex];
+              //       $scope.action = "编辑角色 id:"+$scope.data.id;
+              //       //$scope.$apply();
+              // });
 
               return nRow;
             }
@@ -314,34 +335,11 @@ angular.module('MetronicApp')
         });
     }
 
-    $http.get($rootScope.settings.apiPath+"/resource/list").success(function(json){
-        
-        var data = [];
-        for(var i =0;i<json.length;i++){
-            data.push({text:json[i].resourceName,id:parseInt(json[i].id)});
-        }
-        $('#tree_2').jstree({
-            'plugins': ["wholerow", "checkbox", "types"],
-            'core': {
-                "themes" : {
-                    "responsive": false
-                },    
-                'data': data
-            },
-            "types" : {
-                "default" : {
-                    "icon" : "fa fa-user font-green icon-lg"
-                },
-                "file" : {
-                    "icon" : "fa fa-file icon-state-warning icon-lg"
-                }
-            }
-        });
 
-        $('#tree_2').on("changed.jstree", function (e, data) {
-          console.log(data.selected);
-        });
-    })
+    $('#tree_2').on("changed.jstree", function (e, data) {
+      console.log(data.selected);
+    });
+
 
     $scope.getRoleList = function(){
         $http.get($rootScope.settings.apiPath+"/"+ $scope.obj +"/list").success(function(json){
@@ -361,6 +359,8 @@ angular.module('MetronicApp')
      * */
     $scope.upData=function(ev){
 
+        $scope.action = "编辑角色";
+
         var srcEl=ev.target,
             id = $(srcEl).data('id');
         for(var i= 0,len=$scope.datas.length;i<len;i++){
@@ -368,6 +368,56 @@ angular.module('MetronicApp')
                 $scope.data=$scope.datas[i];
             }
         }
+
+        $http.get($rootScope.settings.apiPath+"/resource/list").success(function(json){
+            $http.post($rootScope.settings.apiPath+"/role/getRoleResList",{ids:$scope.data.id}).success(function(result){
+
+                // $('#tree_2').html('');
+
+                var roleList = [];
+                for(var i=0;i<result[0].roleResList.length;i++){
+                    roleList.push(result[0].roleResList[i].resourceId);
+                }
+
+                // console.log(roleList);
+
+                var data = [];
+                for(var i =0;i<json.length;i++){
+                    
+                    if(roleList.indexOf(json[i].id) > -1){
+                        data.push({text:json[i].resourceName,id:parseInt(json[i].id),state:{selected:true}});
+                        console.log(json[i].resourceName+":"+true);
+                    }else{
+                        data.push({text:json[i].resourceName,id:parseInt(json[i].id),state:{selected:false}});
+                        console.log(json[i].resourceName+":"+false);
+                    }
+                }
+
+
+                $('#tree_2').data('jstree', false).empty();
+                $('#tree_2').jstree({
+                    'plugins': ["wholerow", "checkbox", "types"],
+                    'core': {
+                        "themes" : {
+                            "responsive": false
+                        },    
+                        'data': data
+                    },
+                    "types" : {
+                        "default" : {
+                            "icon" : "fa fa-user font-green icon-lg"
+                        },
+                        "file" : {
+                            "icon" : "fa fa-file icon-state-warning icon-lg"
+                        }
+                    }
+                });
+
+                // $('#tree_2').jstree(true).settings.core.data = data;
+                // $('#tree_2').jstree(true).refresh();
+
+            });
+        });
 
     }
 })
@@ -678,7 +728,7 @@ angular.module('MetronicApp')
         $http.post($rootScope.settings.apiPath+"/hpualarm/addOrUpdate",$scope.temp).success(function(json){
             console.log(json);
             $(".modal").modal('hide');
-            // window.location.reload();
+            window.location.reload();
         });
     }
 

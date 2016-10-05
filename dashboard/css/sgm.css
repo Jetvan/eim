@@ -99,9 +99,9 @@ body{
 	padding:13px 4px 9px 4px!important;
 	display: inline-block;
 }
-.page-header.navbar .menu-toggler.responsive-toggler{
+/*.page-header.navbar .menu-toggler.responsive-toggler{
 	display: block!important;
-}
+}*/
 
 th{
 	text-align:center!important;
@@ -326,3 +326,7 @@ div.dataTables_wrapper div.dataTables_paginate{
 }
 
 */
+
+.jstree-default .jstree-wholerow-clicked, .jstree-wholerow .jstree-wholerow-clicked{
+	background: none!important;
+}
