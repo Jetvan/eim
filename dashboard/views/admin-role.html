@@ -45,7 +45,7 @@
                             <td ng-bind="data.modifyUser"></td>
                             <td>
                                 <button class="btn btn-outline white" action="edit" data-id="{{data.id}}" data-toggle="modal" href="#draggable" ng-click="upData($event)">修改</button>
-                                <button class="btn btn-danger" action="delete" data-id="{{data.id}}">删除</button>
+                                <button class="btn btn-danger" action="delete" data-id="{{data.id}}" ng-click="delData(d.id)">删除</button>
                             </td>
                         </tr>
                         
@@ -71,7 +71,7 @@
                             <div class="portlet-body">
                                 <div class="form-body">
                                     <div class="row">
-                                        <div class="col-md-3 col-sm-3">
+                                        <div class="col-md-36 col-sm-6">
                                             <div class="form-group form-md-line-input">
                                                 <input type="text" class="form-control" name="roleName" id="resourceName" placeholder="请输入角色名"
                                                 ng-model="data.roleName" required>
@@ -80,23 +80,8 @@
                                                 </label>
                                             </div>
                                         </div>
-                                        <div class="col-md-3  col-sm-3">
-                                             <div class="form-group form-md-line-input">
-                                                <input type="text" class="form-control" name="resourceIds" id="resourceIds" placeholder="请输入资源号"
-                                                ng-model="data.resourceIds" >
-                                                <label for="resourceIds">资源号
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3 col-sm-3">
-                                            <div class="form-group form-md-line-input">
-                                                <input type="text" class="form-control" id="templateSecurity" name="templateSecurity" placeholder="请输入临时权限"
-                                                ng-model="data.templateSecurity" >
-                                                <label for="templateSecurity">模板权限
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3 col-sm-3">
+                                       
+                                        <div class="col-md-6 col-sm-6">
                                             <div class="form-group form-md-line-input">
                                                 <input type="text" class="form-control" id="roleDesc" name="roleDesc" placeholder="请输入角色描述限"
                                                 ng-model="data.roleDesc" >

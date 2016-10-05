@@ -48,7 +48,7 @@
                             <td ng-bind="d.email"></td>
                             <td>
                                 <button class="btn btn-outline white" action="edit" data-id="{{d.id}}" data-toggle="modal" href="#draggable" ng-click="upDataUser($event)">修改</button>
-                                <button class="btn btn-danger" action="delete" data-id="{{d.id}}">删除</button>
+                                <button class="btn btn-danger" action="delete" data-id="{{d.id}}" ng-click="delData($event)">删除</button>
                             </td>
                         </tr>
                         
