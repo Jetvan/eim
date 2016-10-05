@@ -511,6 +511,7 @@ MetronicApp.run(["$rootScope", "settings", "$state", "$http", function($rootScop
     };
 
     $rootScope.tableConfig = {
+            //"ordering": false,
             "searching":false,
             "bLengthChange":false,
             "language": {

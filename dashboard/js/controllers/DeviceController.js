@@ -68,6 +68,7 @@ angular.module('MetronicApp')
         $("#rpc").removeClass("hide");
         var warningMTSConfig = {
 
+            "autoWidth": false,
         "pagingType":'bootstrap_full_number2',
         "bProcessing": true,
         "bLengthChange":false,
@@ -77,11 +78,21 @@ angular.module('MetronicApp')
             [5, 10, 10, "All"] // change per page values here
         ],
         "columnDefs": [{  // set default column settings
+                'width':'30%',
                 'orderable': false,
-                "targets": [0,1]
+                "targets":0
             }, {
+                'width':'30%',
                 "searchable": false,
-                "targets": [0,1]
+                "targets":0
+            }, {
+                'width':'30%',
+                "searchable": false,
+                "targets":0
+            }, {
+                'width':'10%',
+                "searchable": false,
+                "targets":0
             }]
         };
 
@@ -711,19 +722,34 @@ angular.module('MetronicApp')
                     fontSize:12
                 }},
             data: [{value: 50, name: '进水口温度'}],
-            axisLine: {            // 坐标轴线
+            axisLine: {// 坐标轴线
+                length: 1,
                 lineStyle: {       // 属性lineStyle控制线条样式
-                    width: 3
+                    width: 5
                 }
             },
+            axisLabel: {            // 坐标轴小标记
+                textStyle: {       // 属性lineStyle控制线条样式
+                    fontWeight: 'bolder',
+                    color: '#fff',
+                    shadowColor : '#fff', //默认透明
+                    shadowBlur: 10
+                 }
+            },
             axisTick: {            // 坐标轴小标记
-                splitNumber: 1,
-                length: 1,        // 属性length控制线长
+                splitNumber: 5,
+                length:9,        // 属性length控制线长
                 lineStyle: {       // 属性lineStyle控制线条样式
                     color: 'auto',
                     width:1
                 }
             },
+            splitLine: {           // 分隔线
+                length :10,         // 属性length控制线长
+                lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
+                    width:4
+                }
+            }
         }   
     ]
 };
