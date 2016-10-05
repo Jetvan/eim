@@ -202,6 +202,7 @@ th{
 }
 .page-sidebar .page-sidebar-menu .sub-menu, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu .sub-menu{
 	margin:0!important;
+	margin-left: 14px !important;
 }
 .icon-btn.patac-icon-btn{
 	background:none!important;
@@ -383,4 +384,8 @@ div.dataTables_wrapper div.dataTables_paginate{
 }
 .page-content-wrapper .page-content {
 	padding:20px 20px 0px 20px;
+}
+/*siderbar width auto*/
+.page-sidebar {
+	width: 280px !important;
 }
