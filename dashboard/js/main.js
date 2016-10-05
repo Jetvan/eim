@@ -90,10 +90,11 @@ MetronicApp.factory('settings', ['$rootScope', function($rootScope) {
         layoutPath: '../assets/layouts/layout',
         apiPath:'',
         mode:"server",
-        version:'1.6',
+        version:'1.7',
         api:{
             dashboard:"http://10.203.97.123:7003/pataceim-rest",
-            // dashboard:"http://10.6.96.2:8080/pataceim-rest", 
+            // local:"http://10.6.96.2:8080/pataceim-rest", 
+            local:"http://10.203.97.123:7003/pataceim-rest",
         },
         debug: {
         	request:false,
@@ -197,7 +198,6 @@ MetronicApp.controller('HeaderController', ['$rootScope','$scope','$http','$stat
     });
     
     $scope.setDevice = function(type,id,name){
-        console.log(type,id,name);
         $rootScope.deviceName = name;
         $state.go(type,{id:id});
     }
@@ -224,7 +224,6 @@ MetronicApp.controller('SidebarController', ['$scope', function($scope,$state) {
     });
 
     $scope.open = function(router,$event){
-        // console.log(router);
         window.open(router);
         $event.stopPropagation();
     }
@@ -281,7 +280,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                             insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
                             files: [
                                 './js/controllers/DashboardController.js',
-                                './js/plugins/3d/data.js',
+                                // './js/plugins/3d/data.js',
                                 './js/plugins/3d/tooltip.js'
                             ] 
                         })
@@ -333,7 +332,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                             files: [
 
                                 './js/controllers/LabController.js',
-                                './js/plugins/3d/data.js',
+                                // './js/plugins/3d/data.js',
                                 './js/plugins/3d/tooltip.js',
                             ] 
                         })
@@ -552,34 +551,92 @@ MetronicApp.run(["$rootScope", "settings", "$state", "$http", "$interval", funct
                 "searchable": false,
                 "targets": [0]
             }]
-        //     "order": [
-        //         [1, "asc"]
-        //     ]
         };
 
+        //test api
+        $rootScope.threeReady = false;
+        $http.post($rootScope.settings.apiPath+"/user/login",{userName:'apptest05'})
+        .success(function(json){
+            var menu = [];
+            for(var i=0;i<json.length;i++){
+
+                if(json[i].parentId == undefined){
+                    json[i].parentId=0;
+                }
+
+                if(typeof menu[json[i].parentId] == "undefined"){
+                    menu[json[i].parentId]=[];
+                }
+
+                if(json[i].url && json[i].url.indexOf('lab')>-1){
+
+                    var id = json[i].url.split('#/lab/')[1];
+                    for(var j=0;j<lab0.objects.length;j++){
+                        if(lab0.objects[j].client && lab0.objects[j].client.id == id){
+                            
+                            console.log(lab0.objects[j].client.name);
+                            lab0.objects[j].client.validateLicense = true;
+                            lab0.objects[j].sideColor =  '#e47930';
+                            lab0.objects[j].topColor = '#f19149';
+                        }
+                    }
+                }
+
+            }
+
+
+            $rootScope.threeReady = true;
+
+            
+
+            var tmp = [];
+            for(var i=json.length-1;i>=0;i--){
+                for(var j=0;j<json.length;j++){
+                    if(json[j].id==json[i].parentId){
+                        if(json[j]['child']==undefined) json[j]['child'] = [];
+                        json[j]['child'].unshift( json[i] );
+                    }
+                }
+               
+            }
+
+            var menuList = [];
+            for(var i=0;i<json.length;i++){
+                if(json[i].parentId==0){
+                    menuList.push(json[i]);
+                }
+
+            }
+
+            $rootScope.menu = menuList;
+        }); 
+
+        //server apis
         $http.get($rootScope.settings.apiPath+"/user/getLoginUser")
         .success(function(json){
-            console.log(json,json.realName);
+
             $rootScope.realName = json.realName;
 
             //TODO: userstatus 01 没有权限  02 session过期  00 正常登陆
 
-            switch(json.userstatus){
-                case "01":
-                    toastr.clear();
-                    toastr["warning"]("没有权限","");
-                    setTimeout(function(){window.location.href = "/pkmslogout.html?filename=eimlogout.html";},3000);
-                    break;
+            if(settings.mode==="server"){
+                switch(json.userstatus){
+                    case "01":
+                        toastr.clear();
+                        toastr["warning"]("没有权限","");
+                        setTimeout(function(){window.location.href = "/pkmslogout.html?filename=eimlogout.html";},3000);
+                        break;
 
-                case "02":
-                    toastr.clear();
-                    toastr["warning"]("session过期","");
-                    setTimeout(function(){window.location.href = "/pkmslogout.html?filename=eimlogout.html";},3000);
-                    break;
+                    case "02":
+                        toastr.clear();
+                        toastr["warning"]("session过期","");
+                        setTimeout(function(){window.location.href = "/pkmslogout.html?filename=eimlogout.html";},3000);
+                        break;
 
-                case "00":
-                default:
-                    break;
+                    case "00":
+                    default:
+                        break;
+                }
             }
 
             $http.post($rootScope.settings.apiPath+"/user/login",{userName:json.userName})
@@ -587,7 +644,6 @@ MetronicApp.run(["$rootScope", "settings", "$state", "$http", "$interval", funct
                 var menu = [];
                 for(var i=0;i<json.length;i++){
 
-                    // console.log(json[i]);
                     if(json[i].parentId == undefined){
                         json[i].parentId=0;
                     }
@@ -624,8 +680,6 @@ MetronicApp.run(["$rootScope", "settings", "$state", "$http", "$interval", funct
                     }
 
                 }
-
-                console.log(json);
 
                 $rootScope.menu = menuList;
             }); 

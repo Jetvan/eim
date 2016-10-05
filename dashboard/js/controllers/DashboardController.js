@@ -1,13 +1,25 @@
 angular.module('MetronicApp')
-.controller('DashboardController', function($rootScope, $scope, $http, $timeout) {
+.controller('DashboardController', function($rootScope, $scope, $http, $timeout,$interval) {
     $scope.$on('$viewContentLoaded', function() {   
-        var position = {
-            w:1000,
-            h:1000,
-            d:2000
-        };
-        var tooltip = new Tooltip(['试验室名：'],['000000']);
-        demo.init('3d_view',lab0,0,0,position,tooltip);
+
+        var timer = $interval(function(){
+            console.log($rootScope.threeReady);
+            if($rootScope.threeReady){
+
+                console.log(lab0);
+                var position = {
+                    w:1000,
+                    h:1000,
+                    d:2000
+                };
+                var tooltip = new Tooltip(['试验室名：'],['000000']);
+                demo.init('3d_view',lab0,0,0,position,tooltip);
+
+                $interval.cancel(timer);
+            }
+
+        },1000);
+        
         
     });
 
@@ -19,10 +31,6 @@ angular.module('MetronicApp')
     $rootScope.settings.layout.setFullscreen = true;
     $rootScope.settings.layout.setLabButton = false;
     $rootScope.settings.layout.setDeviceButton = false;
-
-    
-
-    
 
     
     // SUCCESS
@@ -38,12 +46,4 @@ angular.module('MetronicApp')
     // });
 
 
-})
-
-.controller('LoginController', function($rootScope, $scope, $http, $timeout,$state) {
-    
-    $http.post($rootScope.settings.apiPath+"/user/login",{userName:$state.params.username})
-        .success(function(json){
-            console.log(json);
-    });
 });
