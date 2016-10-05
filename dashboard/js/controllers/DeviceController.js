@@ -319,8 +319,8 @@ angular.module('MetronicApp')
         })
 
          $(window).resize(function(){
-            // myChart = echarts.init(document.getElementById('bar1'),theme);
-            // myChart.setOption(StateOption);
+             myChart = echarts.init(document.getElementById('bar1'),theme);
+             myChart.setOption(StateOption);
 
             agilent = echarts.init(document.getElementById('bar2'),theme);
             agilent.setOption(agilentOption);
@@ -662,8 +662,8 @@ angular.module('MetronicApp')
             var myChart = echarts.init(document.getElementById('bar1'),theme);
             myChart.setOption(option);
 
-            var myChart = echarts.init(document.getElementById('bar2'),theme);
-            myChart.setOption(timeOption);
+            /*var myChart = echarts.init(document.getElementById('bar2'),theme);
+            myChart.setOption(timeOption);*/
 
             renderChart("bar3",$scope.timeOptionWater);
             renderChart("bar4",$scope.timeOptionOil);

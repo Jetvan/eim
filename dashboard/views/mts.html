@@ -91,14 +91,16 @@
                 <table class="table table-striped table-bordered table-checkable order-column m-t-lg hide" id="station">
                     <thead>
                         <tr>
-                            <th> 日志信息 </th>
                             <th> 时间 </th>
+                            <th> 日志信息 </th>
+                            
                         </tr>
                     </thead>
                     <tbody>
                         <tr class="odd gradeX" ng-repeat="data in station" on-repeat-finished>
-                            <td ng-bind="data.msg"> shuxer </td>
                             <td ng-bind="data.time | moment:'fromNow' "></td>
+                            <td ng-bind="data.msg"> shuxer </td>
+                            
 
                         </tr>
                         
@@ -134,19 +136,21 @@
                     <thead>
                         <tr>
                             <!-- <th> 报警信息 </th> -->
+                            <th> 时间 </th>
                             <th> 设备号 </th>
                             <th> 当前值 </th>
                             <th> 报警阈值 </th>
-                            <th> 时间 </th>
+                            
                         </tr>
                     </thead>
                     <tbody>
                         <tr class="odd gradeX" ng-repeat="data in rpc" on-repeat-finished2>
                             <!-- <td ng-bind="data.sequence"> shuxer </td> -->
+                            <td ng-bind="data.time | moment:'fromNow' "></td>
                             <td ng-bind="data.equipNo"> shuxer </td>
                             <td ng-bind="data.currentValue | number:2"> shuxer </td>
                             <td ng-bind="data.limitValue | number:2"> shuxer </td>
-                            <td ng-bind="data.time | moment:'fromNow' "></td>
+                            
 
                         </tr>
                     </tbody>

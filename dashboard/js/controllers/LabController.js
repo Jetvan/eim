@@ -161,7 +161,7 @@ angular.module('MetronicApp').controller('LabController', function($rootScope, $
         yAxis : [
             {
                 type : 'value',
-                max:5,
+                //max:5,
                 splitLine:{ 
                     show:false
                 },

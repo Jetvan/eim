@@ -202,7 +202,10 @@ th{
 }
 .page-sidebar .page-sidebar-menu .sub-menu, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu .sub-menu{
 	margin:0!important;
-	margin-left: 14px !important;
+	margin-left: 10px !important;
+}
+.page-sidebar .nav-link>span{
+    white-space:nowrap;
 }
 .icon-btn.patac-icon-btn{
 	background:none!important;
@@ -388,7 +391,7 @@ div.dataTables_wrapper div.dataTables_paginate{
 }
 /*siderbar width auto*/
 .page-sidebar {
-	width: 248px !important;
+	width: 252px !important;
 }
 /*实验室去点击效果*/
 .no-btn-active>.btn.btn-outline.white{
