@@ -89,12 +89,12 @@ MetronicApp.factory('settings', ['$rootScope', function($rootScope) {
         globalPath: '../assets/global',
         layoutPath: '../assets/layouts/layout',
         apiPath:'',
-        mode:"server",
+        mode:"s",
         version:'1.7',
         api:{
             dashboard:"http://10.203.97.123:7003/pataceim-rest",
-            // local:"http://10.6.96.2:8080/pataceim-rest", 
-            local:"http://10.203.97.123:7003/pataceim-rest",
+            local:"http://10.6.96.2:8080/pataceim-rest", 
+            // local:"http://10.203.97.123:7003/pataceim-rest",
         },
         debug: {
         	request:false,
@@ -555,7 +555,7 @@ MetronicApp.run(["$rootScope", "settings", "$state", "$http", "$interval", funct
 
         //test api
         $rootScope.threeReady = false;
-        $http.post($rootScope.settings.apiPath+"/user/login",{userName:'apptest05'})
+        $http.post($rootScope.settings.apiPath+"/user/login",{userName:'apptest06'})
         .success(function(json){
             var menu = [];
             for(var i=0;i<json.length;i++){
@@ -652,16 +652,27 @@ MetronicApp.run(["$rootScope", "settings", "$state", "$http", "$interval", funct
                         menu[json[i].parentId]=[];
                     }
 
+                    if(json[i].url && json[i].url.indexOf('lab')>-1){
+
+                        var id = json[i].url.split('#/lab/')[1];
+                        for(var j=0;j<lab0.objects.length;j++){
+                            if(lab0.objects[j].client && lab0.objects[j].client.id == id){
+                                
+                                console.log(lab0.objects[j].client.name);
+                                lab0.objects[j].client.validateLicense = true;
+                                lab0.objects[j].sideColor =  '#e47930';
+                                lab0.objects[j].topColor = '#f19149';
+                            }
+                        }
+                    }
+
                 }
 
-                // menu[0][0].child = menu[1];
-                // menu[0][1].child = menu[2];
-                // menu[0][2].child = menu[3];
-                // menu[0][3].child = menu[4];
 
-                // menu[0][0].child[0].child = menu[5];
-                // menu[0][0].child[0].child[0].child = menu[6];
-                // menu[0][0].child[0].child[1].child = menu[7];
+                $rootScope.threeReady = true;
+
+                
+
                 var tmp = [];
                 for(var i=json.length-1;i>=0;i--){
                     for(var j=0;j<json.length;j++){

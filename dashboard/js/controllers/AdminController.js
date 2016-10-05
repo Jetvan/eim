@@ -200,15 +200,11 @@ angular.module('MetronicApp')
         });
     }
 
-    $scope.delData = function(ev){
-        
+    $scope.delData = function(id){
 
         if(!confirm("确定要删除当前用户吗?")){
             return false;
         }
-
-        var srcEl=ev.target,
-            id = $(srcEl).data('id');
 
         var url = $rootScope.settings.apiPath + "/"+ $scope.obj +"/delete";
 
@@ -218,7 +214,7 @@ angular.module('MetronicApp')
             params:{ids:id}
         }).success(function(json){
 
-            window.location.reload();
+            // window.location.reload();
         })
     }
 
@@ -425,14 +421,11 @@ angular.module('MetronicApp')
         });
     }
 
-    $scope.delData = function(ev){
+    $scope.delData = function(id){
 
         if(!confirm("确定要删除当前角色吗?")){
             return false
         }
-
-        var srcEl=ev.target,
-            id = $(srcEl).data('id');
 
         var url = $rootScope.settings.apiPath + "/"+ $scope.obj +"/delete";
 
@@ -556,14 +549,11 @@ angular.module('MetronicApp')
 
     }
 
-    $scope.delData = function(ev){
+    $scope.delData = function(id){
 
         if(!confirm("确定要删除当前资源吗?")){
             return false
         }
-
-        var srcEl=ev.target,
-            id = $(srcEl).data('id');
 
         var url = $rootScope.settings.apiPath + "/"+ $scope.obj +"/delete";
 
@@ -710,7 +700,7 @@ angular.module('MetronicApp')
 .filter('userStatus', function () {
   return function (input, userStatus /*, param1, param2, ...param n */) {
     var args = Array.prototype.slice.call(arguments, 2);
-    
+
     switch(input){
         case 0:
             return "禁用";
