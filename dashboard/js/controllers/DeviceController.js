@@ -67,9 +67,21 @@ angular.module('MetronicApp')
         console.log('ngRepeatFinished2');
         $("#rpc").removeClass("hide");
         var warningMTSConfig = {
+
             "bStateSave": false,
             "orderable": false,
             "autoWidth": false,
+        "aoColumns": [
+              {
+                  sWidth: '140px'
+              },{
+                  sWidth: '130px'
+              },{
+                  sWidth: '130px'
+              },{
+                  sWidth: '130px'
+              }
+        ],
         "pagingType":'bootstrap_full_number2',
         "bProcessing": true,
         "bLengthChange":false,
@@ -125,9 +137,9 @@ angular.module('MetronicApp')
         "searching":false,
         "aoColumns": [
               {
-                  sWidth: '400px'
+                  sWidth: '130px'
               },{
-                  sWidth: '100px'
+                  sWidth: '400px'
               }
         ],
         "lengthMenu": [
@@ -202,40 +214,13 @@ angular.module('MetronicApp')
                     name: 'CH103',
                     type: 'line',
                     data: [11, 11, 15, 13, 12, 13, 10],
-                    markPoint: {
-                        data: [{
-                            type: 'max',
-                            name: 'Max'
-                        }, {
-                            type: 'min',
-                            name: 'Min'
-                        }]
-                    },
-                    markLine: {
-                        data: [{
-                            type: 'average',
-                            name: 'Mean'
-                        }]
-                    }
+                    
                 }, 
                 {
                     name: 'CH104',
                     type: 'line',
                     data: [1, -2, 2, 5, 3, 2, 0],
-                    markPoint: {
-                        data: [{
-                            name: 'Lowest',
-                            value: -2,
-                            xAxis: 1,
-                            yAxis: -1.5
-                        }]
-                    },
-                    markLine: {
-                        data: [{
-                            type: 'average',
-                            name: 'Mean'
-                        }]
-                    }
+                   
                 }]
         };
 
@@ -757,34 +742,52 @@ angular.module('MetronicApp')
     ]
 };
 
-setInterval(function (){
-    gaugeOption.series[0].data[0].value = (Math.random()*10+40).toFixed(2) ;
-    gaugeOption.series[0].data[0].name = "进水口";
+    // setInterval(function (){
+    //     gaugeOption.series[0].data[0].value = (Math.random()*10+40).toFixed(2) ;
+    //     gaugeOption.series[0].data[0].name = "进水口";
+    //     waterIn.setOption(gaugeOption);
+        
+    //     gaugeOption.series[0].data[0].name = "出水口";
+    //     gaugeOption.series[0].data[0].value = (Math.random()*10+10).toFixed(2) ;
+    //     waterOut.setOption(gaugeOption);
+        
+    //     gaugeOption.series[0].data[0].name = "进油口";
+    //     gaugeOption.series[0].data[0].value = (Math.random()*10+50).toFixed(2) ;
+    //     oilIn.setOption(gaugeOption);
+       
+    //     gaugeOption.series[0].data[0].name = "出油口";
+    //     gaugeOption.series[0].data[0].value = (Math.random()*10+3).toFixed(2) ;
+    //     oilOut.setOption(gaugeOption);
+    // },2000);
+
+    var waterIn = echarts.init(document.getElementById("waterIn"),theme);
+    var waterOut = echarts.init(document.getElementById("waterOut"),theme);
+    var oilIn = echarts.init(document.getElementById("oilIn"),theme);
+    var oilOut = echarts.init(document.getElementById("oilOut"),theme);
     waterIn.setOption(gaugeOption);
-    
-    gaugeOption.series[0].data[0].name = "出水口";
-    gaugeOption.series[0].data[0].value = (Math.random()*10+10).toFixed(2) ;
     waterOut.setOption(gaugeOption);
-    
-    gaugeOption.series[0].data[0].name = "进油口";
-    gaugeOption.series[0].data[0].value = (Math.random()*10+50).toFixed(2) ;
     oilIn.setOption(gaugeOption);
-   
-    gaugeOption.series[0].data[0].name = "出油口";
-    gaugeOption.series[0].data[0].value = (Math.random()*10+3).toFixed(2) ;
     oilOut.setOption(gaugeOption);
-},2000);
 
-var waterIn = echarts.init(document.getElementById("waterIn"),theme);
-var waterOut = echarts.init(document.getElementById("waterOut"),theme);
-var oilIn = echarts.init(document.getElementById("oilIn"),theme);
-var oilOut = echarts.init(document.getElementById("oilOut"),theme);
-waterIn.setOption(gaugeOption);
-waterOut.setOption(gaugeOption);
-oilIn.setOption(gaugeOption);
-oilOut.setOption(gaugeOption);
+
+    $(window).resize(function(){
+        gaugeOption.series[0].data[0].value = $scope.getIndexMomentHPU.t_WaterIn;
+        gaugeOption.series[0].data[0].name = "进水口";
+        waterIn.setOption(gaugeOption);
+        
+        gaugeOption.series[0].data[0].name = "出水口";
+        gaugeOption.series[0].data[0].value = $scope.getIndexMomentHPU.t_WaterOut;
+        waterOut.setOption(gaugeOption);
+        
+        gaugeOption.series[0].data[0].name = "进油口";
+        gaugeOption.series[0].data[0].value = $scope.getIndexMomentHPU.t_OilIn;
+        oilIn.setOption(gaugeOption);
+       
+        gaugeOption.series[0].data[0].name = "出油口";
+        gaugeOption.series[0].data[0].value = $scope.getIndexMomentHPU.t_OilOut;
+        oilOut.setOption(gaugeOption);
+    })
     
-
 
     //设备菜单
     var url = "/equippage/getMainEquipMenu";
@@ -809,6 +812,33 @@ oilOut.setOption(gaugeOption);
     data = {equipNo:id,indexName:["Iso4U","Iso6U","Iso14U","NAS","Saturation","T_Env","T_WaterIn","T_WaterOut","T_OilIn","T_OilOut","WaterPressure"]};
     $http.post($rootScope.settings.apiPath + url,JSON.stringify(data)).success(function(json){
         $scope.getIndexMomentHPU = json;
+
+        var waterIn = echarts.init(document.getElementById("waterIn"),theme);
+        var waterOut = echarts.init(document.getElementById("waterOut"),theme);
+        var oilIn = echarts.init(document.getElementById("oilIn"),theme);
+        var oilOut = echarts.init(document.getElementById("oilOut"),theme);
+        // waterIn.setOption(gaugeOption);
+        // waterOut.setOption(gaugeOption);
+        // oilIn.setOption(gaugeOption);
+        // oilOut.setOption(gaugeOption);
+
+        gaugeOption.series[0].data[0].value = $scope.getIndexMomentHPU.t_WaterIn;
+        gaugeOption.series[0].data[0].name = "进水口";
+        waterIn.setOption(gaugeOption);
+        
+        gaugeOption.series[0].data[0].name = "出水口";
+        gaugeOption.series[0].data[0].value = $scope.getIndexMomentHPU.t_WaterOut;
+        waterOut.setOption(gaugeOption);
+        
+        gaugeOption.series[0].data[0].name = "进油口";
+        gaugeOption.series[0].data[0].value = $scope.getIndexMomentHPU.t_OilIn;
+        oilIn.setOption(gaugeOption);
+       
+        gaugeOption.series[0].data[0].name = "出油口";
+        gaugeOption.series[0].data[0].value = $scope.getIndexMomentHPU.t_OilOut;
+        oilOut.setOption(gaugeOption);
+
+        console.log('down')
 
 
     });
