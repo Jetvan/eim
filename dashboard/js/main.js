@@ -90,10 +90,10 @@ MetronicApp.factory('settings', ['$rootScope', function($rootScope) {
         layoutPath: '../assets/layouts/layout',
         apiPath:'',
         mode:"server",
-        version:'1.3',
+        version:'1.5',
         api:{
-            // dashboard:"http://10.203.97.123:7003/pataceim-rest",
-            dashboard:"http://10.6.96.2:8080/pataceim-rest",
+            dashboard:"http://10.203.97.123:7003/pataceim-rest",
+            // dashboard:"http://10.6.96.2:8080/pataceim-rest", 
         },
         debug: {
         	request:false,
@@ -561,6 +561,8 @@ MetronicApp.run(["$rootScope", "settings", "$state", "$http", "$interval", funct
         .success(function(json){
             console.log(json,json.realName);
             $rootScope.realName = json.realName;
+
+            //TODO: userstatus 01 没有权限  02 session过期  00 正常登陆
 
             $http.post($rootScope.settings.apiPath+"/user/login",{userName:json.userName})
             .success(function(json){
