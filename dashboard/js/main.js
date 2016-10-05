@@ -92,8 +92,8 @@ MetronicApp.factory('settings', ['$rootScope', function($rootScope) {
         mode:"server",
         version:'1.3',
         api:{
-            dashboard:"http://10.203.97.123:7003/pataceim-rest",
-            // dashboard:"http://10.6.96.2:8080/pataceim-rest",
+            // dashboard:"http://10.203.97.123:7003/pataceim-rest",
+            dashboard:"http://10.6.96.2:8080/pataceim-rest",
         },
         debug: {
         	request:false,
@@ -490,8 +490,11 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
 }]);
 
 /* Init global settings and run the app */
-MetronicApp.run(["$rootScope", "settings", "$state", "$http", function($rootScope, settings, $state,$http) {
-    $rootScope.time = moment().format('YYYY年 MM月D日 hh:mm:ss');
+MetronicApp.run(["$rootScope", "settings", "$state", "$http", "$interval", function($rootScope, settings, $state,$http,$interval) {
+    var timer = $interval(function(){
+        $rootScope.time = moment().format('YYYY年 MM月D日 hh:mm:ss');
+    },1000);
+    
 
     $rootScope.$state = $state; // state to be accessed from view
     $rootScope.$settings = settings; // state to be accessed from view
