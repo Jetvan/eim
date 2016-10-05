@@ -381,4 +381,6 @@ div.dataTables_wrapper div.dataTables_paginate{
 	box-shadow:none;
 	transition: box-shadow .0s cubic-bezier(0,0,0,0);
 }
-
+.page-content-wrapper .page-content {
+	padding:20px 20px 0px 20px;
+}
