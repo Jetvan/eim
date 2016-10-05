@@ -333,17 +333,17 @@ var demo={
             console.log(name);
             switch(name){
             	case "动力及性能实验室":
-            		window.location.href = "#/lab/16";
+            		window.open("#/lab/16");
             		break;
             	case "结构实验室":
-            		window.location.href = "#/lab/10";
+            		window.open("#/lab/10");
             		break;
             	default:
             		var type = object3d.getClient('type'),
             		id = object3d.getClient('id');
             		
             		if(type == "BEP"){
-						window.location.href = "#/"+type+"/"+id;
+						window.open("#/"+type+"/"+id);
 					}
             		break;
             }

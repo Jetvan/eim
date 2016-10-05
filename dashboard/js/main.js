@@ -90,7 +90,7 @@ MetronicApp.factory('settings', ['$rootScope', function($rootScope) {
         layoutPath: '../assets/layouts/layout',
         apiPath:'',
         mode:"server",
-        version:'1.5',
+        version:'1.6',
         api:{
             dashboard:"http://10.203.97.123:7003/pataceim-rest",
             // dashboard:"http://10.6.96.2:8080/pataceim-rest", 
@@ -566,15 +566,15 @@ MetronicApp.run(["$rootScope", "settings", "$state", "$http", "$interval", funct
 
             switch(json.userstatus){
                 case "01":
-                    toastr.clear()
+                    toastr.clear();
                     toastr["warning"]("没有权限","");
-                    setTimeout(function(){window.location.href = "/pkmslogout.html?filename=eimlogout.html";},1000);
+                    setTimeout(function(){window.location.href = "/pkmslogout.html?filename=eimlogout.html";},3000);
                     break;
-                    
+
                 case "02":
-                    toastr.clear()
+                    toastr.clear();
                     toastr["warning"]("session过期","");
-                    setTimeout(function(){window.location.href = "/pkmslogout.html?filename=eimlogout.html";},1000);
+                    setTimeout(function(){window.location.href = "/pkmslogout.html?filename=eimlogout.html";},3000);
                     break;
 
                 case "00":
