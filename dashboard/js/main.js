@@ -564,6 +564,24 @@ MetronicApp.run(["$rootScope", "settings", "$state", "$http", "$interval", funct
 
             //TODO: userstatus 01 没有权限  02 session过期  00 正常登陆
 
+            switch(json.userstatus){
+                case "01":
+                    toastr.clear()
+                    toastr["warning"]("没有权限","");
+                    setTimeout(function(){window.location.href = "/pkmslogout.html?filename=eimlogout.html";},1000);
+                    break;
+                    
+                case "02":
+                    toastr.clear()
+                    toastr["warning"]("session过期","");
+                    setTimeout(function(){window.location.href = "/pkmslogout.html?filename=eimlogout.html";},1000);
+                    break;
+
+                case "00":
+                default:
+                    break;
+            }
+
             $http.post($rootScope.settings.apiPath+"/user/login",{userName:json.userName})
             .success(function(json){
                 var menu = [];
