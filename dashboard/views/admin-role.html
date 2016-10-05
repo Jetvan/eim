@@ -26,7 +26,7 @@
             </div>
             <div class="portlet-body">
 
-                <table class="table table-striped table-bordered table-hover table-checkable order-column hide" id="role">
+                <table class="table table-striped table-bordered table-checkable order-column hide" id="role">
                     <thead>
                         <tr>
                             <th><input type="checkbox" class="group-checkable" data-set="#role .checkboxes" /></th>
@@ -45,7 +45,7 @@
                             <td ng-bind="data.modifyUser"></td>
                             <td>
                                 <button class="btn btn-outline white" action="edit" data-id="{{data.id}}" data-toggle="modal" href="#draggable" ng-click="upData($event)">修改</button>
-                                <button class="btn btn-danger" action="delete" data-id="{{data.id}}" ng-click="delData(d.id)">删除</button>
+                                <button class="btn btn-danger" action="delete" data-id="{{data.id}}" ng-click="delData(data.id)">删除</button>
                             </td>
                         </tr>
                         

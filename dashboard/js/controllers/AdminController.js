@@ -46,25 +46,14 @@ angular.module('MetronicApp')
         });
 
         var config = {
+            "ordering": false,
+            "searching":false,
+            "bLengthChange":false,
+            "autoWidth": false,
             "bStateSave": false,
             "lengthMenu": [
                 [10, 15, 20, -1],
                 [10, 15, 20, "All"] // change per page values here
-            ],
-            "aoColumns": [
-                  {
-                      sWidth: '200px'
-                  },{
-                      sWidth: '200px'
-                  },{
-                      sWidth: '200px'
-                  },{
-                      sWidth: '200px'
-                  },{
-                      sWidth: '200px'
-                  },{
-                      sWidth: '200px'
-                  }
             ],
             "columnDefs": [{  // set default column settings
                 'orderable': false,
@@ -79,9 +68,9 @@ angular.module('MetronicApp')
               return nRow;
             }
         }
-
-        $.extend($rootScope.tableConfig,config);
-        $scope.datatable = table.DataTable($rootScope.tableConfig);
+        var t = $rootScope.tableConfig;
+        $.extend(t,config);
+        $scope.datatable = table.DataTable(config);
 
 
     });
@@ -211,15 +200,11 @@ angular.module('MetronicApp')
         });
     }
 
-    $scope.delData = function(ev){
-        
+    $scope.delData = function(id){
 
         if(!confirm("确定要删除当前用户吗?")){
             return false;
         }
-
-        var srcEl=ev.target,
-            id = $(srcEl).data('id');
 
         var url = $rootScope.settings.apiPath + "/"+ $scope.obj +"/delete";
 
@@ -229,7 +214,7 @@ angular.module('MetronicApp')
             params:{ids:id}
         }).success(function(json){
 
-            window.location.reload();
+            // window.location.reload();
         })
     }
 
@@ -264,7 +249,11 @@ angular.module('MetronicApp')
         // });
 
         var config = {
-            "bStateSave": true,
+            "ordering": false,
+            "searching":false,
+            "bLengthChange":false,
+            "autoWidth": false,
+            "bStateSave": false,
             "lengthMenu": [
                 [10, 15, 20, -1],
                 [10, 15, 20, "All"] // change per page values here
@@ -296,8 +285,10 @@ angular.module('MetronicApp')
             }
         };
 
-        $.extend($rootScope.tableConfig,config);
-        table.DataTable($rootScope.tableConfig);
+        var t = $rootScope.tableConfig;
+        $.extend(t,config);
+        $scope.datatable = table.DataTable(config);
+
     });
 
     // set sidebar closed and body solid layout mode
@@ -336,6 +327,7 @@ angular.module('MetronicApp')
     $scope.getRoleList();
 
     $scope.create = function(){
+
         $scope.action = "创建角色";
         $scope.data = {};
         $(".modal").modal('show');
@@ -367,6 +359,7 @@ angular.module('MetronicApp')
             });
         });
     }
+
     /*
      * 修改按钮
      * 获取点击当条数据
@@ -428,14 +421,11 @@ angular.module('MetronicApp')
         });
     }
 
-    $scope.delData = function(ev){
+    $scope.delData = function(id){
 
         if(!confirm("确定要删除当前角色吗?")){
             return false
         }
-
-        var srcEl=ev.target,
-            id = $(srcEl).data('id');
 
         var url = $rootScope.settings.apiPath + "/"+ $scope.obj +"/delete";
 
@@ -487,24 +477,11 @@ angular.module('MetronicApp')
         // });
 
         var config = {
-            "bStateSave": true,
-            "aoColumns": [
-                  {
-                      sWidth: '200px'
-                  },{
-                      sWidth: '200px'
-                  },{
-                      sWidth: '200px'
-                  },{
-                      sWidth: '100px'
-                  },{
-                      sWidth: '100px'
-                  },{
-                      sWidth: '100px'
-                  },{
-                      sWidth: '200px'
-                  }
-            ],
+            "ordering": false,
+            "searching":false,
+            "bLengthChange":false,
+            "autoWidth": false,
+            "bStateSave": false,
             "columnDefs": [{  // set default column settings
                 'orderable': false,
                 "targets": [0,1,2,3,4]
@@ -523,8 +500,9 @@ angular.module('MetronicApp')
             }
         };
 
-        $.extend($rootScope.tableConfig,config);
-        table.DataTable($rootScope.tableConfig);
+        var t = $rootScope.tableConfig;
+        $.extend(t,config);
+        $scope.datatable = table.DataTable(config);
     });
 
     $scope.getResourceList = function(){
@@ -571,14 +549,11 @@ angular.module('MetronicApp')
 
     }
 
-    $scope.delData = function(ev){
+    $scope.delData = function(id){
 
         if(!confirm("确定要删除当前资源吗?")){
             return false
         }
-
-        var srcEl=ev.target,
-            id = $(srcEl).data('id');
 
         var url = $rootScope.settings.apiPath + "/"+ $scope.obj +"/delete";
 
@@ -630,19 +605,7 @@ angular.module('MetronicApp')
         });
 
         var config = {
-            "aoColumns": [
-                  {
-                      sWidth: '200px'
-                  },{
-                      sWidth: '200px'
-                  },{
-                      sWidth: '200px'
-                  },{
-                      sWidth: '200px'
-                  },{
-                      sWidth: '100px'
-                  }
-            ],
+            "autoWidth": false,
             "bStateSave": false,
             "lengthMenu": [
                 [10, 15, 20, -1],
@@ -658,18 +621,18 @@ angular.module('MetronicApp')
             }],
             rowCallback: function( nRow, aData, iDisplayIndex ,dataIndex) {
               
-              $("button[action=delete]", nRow).click(function() {
-                console.log(111);
-                if(!confirm("确定要删除记录吗?")){
-                    return false
-                }
+              // $("button[action=delete]", nRow).click(function() {
+              //   console.log(111);
+              //   if(!confirm("确定要删除记录吗?")){
+              //       return false
+              //   }
 
-                var url = $rootScope.settings.apiPath + "/hpualarm/delete";
-                var id = $(this).attr('data-id');
-                $http.post(url,{eqptNo:[id]}).success(function(json){
-                    $(nRow).remove();
-                })
-              });
+              //   var url = $rootScope.settings.apiPath + "/hpualarm/delete";
+              //   var id = $(this).attr('data-id');
+              //   $http.post(url,{eqptNo:[id]}).success(function(json){
+              //       $(nRow).remove();
+              //   })
+              // });
 
 
               /*$("button[action=edit]", nRow).click(function() {
@@ -684,8 +647,9 @@ angular.module('MetronicApp')
             }
         };
 
-        $.extend($rootScope.tableConfig,config);
-        table.DataTable($rootScope.tableConfig);
+        var t = $rootScope.tableConfig;
+        $.extend(t,config);
+        $scope.datatable = table.DataTable(t);
     });
 
     $scope.getWarningList = function(){
@@ -731,6 +695,30 @@ angular.module('MetronicApp')
         $scope.action = "编辑HPU出油口温度";
     }
 
+})
+
+.filter('userStatus', function () {
+  return function (input, userStatus /*, param1, param2, ...param n */) {
+    var args = Array.prototype.slice.call(arguments, 2);
+
+    switch(input){
+        case 0:
+            return "禁用";
+            break;
+
+
+        case 1:
+            return "可用";
+            break;
+
+
+        default:
+            return "未知";
+            break;
+    }
+
+    // return momentObj[momentFn].apply(momentObj, args);
+  };
 })
 
 .config(function ($validatorProvider) {

@@ -6,23 +6,23 @@ angular.module('MetronicApp').controller('LabController', function($rootScope, $
             // 基于准备好的dom，初始化echarts实例
             myChart = echarts.init(document.getElementById('startRate'),theme);
             // 使用刚指定的配置项和数据显示图表。
-            myChart.setOption($scope.startRate || option);
+            myChart.setOption($scope.startRate );
 
             // 基于准备好的dom，初始化echarts实例
             myChart = echarts.init(document.getElementById('intactRate'),theme);
-            myChart.setOption($scope.intactRate || option);
+            myChart.setOption($scope.intactRate );
 
             // 基于准备好的dom，初始化echarts实例
             myChart = echarts.init(document.getElementById('utilizRate'),theme);
-            myChart.setOption($scope.utilizRate || option);
+            myChart.setOption($scope.utilizRate );
 
             // 基于准备好的dom，初始化echarts实例
             myChart = echarts.init(document.getElementById('durautilizRate'),theme);
-            myChart.setOption($scope.durautilizRate || option);
+            myChart.setOption($scope.durautilizRate );
 
             // 基于准备好的dom，初始化echarts实例
             myChart = echarts.init(document.getElementById('efficiencyCoeff'),theme);
-            myChart.setOption($scope.efficiencyCoeff || option);
+            myChart.setOption($scope.efficiencyCoeff );
         })
 
         var labInfo = {
@@ -43,7 +43,7 @@ angular.module('MetronicApp').controller('LabController', function($rootScope, $
                 name:"PS整车排放及性能试验室",
                 area:[
                     {
-                        name:'PS整车排放及性能区',
+                        name:'PS整车排放及性能试验区',
                         json:LAB03_BEP
                     }
                 ]

@@ -294,7 +294,10 @@ var demo = {
 			tooltip.style.display = 'none';
 			console.log(type + ":" + object3d.getClient('name'));
 			if (type == "lab" || type == "BEP"|| type == "MTS"|| type == "HPU") {
-				window.location.href = "#/" + type + "/" + id
+				// window.location.href = "#/" + type + "/" + id;
+				if(object3d.getClient('validateLicense') == true){
+					window.open("#/" + type + "/" + id);
+				}
 			}
 		}
 	},

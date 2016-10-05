@@ -409,8 +409,7 @@ var lab0={
         height: 40,
         depth: 145,
         translate: [130, 60, 400],
-        sideColor: '#e47930',
-        topColor: '#f19149',
+        
         client: {
             isTooltip:true,
             type: 'floor_box',
@@ -426,8 +425,6 @@ var lab0={
         depth: 60,
         op:'+',
         translate: [97, 60, 305],
-        sideColor: '#e47930',
-        topColor: '#f19149',
         client: {
             isTooltip:true,
             type: 'floor_box',
@@ -459,8 +456,6 @@ var lab0={
         height: 40,
         depth: 222,
         translate: [207, 60, -110],
-        sideColor: '#e47930',
-        topColor: '#f19149',
         client: {
             isTooltip:true,
             name:'结构试验室',
