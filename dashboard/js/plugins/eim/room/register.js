@@ -691,14 +691,14 @@ demo.Default.registerFilter('building', function(box, json){
 			}
 		},{
 			type: 'annotation',
-			label: '1',
+			label: '结构试验室',
 			text: '【双击建筑进入】结构试验室',
 			translate: [100, 70, -80],
 		},{
 			type: 'annotation',
-			label: '2',
+			label: 'PS整车排放及性能试验室',
 			text: '【双击建筑进入】PS整车排放及性能试验室',
-			translate: [-280, 80, -100],
+			translate: [-330, 80, -100],
 		},{//前排灰色办公楼凸出门窗1
 			type: 'cube',
 			width: 100,
