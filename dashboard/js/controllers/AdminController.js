@@ -590,7 +590,7 @@ angular.module('MetronicApp')
 
         var table = $("#warning");
         table.removeClass("hide");
-        table.find(".checkboxes").uniform();
+        //table.find(".checkboxes").uniform();
         table.find('.group-checkable').change(function () {
             var set = jQuery(this).attr("data-set");
             var checked = jQuery(this).is(":checked");
@@ -654,8 +654,8 @@ angular.module('MetronicApp')
 
     $scope.getWarningList = function(){
         $http.get($rootScope.settings.apiPath+"/hpualarm/getHpuAlarmList").success(function(json){
-            $scope.datas = json;
-            $('#'+ $scope.obj +' .checkboxes').uniform();
+            $scope.datas = json;console.log($scope.datas)
+            //$('#'+ $scope.obj +' .checkboxes').uniform();
         });
     }
     $scope.getWarningList();
@@ -668,7 +668,7 @@ angular.module('MetronicApp')
         }
 
         $http.post($rootScope.settings.apiPath+"/hpualarm/addOrUpdate",$scope.temp).success(function(json){
-            console.log(json);
+
             $(".modal").modal('hide');
             window.location.reload();
         });
@@ -719,7 +719,7 @@ angular.module('MetronicApp')
 
         var table = $("#log");
         table.removeClass("hide");
-        table.find(".checkboxes").uniform();
+        //table.find(".checkboxes").uniform();
         table.find('.group-checkable').change(function () {
             var set = jQuery(this).attr("data-set");
             var checked = jQuery(this).is(":checked");
@@ -762,7 +762,7 @@ angular.module('MetronicApp')
     $scope.getWarningList = function(){
         $http.get($rootScope.settings.apiPath+"/eqptlogAlarm/getEqptlogAlarmList").success(function(json){
             $scope.datas = json;
-            $('#'+ $scope.obj +' .checkboxes').uniform();
+            //$('#'+ $scope.obj +' .checkboxes').uniform();
         });
     }
     $scope.getWarningList();
@@ -775,7 +775,6 @@ angular.module('MetronicApp')
         }
 
         $http.post($rootScope.settings.apiPath+"/eqptlogAlarm/addOrUpdate",$scope.temp).success(function(json){
-            console.log(json);
             $(".modal").modal('hide');
             window.location.reload();
         });
