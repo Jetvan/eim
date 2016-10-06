@@ -565,63 +565,6 @@ MetronicApp.run(["$rootScope", "settings", "$state", "$http", "$interval", funct
             }]
         };
 
-        //test api
-        // $rootScope.threeReady = false;
-        // $http.post($rootScope.settings.apiPath+"/user/login",{userName:'apptest06'})
-        // .success(function(json){
-        //     var menu = [];
-        //     for(var i=0;i<json.length;i++){
-
-        //         if(json[i].parentId == undefined){
-        //             json[i].parentId=0;
-        //         }
-
-        //         if(typeof menu[json[i].parentId] == "undefined"){
-        //             menu[json[i].parentId]=[];
-        //         }
-
-        //         if(json[i].url && json[i].url.indexOf('lab')>-1){
-
-        //             var id = json[i].url.split('#/lab/')[1];
-        //             for(var j=0;j<lab0.objects.length;j++){
-        //                 if(lab0.objects[j].client && lab0.objects[j].client.id == id){
-                            
-        //                     console.log(lab0.objects[j].client.name);
-        //                     lab0.objects[j].client.validateLicense = true;
-        //                     lab0.objects[j].sideColor =  '#e47930';
-        //                     lab0.objects[j].topColor = '#f19149';
-        //                 }
-        //             }
-        //         }
-
-        //     }
-
-
-        //     $rootScope.threeReady = true;
-
-            
-
-        //     var tmp = [];
-        //     for(var i=json.length-1;i>=0;i--){
-        //         for(var j=0;j<json.length;j++){
-        //             if(json[j].id==json[i].parentId){
-        //                 if(json[j]['child']==undefined) json[j]['child'] = [];
-        //                 json[j]['child'].unshift( json[i] );
-        //             }
-        //         }
-               
-        //     }
-
-        //     var menuList = [];
-        //     for(var i=0;i<json.length;i++){
-        //         if(json[i].parentId==0){
-        //             menuList.push(json[i]);
-        //         }
-
-        //     }
-
-        //     $rootScope.menu = menuList;
-        // }); 
 
         //server apis
         $http.get($rootScope.settings.apiPath+"/user/getLoginUser")
@@ -654,31 +597,31 @@ MetronicApp.run(["$rootScope", "settings", "$state", "$http", "$interval", funct
                 $http.post($rootScope.settings.apiPath+"/user/login",{userName:json.userName})
                 .success(function(json){
                 var menu = [];
-                for(var i=0;i<json.length;i++){
+                // for(var i=0;i<json.length;i++){
 
-                    if(json[i].parentId == undefined){
-                        json[i].parentId=0;
-                    }
+                //     if(json[i].parentId == undefined){
+                //         json[i].parentId=0;
+                //     }
 
-                    if(typeof menu[json[i].parentId] == "undefined"){
-                        menu[json[i].parentId]=[];
-                    }
+                //     if(typeof menu[json[i].parentId] == "undefined"){
+                //         menu[json[i].parentId]=[];
+                //     }
 
-                    if(json[i].url && json[i].url.indexOf('lab')>-1){
+                //     if(json[i].url && json[i].url.indexOf('lab')>-1){
 
-                        var id = json[i].url.split('#/lab/')[1];
-                        for(var j=0;j<lab0.objects.length;j++){
-                            if(lab0.objects[j].client && lab0.objects[j].client.id == id){
+                //         var id = json[i].url.split('#/lab/')[1];
+                //         for(var j=0;j<lab0.objects.length;j++){
+                //             if(lab0.objects[j].client && lab0.objects[j].client.id == id){
                                 
-                                console.log(lab0.objects[j].client.name);
-                                lab0.objects[j].client.validateLicense = true;
-                                lab0.objects[j].sideColor =  '#e47930';
-                                lab0.objects[j].topColor = '#f19149';
-                            }
-                        }
-                    }
+                //                 console.log(lab0.objects[j].client.name);
+                //                 lab0.objects[j].client.validateLicense = true;
+                //                 lab0.objects[j].sideColor =  '#e47930';
+                //                 lab0.objects[j].topColor = '#f19149';
+                //             }
+                //         }
+                //     }
 
-                }
+                // }
 
 
                 $rootScope.threeReady = true;
