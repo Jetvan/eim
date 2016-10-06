@@ -571,10 +571,11 @@ MetronicApp.run(["$rootScope", "settings", "$state", "$http", "$interval", funct
             .success(function(json){
 
                 $rootScope.realName = json.realName;
-
+                $rootScope.userName = 'apptest01';
                 //TODO: userstatus 01 没有权限  02 session过期  00 正常登陆
 
                 if(settings.mode==="server"){
+                    $rootScope.userName = json.userName;
                     switch(json.userstatus){
                         case "01":
                             toastr.clear();
@@ -594,34 +595,37 @@ MetronicApp.run(["$rootScope", "settings", "$state", "$http", "$interval", funct
                     }
                 }
 
-                $http.post($rootScope.settings.apiPath+"/user/login",{userName:json.userName})
+                $http.post($rootScope.settings.apiPath+"/user/login",{userName:$rootScope.userName})
                 .success(function(json){
                 var menu = [];
-                // for(var i=0;i<json.length;i++){
 
-                //     if(json[i].parentId == undefined){
-                //         json[i].parentId=0;
-                //     }
+                for(var i=0;i<json.length;i++){
 
-                //     if(typeof menu[json[i].parentId] == "undefined"){
-                //         menu[json[i].parentId]=[];
-                //     }
+                    if(json[i].parentId == undefined){
+                        json[i].parentId=0;
+                    }
 
-                //     if(json[i].url && json[i].url.indexOf('lab')>-1){
+                    if(typeof menu[json[i].parentId] == "undefined"){
+                        menu[json[i].parentId]=[];
+                    }
 
-                //         var id = json[i].url.split('#/lab/')[1];
-                //         for(var j=0;j<lab0.objects.length;j++){
-                //             if(lab0.objects[j].client && lab0.objects[j].client.id == id){
+                    //权限校验
+
+                    // if(json[i].url && json[i].url.indexOf('lab')>-1){
+
+                    //     var id = json[i].url.split('#/lab/')[1];
+                    //     for(var j=0;j<lab0.objects.length;j++){
+                    //         if(lab0.objects[j].client && lab0.objects[j].client.id == id){
                                 
-                //                 console.log(lab0.objects[j].client.name);
-                //                 lab0.objects[j].client.validateLicense = true;
-                //                 lab0.objects[j].sideColor =  '#e47930';
-                //                 lab0.objects[j].topColor = '#f19149';
-                //             }
-                //         }
-                //     }
+                    //             console.log(lab0.objects[j].client.name);
+                    //             lab0.objects[j].client.validateLicense = true;
+                    //             lab0.objects[j].sideColor =  '#e47930';
+                    //             lab0.objects[j].topColor = '#f19149';
+                    //         }
+                    //     }
+                    // }
 
-                // }
+                }
 
 
                 $rootScope.threeReady = true;
@@ -648,6 +652,8 @@ MetronicApp.run(["$rootScope", "settings", "$state", "$http", "$interval", funct
                 }
 
                 $rootScope.menu = menuList;
+
+                console.log()
             }); 
         })
 

@@ -449,8 +449,8 @@ demo.Default.registerCreator('mono-conf-table', function(box, json){
 		op: '+',
 		style: {
 			'm.type': 'phong',
-			'm.color': '#BFBFBF',
-			'm.ambient': '#BFBFBF',
+			'm.color': '#FFFFFF',
+			'm.ambient': '#FFFFFF',
 			'm.texture.image': picture,
 			'm.normalmap.image':'../room/images/rack_inside.png',
 			'm.texture.repeat': new mono.Vec2(1,1),
@@ -706,8 +706,8 @@ demo.Default.registerFilter('building', function(box, json){
 			depth: 30,
 			translate: [150, 0, 175],
 			style: {
-				'm.color': '#BFBFBF',
-				'm.ambient': '#BFBFBF',
+				'm.color': '#FFFFFF',
+				'm.ambient': '#FFFFFF',
 				'm.specular': '#FFFFFF',
 				'm.type': 'phong',
 				'm.texture.image': './js/plugins/eim/images/building_side.png',
@@ -728,8 +728,8 @@ demo.Default.registerFilter('building', function(box, json){
 			depth: 30,
 			translate: [-150, 0, 175],
 			style: {
-				'm.color': '#BFBFBF',
-				'm.ambient': '#BFBFBF',
+				'm.color': '#FFFFFF',
+				'm.ambient': '#FFFFFF',
 				'm.specular': '#FFFFFF',
 				'm.type': 'phong',
 				'm.texture.image': './js/plugins/eim/images/building_side.png',
@@ -751,8 +751,8 @@ demo.Default.registerFilter('building', function(box, json){
 			translate: [0, 0, 140],
 			style: {
 				'm.type': 'phong',
-				'm.color': '#BFBFBF',
-				'm.ambient': '#BFBFBF',
+				'm.color': '#FFFFFF',
+				'm.ambient': '#FFFFFF',
 				'm.specular': '#FFFFFF',
 				'm.texture.image': './js/plugins/eim/images/building_side.png',
 				'm.texture.repeat': new mono.Vec2(120,12),
@@ -769,11 +769,11 @@ demo.Default.registerFilter('building', function(box, json){
 			translate: [158, 0, -200],
 			style: {
 				'm.type': 'phong',
-				'm.color': '#BFBFBF',
-				'm.ambient': '#BFBFBF',
+				'm.color': '#FFFFFF',
+				'm.ambient': '#FFFFFF',
 				'm.specular': '#FFFFFF',
 				'm.texture.image': './js/plugins/eim/images/building_side.png',
-				'm.texture.repeat': new mono.Vec2(30,10),
+				'm.texture.repeat': new mono.Vec2(40,8),
 				'left.m.lightmap.image': './js/plugins/eim/room/images/inside_lightmap.png',
 				'right.m.lightmap.image': './js/plugins/eim/room/images/outside_lightmap.png',
 				'front.m.lightmap.image': './js/plugins/eim/room/images/outside_lightmap.png',
@@ -787,11 +787,11 @@ demo.Default.registerFilter('building', function(box, json){
 			translate: [288, 0, -130],
 			style: {
 				'm.type': 'phong',
-				'm.color': '#BFBFBF',
-				'm.ambient': '#BFBFBF',
+				'm.color': '#FFFFFF',
+				'm.ambient': '#FFFFFF',
 				'm.specular': '#FFFFFF',
 				'm.texture.image': './js/plugins/eim/images/building_side.png',
-				'm.texture.repeat': new mono.Vec2(30,1),
+				'm.texture.repeat': new mono.Vec2(10,15),
 				'left.m.lightmap.image': './js/plugins/eim/room/images/inside_lightmap.png',
 				'right.m.lightmap.image': './js/plugins/eim/room/images/outside_lightmap.png',
 				'front.m.lightmap.image': './js/plugins/eim/room/images/outside_lightmap.png',
@@ -805,8 +805,8 @@ demo.Default.registerFilter('building', function(box, json){
 			translate: [-68, 0, -380],
 			style: {
 				'm.type': 'phong',
-				'm.color': '#BFBFBF',
-				'm.ambient': '#BFBFBF',
+				'm.color': '#FFFFFF',
+				'm.ambient': '#FFFFFF',
 				'm.specular': '#FFFFFF',
 				'm.texture.image': './js/plugins/eim/images/building_side.png',
 				'm.texture.repeat': new mono.Vec2(30,10),
@@ -823,8 +823,8 @@ demo.Default.registerFilter('building', function(box, json){
 			translate: [-268, 0, -380],
 			style: {
 				'm.type': 'phong',
-				'm.color': '#BFBFBF',
-				'm.ambient': '#BFBFBF',
+				'm.color': '#FFFFFF',
+				'm.ambient': '#FFFFFF',
 				'm.specular': '#FFFFFF',
 				'm.texture.image': './js/plugins/eim/images/building_side.png',
 				'm.texture.repeat': new mono.Vec2(30,10),
@@ -841,8 +841,8 @@ demo.Default.registerFilter('building', function(box, json){
 			translate: [268, 0, -380],
 			style: {
 				'm.type': 'phong',
-				'm.color': '#BFBFBF',
-				'm.ambient': '#BFBFBF',
+				'm.color': '#FFFFFF',
+				'm.ambient': '#FFFFFF',
 				'm.specular': '#FFFFFF',
 				'm.texture.image': './js/plugins/eim/images/building_side.png',
 				'm.texture.repeat': new mono.Vec2(30,10),
@@ -925,6 +925,39 @@ demo.Default.registerFilter('building', function(box, json){
 			client:{
 				'lazy.function': 'loadBuilding2',
 			}
+		},{//门卫
+			type: 'cube',
+			width: 20,
+			height: 15,
+			depth: 30,
+			translate: [0, 0, 310],
+			style: {
+				'm.type': 'phong',
+				'm.color': '#FFFFFF',
+				'm.ambient': '#FFFFFF',
+				'm.specular': '#FFFFFF',
+				'm.texture.image': './js/plugins/eim/images/building_side.png',
+				'm.texture.repeat': new mono.Vec2(4,6),
+				'left.m.lightmap.image': './js/plugins/eim/room/images/inside_lightmap.png',
+				'right.m.lightmap.image': './js/plugins/eim/room/images/outside_lightmap.png',
+				'front.m.lightmap.image': './js/plugins/eim/room/images/outside_lightmap.png',
+				'back.m.lightmap.image': './js/plugins/eim/room/images/inside_lightmap.png',
+			},
+		},{//门卫
+			type: 'cube',
+			width: 30,
+			height: 5,
+			depth: 40,
+			translate: [0, 0, 240],
+	        sideColor: '#599cbf',
+	        topColor: '#599cbf',
+			scale: [1,1,1],
+			style: {
+				'm.type': 'phong',
+				'm.normalScale': new mono.Vec2(0.2,0.2),
+				'm.envmap.image': ['./js/plugins/eim/images/sky.png','./js/plugins/eim/images/sky.png','./js/plugins/eim/images/sky.png','./js/plugins/eim/images/sky.png','./js/plugins/eim/images/sky.png','./js/plugins/eim/images/sky.png'],	
+				
+			},
 		}
 	];
 
