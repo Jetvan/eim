@@ -404,3 +404,28 @@ div.dataTables_wrapper div.dataTables_paginate{
     background: 0 0;
     box-shadow:none;
 }
+dl.patac-temp{
+    list-style: none;
+    margin-left: 18px;
+}
+.patac-temp>dd{
+    float:left;
+    padding: 0;
+    -webkit-margin-start:0px;
+    margin:0 5px;
+}
+.patac-temp>dd>span{
+    color: #fff;
+    text-align: center;
+    padding: 2px 4px;
+    display: block;
+}
+.patac-temp>dd>.temp{
+    display: inline-block;
+    width: 58px;
+    background: #fff;
+    color:#000;
+    font-size: 16px;
+    border-radius: 1.5px;
+    white-space:nowrap;
+}
