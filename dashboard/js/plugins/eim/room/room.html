@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <title>TWaver 3D机房</title>
+    <script type="text/javascript" src = "../../../libs/t.js"></script>
+	<script type="text/javascript" src = "../../../libs/twaver.js"></script>
+	<script type="text/javascript" src = "../../../libs/mono_toolkits.js"></script>
+	<script type="text/javascript" src = "vector_parser.js"></script>
+	<script type="text/javascript" src = "vector_util.js"></script>
+	<script type="text/javascript" src = "templates.js"></script>
+	<script type="text/javascript" src = "core.js"></script>
+	<script type="text/javascript" src = "json_parser.js"></script>
+	<script type="text/javascript" src = "inbuilts.js"></script>
+	<script type="text/javascript" src = "register.js"></script>
+	
+	<script type="text/javascript" src = "data.js"></script>
+	<style>
+		.btn-back{
+			position:absolute; 
+			left: 10px; 
+			top: 10px;
+			background: url(../images/back.gif);
+			background-size: 100%;
+			width: 32px;
+			height: 32px;
+			border:none;
+			cursor: pointer;
+			border-radius: 50%;
+		}
+
+	</style>
+	<script>
+		function back(){
+			document.location.href= '../index.html';
+		}
+	</script>
+</head>
+
+<body onload = 'demo.Default.setup("3d_view")' style="margin:0px;">
+	<div id='3d_view'></div>
+	<input type='button' class='btn-back' onclick='back()'/>
+</body>
+</html>
