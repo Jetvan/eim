@@ -482,8 +482,16 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
             url: "/alarm",
             templateUrl: "views/admin-warning.html", 
             controller: "WarningController",           
-            data: {pageTitle: 'Lab Template'},
-        });
+            data: {pageTitle: 'Alarm Template'},
+        })
+
+        // Dashboard
+        .state('admin.log', {
+            url: "/log",
+            templateUrl: "views/admin-log.html", 
+            controller: "LogController",           
+            data: {pageTitle: 'Log Template'},
+        });;
         
 
 }]);

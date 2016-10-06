@@ -697,6 +697,113 @@ angular.module('MetronicApp')
 
 })
 
+.controller('LogController', function($rootScope, $scope, $http, $timeout) {
+    
+    // set sidebar closed and body solid layout mode
+    $rootScope.settings.layout.pageContentWhite = true;
+    $rootScope.settings.layout.pageBodySolid = false;
+    $rootScope.settings.layout.pageSidebarClosed = false;
+    $rootScope.settings.layout.setSidebar = true;
+    $rootScope.settings.layout.setFullscreen = false;
+
+    $scope.datas=[];
+    $scope.data={};
+    
+    $scope.$on('$viewContentLoaded', function() {   
+
+    });
+
+    $scope.$on('ngRepeatFinished', function(repeatFinishedEvent, element) {
+
+        console.log("LogController");
+
+        var table = $("#log");
+        table.removeClass("hide");
+        table.find(".checkboxes").uniform();
+        table.find('.group-checkable').change(function () {
+            var set = jQuery(this).attr("data-set");
+            var checked = jQuery(this).is(":checked");
+            jQuery(set).each(function () {
+                if (checked) {
+                    $(this).prop("checked", true);
+                } else {
+                    $(this).prop("checked", false);
+                }
+            });
+            jQuery.uniform.update(set);
+        });
+
+        var config = {
+            "autoWidth": false,
+            "bStateSave": false,
+            "lengthMenu": [
+                [10, 15, 20, -1],
+                [10, 15, 20, "All"] // change per page values here
+            ],
+
+            "columnDefs": [{  // set default column settings
+                'orderable': false,
+                "targets": [0,1,2,3,4]
+            }, {
+                "searchable": false,
+                "targets": [0]
+            }],
+            rowCallback: function( nRow, aData, iDisplayIndex ,dataIndex) {
+              
+              return nRow;
+            }
+        };
+
+        var t = $rootScope.tableConfig;
+        $.extend(t,config);
+        $scope.datatable = table.DataTable(t);
+    });
+
+    $scope.getWarningList = function(){
+        $http.get($rootScope.settings.apiPath+"/eqptlogAlarm/geteqptlogAlarmList").success(function(json){
+            $scope.datas = json;
+            $('#'+ $scope.obj +' .checkboxes').uniform();
+        });
+    }
+    $scope.getWarningList();
+
+    $scope.save = function(form){
+
+        if(!form.validate()) {
+            console.log('fail');
+            return;
+        }
+
+        $http.post($rootScope.settings.apiPath+"/eqptlogAlarm/addOrUpdate",$scope.temp).success(function(json){
+            console.log(json);
+            $(".modal").modal('hide');
+            window.location.reload();
+        });
+    }
+
+    $scope.create = function(){
+        $scope.action = "创建报警日志阀值";
+        $scope.data = {};
+        $(".modal").modal('show');
+    }
+
+    /*
+     * 修改按钮
+     * 获取点击当条数据
+     * */
+    $scope.upData=function(ev){
+        var srcEl=ev.target,
+            id = $(srcEl).data('id');
+        for(var i= 0,len=$scope.datas.length;i<len;i++){
+            if($scope.datas[i].eqptNo==id){
+                $scope.temp=$scope.datas[i];
+            }
+        }
+        $scope.action = "编辑报警日志阀值";
+    }
+
+})
+
 .filter('userStatus', function () {
   return function (input, userStatus /*, param1, param2, ...param n */) {
     var args = Array.prototype.slice.call(arguments, 2);
