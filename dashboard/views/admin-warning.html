@@ -32,6 +32,7 @@
                             <th> 上限值 </th>
                             <th> 下限值 </th>
                             <th> 通知邮箱 </th>
+                            <th> 是否有效 </th>
                             <th> 操作</th>
                         </tr>
                     </thead>
@@ -41,6 +42,7 @@
                             <td ng-bind="data.highAlarmVal"></td>
                             <td ng-bind="data.lowAlarmVal"></td>
                             <td ng-bind="data.email"></td>
+                            <td ng-bind="data.isEffective | userStatus"></td>
                             <td>
                                 <button class="btn btn-outline white" action="edit" data-toggle="modal" data-id="{{data.eqptNo}}" href="#draggable" ng-click="upData($event)">修改</button>
                                 <!-- <button class="btn btn-danger" data-id="{{data.eqptNo}}" action="delete">删除</button> -->
