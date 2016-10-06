@@ -571,12 +571,13 @@ MetronicApp.run(["$rootScope", "settings", "$state", "$http", "$interval", funct
         $http.get($rootScope.settings.apiPath+"/user/getLoginUser")
             .success(function(json){
 
-                $rootScope.realName = json.realName;
+                $rootScope.realName = '测试用户01';
                 $rootScope.userName = 'apptest01';
                 //TODO: userstatus 01 没有权限  02 session过期  00 正常登陆
 
                 if(settings.mode==="server"){
                     $rootScope.userName = json.userName;
+                    $rootScope.realName = json.realName;
                     switch(json.userstatus){
                         case "01":
                             toastr.clear();

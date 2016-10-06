@@ -14133,7 +14133,7 @@
 				e.appendChild(document.createTextNode("")), document.head.appendChild(e);
 				var t = e.sheet;
 				//TODO: HOVER COLOR
-				this._addCSSRule(t, ".tgl_annotation", "position:absolute;color:#fff;text-align:center;"), this._addCSSRule(t, ".tgl_annotation:hover", ""), this._annotationStyle = e
+				this._addCSSRule(t, ".tgl_annotation", "cursor:pointer;font-family:微软雅黑;font-weight:bold;position:absolute;color:#fff;text-align:center;"), this._addCSSRule(t, ".tgl_annotation:hover", ""), this._annotationStyle = e
 			}
 		},
 		_removeAnnotationDiv: function(e) {
@@ -14154,7 +14154,7 @@
 				var t = document.createElement("style");
 				t.appendChild(document.createTextNode("")), document.head.appendChild(t);
 				var n = t.sheet,
-					r = "position: absolute;border: 3px solid #e96e3e; background-color: #e96e3e; padding: 3px;text-align: left;width: 220px;height: 'auto';border-radius: 10px;bottom:35px;left:-13px;";
+					r = "font-family:微软雅黑;font-weight:normal;position: absolute;border: 3px solid #e96e3e; background-color: #e96e3e; padding: 3px;text-align: left;width: 220px;height: 'auto';border-radius: 10px;bottom:35px;left:-13px;";
 				this._addCSSRule(n, ".tgl_annotation_tooltip", r), r = "content: ' ';position: absolute;top: 100%; border: 1px solid;", this._addCSSRule(n, ".tgl_annotation_tooltip:after, .tgl_annotation_tooltip:before", r), r = "border-color: #e96e3e transparent transparent transparent;border-width: 16px 17px 0 7px;left: 10px;", this._addCSSRule(n, ".tgl_annotation_tooltip:before", r), r = "border-color: #e96e3e transparent transparent transparent;border-width: 12px 11px 0 4px;left: 14px;", this._addCSSRule(n, ".tgl_annotation_tooltip:after", r), this._annotationToolTipDiv = e
 			}
 		},
