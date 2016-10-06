@@ -581,7 +581,7 @@ demo.Default.registerFilter('building', function(box, json){
 				// 'back.m.lightmap.image': './js/plugins/eim/room/images/inside_lightmap.png',
 			},
 			client:{
-				'lazy.function': 'loadBuilding1',
+				'lazy.function': 'loadBuilding2',
 			},
 		},{//激活区域：结构
 			type: 'cube',
