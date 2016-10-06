@@ -796,7 +796,7 @@ angular.module('MetronicApp')
             id = $(srcEl).data('id');
         for(var i= 0,len=$scope.datas.length;i<len;i++){
             if($scope.datas[i].eqptNo==id){
-                $scope.temp=JSON.parse(JSON.stringify($scope.datas[i]));
+                $scope.temp=angular.copy($scope.datas[i]);//JSON.parse(JSON.stringify($scope.datas[i]));
             }
         }
         $scope.action = "编辑报警日志阀值";
@@ -828,7 +828,29 @@ angular.module('MetronicApp')
   };
 })
 
+    .filter('checkStatus', function () {
+        return function (input, userStatus /*, param1, param2, ...param n */) {
+            var args = Array.prototype.slice.call(arguments, 2);
 
+            switch(input){
+                case 0:
+                    return false;
+                    break;
+
+
+                case 1:
+                    return true;
+                    break;
+
+
+                default:
+                    return false;
+                    break;
+            }
+
+            // return momentObj[momentFn].apply(momentObj, args);
+        };
+    })
 .config(function ($validatorProvider) {
     $validatorProvider.setDefaults({
         errorElement: 'span',
