@@ -760,7 +760,7 @@ angular.module('MetronicApp')
     });
 
     $scope.getWarningList = function(){
-        $http.get($rootScope.settings.apiPath+"/eqptlogAlarm/geteqptlogAlarmList").success(function(json){
+        $http.get($rootScope.settings.apiPath+"/eqptlogAlarm/getEqptlogAlarmList").success(function(json){
             $scope.datas = json;
             $('#'+ $scope.obj +' .checkboxes').uniform();
         });
@@ -827,6 +827,7 @@ angular.module('MetronicApp')
     // return momentObj[momentFn].apply(momentObj, args);
   };
 })
+
 
 .config(function ($validatorProvider) {
     $validatorProvider.setDefaults({
