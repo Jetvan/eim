@@ -69,7 +69,7 @@
                             <div class="portlet-body">
                                 <div class="form-body">
                                     <div class="row">
-                                        <div class="col-md-4">
+                                        <div class="col-md-3">
                                             <div class="form-group form-md-line-input">
                                                 <input type="text" class="form-control" name="eqptNo" id="eqptNo" placeholder="请输入设备编号"
                                                 ng-model="temp.eqptNo" disabled>
@@ -77,7 +77,7 @@
                                                 </label>
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-3">
                                              <div class="form-group form-md-line-input">
                                                 <input type="text" class="form-control" name="highAlarmVal" id="highAlarmVal" placeholder="请输入上限值"
                                                 ng-model="temp.highAlarmVal">
@@ -85,11 +85,20 @@
                                                 </label>
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-3">
                                             <div class="form-group form-md-line-input">
                                                 <input type="text" class="form-control" id="lowAlarmVal" name="lowAlarmVal" placeholder="请输入下限值"
                                                 ng-model="temp.lowAlarmVal">
                                                 <label for="lowAlarmVal">下限值
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-inline form-md-line-input">
+                                                <label for="isEffective">
+                                                    <input type="checkbox" class="form-control" id="isEffective" name="email" placeholder="请输入下限值"
+                                                           ng-checked="temp.isEffective" ng-true-value="1" ng-false-value="0" style="position: relative;top:-2px;"/>
+                                                    是否有效
                                                 </label>
                                             </div>
                                         </div>
