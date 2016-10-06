@@ -137,9 +137,9 @@ angular.module('MetronicApp')
         "searching":false,
         "aoColumns": [
               {
-                  sWidth: '130px'
+                  sWidth: '150px'
               },{
-                  sWidth: '400px'
+                  sWidth: '200px'
               }
         ],
         "lengthMenu": [
