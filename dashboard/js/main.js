@@ -566,6 +566,7 @@ MetronicApp.run(["$rootScope", "settings", "$state", "$http", "$interval", funct
         };
 
 
+
         //server apis
         $http.get($rootScope.settings.apiPath+"/user/getLoginUser")
             .success(function(json){
@@ -624,7 +625,6 @@ MetronicApp.run(["$rootScope", "settings", "$state", "$http", "$interval", funct
                     //         }
                     //     }
                     // }
-
                 }
 
 
