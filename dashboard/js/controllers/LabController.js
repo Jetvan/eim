@@ -4,25 +4,25 @@ angular.module('MetronicApp').controller('LabController', function($rootScope, $
 
         $(window).resize(function(){
             // 基于准备好的dom，初始化echarts实例
-            myChart = echarts.init(document.getElementById('startRate'),theme);
+            myChart1 = echarts.init(document.getElementById('startRate'),theme);
             // 使用刚指定的配置项和数据显示图表。
-            myChart.setOption($scope.startRate );
+            myChart1.setOption($scope.startRate );
 
             // 基于准备好的dom，初始化echarts实例
-            myChart = echarts.init(document.getElementById('intactRate'),theme);
-            myChart.setOption($scope.intactRate );
+            myChart2 = echarts.init(document.getElementById('intactRate'),theme);
+            myChart2.setOption($scope.intactRate );
 
             // 基于准备好的dom，初始化echarts实例
-            myChart = echarts.init(document.getElementById('utilizRate'),theme);
-            myChart.setOption($scope.utilizRate );
+            myChart3 = echarts.init(document.getElementById('utilizRate'),theme);
+            myChart3.setOption($scope.utilizRate );
 
             // 基于准备好的dom，初始化echarts实例
-            myChart = echarts.init(document.getElementById('durautilizRate'),theme);
-            myChart.setOption($scope.durautilizRate );
+            myChart4 = echarts.init(document.getElementById('durautilizRate'),theme);
+            myChart4.setOption($scope.durautilizRate );
 
             // 基于准备好的dom，初始化echarts实例
-            myChart = echarts.init(document.getElementById('efficiencyCoeff'),theme);
-            myChart.setOption($scope.efficiencyCoeff );
+            myChart5 = echarts.init(document.getElementById('efficiencyCoeff'),theme);
+            myChart5.setOption($scope.efficiencyCoeff );
         })
 
         var labInfo = {
@@ -262,64 +262,60 @@ angular.module('MetronicApp').controller('LabController', function($rootScope, $
 
         for(var i=0;i<json.length;i++){
            
-            if(json[i].indexName==="startRate"){
-                
-                var op = option;
-                op.tooltip.text = "设备开动率";
+                if(json[i].indexName==="startRate"){
+                    var op=JSON.stringify(option);
+                    $scope.startRate=JSON.parse(op);
+                    $scope.startRate.tooltip.text = "设备开动率";
+                    $scope.startRate.series[0].data = json[i].indexValue;
+                    $scope.startRate.series[1].markLine.data[0].yAxis = json[i].indexAvgValue;
+                    $scope.startRate.series[2].markLine.data[0].yAxis = json[i].indexLastValue;
 
-                op.series[0].data = json[i].indexValue;
-                op.series[1].markLine.data[0].yAxis = json[i].indexAvgValue;
-                op.series[2].markLine.data[0].yAxis = json[i].indexLastValue;
+                    var myChart1 = echarts.init(document.getElementById('startRate'),theme);
+                    myChart1.setOption($scope.startRate);
 
-                $scope.startRate = op;
+                }else if(json[i].indexName==="intactRate"){
 
-                var myChart = echarts.init(document.getElementById('startRate'),theme);
-                myChart.setOption(op);
+                    var op=JSON.stringify(option);
+                    $scope.intactRate = JSON.parse(op);
+                    $scope.intactRate.series[0].data = json[i].indexValue;
+                    $scope.intactRate.series[1].markLine.data[0].yAxis = json[i].indexAvgValue;
+                    $scope.intactRate.series[2].markLine.data[0].yAxis = json[i].indexLastValue;
 
-            }else if(json[i].indexName==="intactRate"){
+                    var myChart2 = echarts.init(document.getElementById('intactRate'),theme);
+                    myChart2.setOption($scope.intactRate);
 
-                var op = option;
-                op.series[0].data = json[i].indexValue;
-                op.series[1].markLine.data[0].yAxis = json[i].indexAvgValue;
-                op.series[2].markLine.data[0].yAxis = json[i].indexLastValue;
+                }else if(json[i].indexName==="utilizRate"){
+                    var op=JSON.stringify(option);
+                    $scope.utilizRate = JSON.parse(op);
+                    $scope.utilizRate.series[0].data = json[i].indexValue;
+                    $scope.utilizRate.series[1].markLine.data[0].yAxis = json[i].indexAvgValue;
+                    $scope.utilizRate.series[2].markLine.data[0].yAxis = json[i].indexLastValue;
 
-                $scope.intactRate = op;
-                var myChart = echarts.init(document.getElementById('intactRate'),theme);
-                myChart.setOption(op);
+                    var myChart3 = echarts.init(document.getElementById('utilizRate'),theme);
+                    myChart3.setOption($scope.utilizRate);
 
-            }else if(json[i].indexName==="utilizRate"){
+                }else if(json[i].indexName==="durautilizRate"){
 
-                var op = option;
-                op.series[0].data = json[i].indexValue;
-                op.series[1].markLine.data[0].yAxis = json[i].indexAvgValue;
-                op.series[2].markLine.data[0].yAxis = json[i].indexLastValue;
+                    var op=JSON.stringify(option);
+                    $scope.durautilizRate = JSON.parse(op);
+                    $scope.durautilizRate.series[0].data = json[i].indexValue;
+                    $scope.durautilizRate.series[1].markLine.data[0].yAxis = json[i].indexAvgValue;
+                    $scope.durautilizRate.series[2].markLine.data[0].yAxis = json[i].indexLastValue;
 
-                $scope.utilizRate = op;
-                var myChart = echarts.init(document.getElementById('utilizRate'),theme);
-                myChart.setOption(op);
+                    var myChart4 = echarts.init(document.getElementById('durautilizRate'),theme);
+                    myChart4.setOption($scope.durautilizRate);
 
-            }else if(json[i].indexName==="durautilizRate"){
-                
-                var op = option;
-                op.series[0].data = json[i].indexValue;
-                op.series[1].markLine.data[0].yAxis = json[i].indexAvgValue;
-                op.series[2].markLine.data[0].yAxis = json[i].indexLastValue;
+                }else if(json[i].indexName==="efficiencyCoeff"){
 
-                $scope.durautilizRate = op;
-                var myChart = echarts.init(document.getElementById('durautilizRate'),theme);
-                myChart.setOption(op);
+                    var op=JSON.stringify(option);
+                    $scope.efficiencyCoeff = JSON.parse(op);
+                    $scope.efficiencyCoeff.series[0].data = json[i].indexValue;
+                    $scope.efficiencyCoeff.series[1].markLine.data[0].yAxis = json[i].indexAvgValue;
+                    $scope.efficiencyCoeff.series[2].markLine.data[0].yAxis = json[i].indexLastValue;
 
-            }else if(json[i].indexName==="efficiencyCoeff"){
-                
-                var op = option;
-                op.series[0].data = json[i].indexValue;
-                op.series[1].markLine.data[0].yAxis = json[i].indexAvgValue;
-                op.series[2].markLine.data[0].yAxis = json[i].indexLastValue;
-
-                $scope.efficiencyCoeff = op;
-                var myChart = echarts.init(document.getElementById('efficiencyCoeff'),theme);
-                myChart.setOption(op);
-            }
+                    var myChart5 = echarts.init(document.getElementById('efficiencyCoeff'),theme);
+                    myChart5.setOption($scope.efficiencyCoeff);
+                }
         }
     });
 
