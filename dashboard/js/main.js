@@ -90,7 +90,7 @@ MetronicApp.factory('settings', ['$rootScope', function($rootScope) {
         layoutPath: '../assets/layouts/layout',
         apiPath:'',
         mode:"server",
-        version:'2.0',
+        version:'2.0.1',
         api:{
             dashboard:"http://10.203.97.123:7003/pataceim-rest",
             // local:"http://10.6.96.2:8080/pataceim-rest", 
@@ -273,8 +273,6 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                             './js/plugins/eim/libs/t.js',
                             './js/plugins/eim/libs/twaver.js',
                             './js/plugins/eim/room/core.js',
-                            './js/plugins/eim/room/inbuilts.js',
-                            './js/plugins/eim/room/register.js',
                         ] 
                     })
                     .then(function(){
@@ -283,6 +281,8 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                             insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
                             files: [
 
+                                './js/plugins/eim/room/inbuilts.js',
+                                './js/plugins/eim/room/register.js',
                                 './js/plugins/eim/building.js',
                                 './js/plugins/eim/index.js',
                                 './js/controllers/DashboardController.js',
