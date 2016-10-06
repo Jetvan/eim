@@ -60,17 +60,16 @@
                     </div>
                 </div>
                 <div class="portlet-body">
-                    <div style="height:130px;">
-                    <a class="patac-temp" ng-repeat="ch in chShowList">
-                        <span>CH103</span>
-                        <div>
-                            <span class="font-lg font-red" >45°C</span><br/>
-                            
-                        </div>
-                    </a>
+                    <div style="height:130px;max-width:380px;position: relative;top:-20px;">
+                        <dl class="patac-temp">
+                            <dd ng-repeat="ch in chShowList">
+                                <span>CH{{ch.channelCode}}</span>
+                                <span class="temp" >{{ch.temp}}<span style="font-size:14px ">°C</span></span><br/>
+                            </dd>
+                        </dl>
                     
                     </div>
-                    <div id="bar2" style="height:200px;"></div>
+                    <div id="bar2" style="height:200px;top:-32px;"></div>
                 </div>
                 </div>
             </div>
@@ -92,7 +91,7 @@
             </div>
             <div class="portlet-body">
 
-                <table class="table table-striped table-bordered table-checkable order-column m-t-lg hide" id="station">
+                <table class="table table-striped table-bordered  order-column m-t-lg hide" id="station">
                     <thead>
                         <tr>
                             <th> 时间 </th>
@@ -136,7 +135,7 @@
             </div>
             <div class="portlet-body">
 
-                <table class="table table-striped table-bordered table-checkable order-column m-t-lg hide" id="rpc">
+                <table class="table table-striped table-bordered  order-column m-t-lg hide" id="rpc">
                     <thead>
                         <tr>
                             <!-- <th> 报警信息 </th> -->

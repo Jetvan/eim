@@ -283,7 +283,7 @@ angular.module('MetronicApp')
             $http.post(api,request)
             .success(function(response){
                 //TODO 改list
-                $scope.agilentTemp = response;
+                $scope.chShowList=$scope.agilentTemp = response;
 
                 //agilent温度
                 var api = $rootScope.settings.apiPath + "/equippage/getAgilentTime";
@@ -856,7 +856,7 @@ angular.module('MetronicApp')
         time = time.map(function (str) {
             var d = new Date(str);
             var t = (d.getMonth()+1)+"/"+d.getDate()+" "+d.getHours()+":"+d.getMinutes();
-            console.log(t);
+            //console.log(t);
             return t;
         });
 
@@ -1404,4 +1404,10 @@ angular.module('MetronicApp')
         momentObj = moment(input);
     return momentObj[momentFn].apply(momentObj, args);
   };
+})
+.filter('waterPressureFilter', function () {
+    return function (waterPressure) {
+        console.log(waterPressure)
+        return waterPressure==1?'超限':'正常';
+    };
 });

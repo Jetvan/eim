@@ -173,7 +173,7 @@ angular.module('MetronicApp').controller('LabController', function($rootScope, $
                         color:'#fff'
                     }
                 },
-                splitNumber: 5,
+                splitNumber: 5
                 // data:[78, 59, 60]
             }
         ],
@@ -262,7 +262,10 @@ angular.module('MetronicApp').controller('LabController', function($rootScope, $
 
         for(var i=0;i<json.length;i++){
            
-                if(json[i].indexName==="startRate"){
+            //(function(i){
+            var maxNum=Math.max(json[i].indexAvgValue,json[i].indexLastValue,Math.max.apply(null,json[i].indexValue));
+                maxNum=Math.ceil(maxNum+maxNum*0.2);
+                if(json[i].indexName==="startRate"){console.log(option)
                     var op=JSON.stringify(option);
                     $scope.startRate=JSON.parse(op);
                     $scope.startRate.tooltip.text = "设备开动率";
@@ -270,6 +273,7 @@ angular.module('MetronicApp').controller('LabController', function($rootScope, $
                     $scope.startRate.series[1].markLine.data[0].yAxis = json[i].indexAvgValue;
                     $scope.startRate.series[2].markLine.data[0].yAxis = json[i].indexLastValue;
 
+                    $scope.startRate.yAxis[0].max=maxNum;
                     var myChart1 = echarts.init(document.getElementById('startRate'),theme);
                     myChart1.setOption($scope.startRate);
 
@@ -280,7 +284,7 @@ angular.module('MetronicApp').controller('LabController', function($rootScope, $
                     $scope.intactRate.series[0].data = json[i].indexValue;
                     $scope.intactRate.series[1].markLine.data[0].yAxis = json[i].indexAvgValue;
                     $scope.intactRate.series[2].markLine.data[0].yAxis = json[i].indexLastValue;
-
+                    $scope.intactRate.yAxis[0].max=maxNum;
                     var myChart2 = echarts.init(document.getElementById('intactRate'),theme);
                     myChart2.setOption($scope.intactRate);
 
@@ -291,6 +295,7 @@ angular.module('MetronicApp').controller('LabController', function($rootScope, $
                     $scope.utilizRate.series[1].markLine.data[0].yAxis = json[i].indexAvgValue;
                     $scope.utilizRate.series[2].markLine.data[0].yAxis = json[i].indexLastValue;
 
+                    $scope.utilizRate.yAxis[0].max=maxNum;
                     var myChart3 = echarts.init(document.getElementById('utilizRate'),theme);
                     myChart3.setOption($scope.utilizRate);
 
@@ -302,6 +307,7 @@ angular.module('MetronicApp').controller('LabController', function($rootScope, $
                     $scope.durautilizRate.series[1].markLine.data[0].yAxis = json[i].indexAvgValue;
                     $scope.durautilizRate.series[2].markLine.data[0].yAxis = json[i].indexLastValue;
 
+                    $scope.durautilizRate.yAxis[0].max=maxNum;
                     var myChart4 = echarts.init(document.getElementById('durautilizRate'),theme);
                     myChart4.setOption($scope.durautilizRate);
 
@@ -313,9 +319,11 @@ angular.module('MetronicApp').controller('LabController', function($rootScope, $
                     $scope.efficiencyCoeff.series[1].markLine.data[0].yAxis = json[i].indexAvgValue;
                     $scope.efficiencyCoeff.series[2].markLine.data[0].yAxis = json[i].indexLastValue;
 
+                    $scope.efficiencyCoeff.yAxis[0].max=maxNum;
                     var myChart5 = echarts.init(document.getElementById('efficiencyCoeff'),theme);
                     myChart5.setOption($scope.efficiencyCoeff);
                 }
+            //})(i);
         }
     });
 
