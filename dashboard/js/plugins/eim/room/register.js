@@ -541,7 +541,7 @@ demo.Default.registerFilter('building', function(box, json){
 		y=translate[1],
 		z=translate[2];
 	var rotate=json.rotate || [0,0,0];
-	var parts = [{//激活区域：PS
+	var parts = [{//激活区域：PS整车排放及性能试验室
 			type: 'cube',
 			width: 160,
 			height: 50,
@@ -562,7 +562,7 @@ demo.Default.registerFilter('building', function(box, json){
 			client:{
 				'lazy.function': 'loadBuilding2',
 			},
-		},{//激活区域：结构
+		},{//激活区域：PS整车排放及性能试验室
 			type: 'cube',
 			width: 70,
 			height: 50,
@@ -583,7 +583,7 @@ demo.Default.registerFilter('building', function(box, json){
 			client:{
 				'lazy.function': 'loadBuilding2',
 			},
-		},{//激活区域：结构
+		},{//激活区域：试验室
 			type: 'cube',
 			width: 224,
 			height: 48,
@@ -801,8 +801,8 @@ demo.Default.registerFilter('building', function(box, json){
 			type: 'cube',
 			width: 160,
 			height: 50,
-			depth: 50,
-			translate: [-68, 0, -380],
+			depth: 80,
+			translate: [-68, 0, -368],
 			style: {
 				'm.type': 'phong',
 				'm.color': '#FFFFFF',
