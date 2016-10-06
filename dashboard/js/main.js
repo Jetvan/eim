@@ -89,12 +89,12 @@ MetronicApp.factory('settings', ['$rootScope', function($rootScope) {
         globalPath: '../assets/global',
         layoutPath: '../assets/layouts/layout',
         apiPath:'',
-        mode:"server",
+        mode:"local",
         version:'1.9',
         api:{
             dashboard:"http://10.203.97.123:7003/pataceim-rest",
-            local:"http://10.6.96.2:8080/pataceim-rest", 
-            // local:"http://10.203.97.123:7003/pataceim-rest",
+            // local:"http://10.6.96.2:8080/pataceim-rest", 
+            local:"http://10.203.97.123:7003/pataceim-rest",
         },
         debug: {
         	request:false,
@@ -270,8 +270,11 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                         name: 'MetronicApp',
                         insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
                         files: [
-                            './js/plugins/3d/libs/t.js',
-                            './js/plugins/3d/init.js',
+                            './js/plugins/eim/libs/t.js',
+                            './js/plugins/eim/libs/twaver.js',
+                            './js/plugins/eim/room/core.js',
+                            './js/plugins/eim/room/inbuilts.js',
+                            './js/plugins/eim/room/register.js',
                         ] 
                     })
                     .then(function(){
@@ -279,9 +282,10 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                             name: 'MetronicApp',
                             insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
                             files: [
+
+                                './js/plugins/eim/building.js',
+                                './js/plugins/eim/index.js',
                                 './js/controllers/DashboardController.js',
-                                // './js/plugins/3d/data.js',
-                                './js/plugins/3d/tooltip.js'
                             ] 
                         })
                     });

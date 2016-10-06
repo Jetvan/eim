@@ -12,8 +12,9 @@ angular.module('MetronicApp')
                     h:1000,
                     d:2000
                 };
-                var tooltip = new Tooltip(['试验室名：'],['000000']);
-                demo.init('3d_view',lab0,0,0,position,tooltip);
+                // var tooltip = new Tooltip(['试验室名：'],['000000']);
+                // demo.init('3d_view',lab0,0,0,position,tooltip);
+                demo.Default.setupRoomFiled("3d_view");
 
                 $interval.cancel(timer);
             }
