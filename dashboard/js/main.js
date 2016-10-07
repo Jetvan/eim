@@ -89,7 +89,7 @@ MetronicApp.factory('settings', ['$rootScope', function($rootScope) {
         globalPath: '../assets/global',
         layoutPath: '../assets/layouts/layout',
         apiPath:'',
-        mode:"server",
+        mode:"",
         version:'2.0.2',
         api:{
             dashboard:"http://10.203.97.123:7003/pataceim-rest",
@@ -565,7 +565,7 @@ MetronicApp.run(["$rootScope", "settings", "$state", "$http", "$interval", funct
             }]
         };
 
-
+        if($rootScope.settings.mode==="") $rootScope.threeReady = true;
 
         //server apis
         $http.get($rootScope.settings.apiPath+"/user/getLoginUser")
