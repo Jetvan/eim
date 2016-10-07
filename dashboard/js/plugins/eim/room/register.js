@@ -797,12 +797,30 @@ demo.Default.registerFilter('building', function(box, json){
 				'front.m.lightmap.image': './js/plugins/eim/room/images/outside_lightmap.png',
 				'back.m.lightmap.image': './js/plugins/eim/room/images/inside_lightmap.png',
 			},
-		},{//最后排灰色办公楼2
+		},{//最后排灰色办公楼2-1
 			type: 'cube',
-			width: 160,
+			width: 130,
 			height: 50,
 			depth: 80,
 			translate: [-68, 0, -368],
+			style: {
+				'm.type': 'phong',
+				'm.color': '#FFFFFF',
+				'm.ambient': '#FFFFFF',
+				'm.specular': '#FFFFFF',
+				'm.texture.image': './js/plugins/eim/images/building_side.png',
+				'm.texture.repeat': new mono.Vec2(30,10),
+				'left.m.lightmap.image': './js/plugins/eim/room/images/inside_lightmap.png',
+				'right.m.lightmap.image': './js/plugins/eim/room/images/outside_lightmap.png',
+				'front.m.lightmap.image': './js/plugins/eim/room/images/outside_lightmap.png',
+				'back.m.lightmap.image': './js/plugins/eim/room/images/inside_lightmap.png',
+			},
+		},{//最后排灰色办公楼2-2
+			type: 'cube',
+			width: 30,
+			height: 40,
+			depth: 80,
+			translate: [8, 0, -368],
 			style: {
 				'm.type': 'phong',
 				'm.color': '#FFFFFF',

@@ -336,21 +336,23 @@ angular.module('MetronicApp').controller('LabController', function($rootScope, $
     });
 
     var url = "/experipage/getEquipState";
+    $scope.status = {
+        "0":0,
+        "1":0,
+        "2":0,
+        "3":0,
+        "4":0,
+        "5":0,
+    };
+
     if($state.params.id=="LAB02"){
-        $scope.status = {
-            "0":0,
-            "1":0,
-            "2":0,
-            "3":0,
-            "4":0,
-            "5":0,
-        }
+
+        
         var data = {equipType:"MTS"};
         $http.post($rootScope.settings.apiPath + url,JSON.stringify(data)).success(function(json){
             for(var i=0;i<json.length;i++){
                 $scope.status[json[i].status]++;
             }
-            // $scope.$apply();
         });
 
         var data = {equipType:"HPU"};
@@ -358,15 +360,17 @@ angular.module('MetronicApp').controller('LabController', function($rootScope, $
             for(var i=0;i<json.length;i++){
                 $scope.status[json[i].status]++;
             }
-            // $scope.$apply();
         });
 
     }else if($state.params.id=="LAB03"){
 
         var data = {equipType:"BEP"};
         $http.post($rootScope.settings.apiPath + url,JSON.stringify(data)).success(function(json){
-            console.log(json);
-            // $scope.$apply();
+            
+            for(var i=0;i<json.length;i++){
+                $scope.status[json[i].status]++;
+            }
+
         });
     }
     

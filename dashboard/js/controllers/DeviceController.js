@@ -123,7 +123,7 @@ angular.module('MetronicApp')
     $scope.$on('ngRepeatFinished', function(repeatFinishedEvent, element) {
         console.log('ngRepeatFinished');
 
-        $('input').uniform();
+        // $('input').uniform();
         $("#station").removeClass("hide");
 
         var warningMTSConfig = {
@@ -270,16 +270,21 @@ angular.module('MetronicApp')
         
         $("#hoverBtn").on("hide.bs.dropdown",function(){
             $scope.chShowList=[];
+            $scope.request=[];
+            
             $("#CHList input[type=checkbox]").each(function(i,e){
                 
                 if($(this).is(":checked")){
                     $scope.chShowList.push($(this).attr("data-id"));
+                    $scope.request.push($(this).attr("data-id"));
                 }
             });
 
             //agilent温度
             var api = $rootScope.settings.apiPath + "/equippage/getAgilentTemp";
-            var request = {channelCode:$scope.chShowList};
+            var request = {channelCode:$scope.request};
+
+
             $http.post(api,request)
             .success(function(response){
                 //TODO 改list
@@ -287,7 +292,8 @@ angular.module('MetronicApp')
 
                 //agilent温度
                 var api = $rootScope.settings.apiPath + "/equippage/getAgilentTime";
-                var request = {channelCode:$scope.chShowList};
+                // var request = {channelCode:$scope.request};
+
                 $http.post(api,request)
                 .success(function(response){
                     
