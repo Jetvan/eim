@@ -19,7 +19,7 @@ demo.Default.setupRoomFiled = function(htmlElementId,network){
 	var div = document.getElementById(htmlElementId);	
 	div.appendChild(network.getRootView());
 	mono.Utils.autoAdjustNetworkBounds(network,div,'clientWidth','clientHeight');
-	network.getRootView().addEventListener('dblclick', function(e){
+	network.getRootView().addEventListener('click', function(e){
 		handleDoubleClick(e, network);
 	});	
 
