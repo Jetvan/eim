@@ -272,8 +272,8 @@ angular.module('MetronicApp').controller('LabController', function($rootScope, $
                     $scope.startRate.series[0].data = json[i].indexValue;
                     $scope.startRate.series[1].markLine.data[0].yAxis = json[i].indexAvgValue;
                     $scope.startRate.series[2].markLine.data[0].yAxis = json[i].indexLastValue;
-
-                    $scope.startRate.yAxis[0].max=maxNum;
+                    //maxNum=maxNum>100?100:maxNum;
+                    $scope.startRate.yAxis[0].max=100;
                     var myChart1 = echarts.init(document.getElementById('startRate'),theme);
                     myChart1.setOption($scope.startRate);
 
@@ -284,6 +284,7 @@ angular.module('MetronicApp').controller('LabController', function($rootScope, $
                     $scope.intactRate.series[0].data = json[i].indexValue;
                     $scope.intactRate.series[1].markLine.data[0].yAxis = json[i].indexAvgValue;
                     $scope.intactRate.series[2].markLine.data[0].yAxis = json[i].indexLastValue;
+                    maxNum=maxNum>100?100:maxNum;
                     $scope.intactRate.yAxis[0].max=maxNum;
                     var myChart2 = echarts.init(document.getElementById('intactRate'),theme);
                     myChart2.setOption($scope.intactRate);
@@ -306,8 +307,8 @@ angular.module('MetronicApp').controller('LabController', function($rootScope, $
                     $scope.durautilizRate.series[0].data = json[i].indexValue;
                     $scope.durautilizRate.series[1].markLine.data[0].yAxis = json[i].indexAvgValue;
                     $scope.durautilizRate.series[2].markLine.data[0].yAxis = json[i].indexLastValue;
-
-                    $scope.durautilizRate.yAxis[0].max=maxNum;
+                    //maxNum=maxNum>100?100:maxNum;
+                    $scope.durautilizRate.yAxis[0].max=100;
                     var myChart4 = echarts.init(document.getElementById('durautilizRate'),theme);
                     myChart4.setOption($scope.durautilizRate);
 

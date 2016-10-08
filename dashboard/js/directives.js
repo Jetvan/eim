@@ -67,3 +67,61 @@ MetronicApp.directive('dropdownMenuHover', function () {
     }
   };  
 });
+
+//table
+/*
+mainApp.directive("table",function(){
+    return{
+        restrict:"AE",
+        transclude:true,
+        template:
+            ''
+        ,
+        link:function(scope,element,attr){
+            //console.log(scope,element,attr)
+            if(!scope.pageData){
+                console.log("未传页数");
+                return false;
+            }
+            scope.page=function(ev){
+                var el=ev.target,
+                    val=el.dataset.val;
+                switch(val){
+                    case "first":
+                        scope.pageData.page=1;
+                        break;
+                    case "prev":
+                        if(scope.pageData.page<2){
+                            return false;
+                        }
+                        scope.pageData.page--;
+                        break;
+                    case "next":
+                        if(++scope.pageData.page>scope.pageData.altogetherPage){
+                            scope.pageData.page=scope.pageData.altogetherPage;
+                            return false;
+                        }
+                        break;
+                    case "last":
+                        scope.pageData.page=scope.pageData.altogetherPage;
+                        break;
+                    default:return false;
+                }
+                console.log("第"+scope.pageData.page+"页",location.hash.substr(1));
+            }
+            scope.setPage=function(ev){
+                if(ev.keyCode!=13){//enter键
+                    return false;
+                }
+                var el=ev.target;
+                var page=el.value;
+                if(page<1||page>scope.pageData.altogetherPage || isNaN(page)){
+                    //设置页数无效
+                    return false;
+                }
+                scope.pageData.page=page;
+                console.log("第"+scope.pageData.page+"页",window.location.hash.substr(1));
+            }
+        }
+    }
+});*/

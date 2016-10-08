@@ -73,13 +73,15 @@ angular.module('MetronicApp')
             "autoWidth": false,
         "aoColumns": [
               {
-                  sWidth: '140px'
+                  sWidth: '80px'
               },{
-                  sWidth: '130px'
+                  sWidth: '100px'
               },{
-                  sWidth: '130px'
+                  sWidth: '60px'
               },{
-                  sWidth: '130px'
+                  sWidth: '40px'
+              },{
+                sWidth: '40px'
               }
         ],
         "pagingType":'bootstrap_full_number2',
@@ -91,15 +93,19 @@ angular.module('MetronicApp')
             [5, 10, 10, "All"] // change per page values here
         ],
         "columnDefs": [{  // set default column settings
-                'width':'30%',
+                'width':'20%',
                 'orderable': false,
                 "targets":0
             }, {
-                'width':'30%',
+                'width':'40%',
                 "searchable": false,
                 "targets":0
             }, {
-                'width':'30%',
+                'width':'20%',
+                "searchable": false,
+                "targets":0
+            }, {
+                'width':'10%',
                 "searchable": false,
                 "targets":0
             }, {
@@ -162,7 +168,6 @@ angular.module('MetronicApp')
         //     // $("#station").DataTable().destroy();
         // }
 
-                    
         $scope.stationTable = $("#station").DataTable(warningMTSConfig);
 
         
@@ -210,18 +215,7 @@ angular.module('MetronicApp')
                         }
                     }
                 }],
-                series: [{
-                    name: 'CH103',
-                    type: 'line',
-                    data: [11, 11, 15, 13, 12, 13, 10],
-                    
-                }, 
-                {
-                    name: 'CH104',
-                    type: 'line',
-                    data: [1, -2, 2, 5, 3, 2, 0],
-                   
-                }]
+                series: []
         };
 
         var StateOption = {
@@ -271,12 +265,28 @@ angular.module('MetronicApp')
         $("#hoverBtn").on("hide.bs.dropdown",function(){
             $scope.chShowList=[];
             $scope.request=[];
-            
+            agilentOption.series=[{
+                name: '',
+                type: 'line',
+                data: [0, 0, 0, 0, 0, 0, 0],
+
+            }];
             $("#CHList input[type=checkbox]").each(function(i,e){
                 
                 if($(this).is(":checked")){
-                    $scope.chShowList.push($(this).attr("data-id"));
-                    $scope.request.push($(this).attr("data-id"));
+                    var id=$(this).attr("data-id");console.log(id);
+                    console.log($scope.agilentTime,'后加载')
+                    /*var tempData=$scope.agilentTime.forEach(function(item,index){
+                        console.log(item)
+                    });*/
+                    $scope.chShowList.push(id);
+                    $scope.request.push(id);
+                    agilentOption.series.push({
+                        name: 'CH'+id,
+                        type: 'line',
+                        data: [1, -2, 2, 5, 3, 2, id-100]
+                    })
+                    agilent.setOption(agilentOption);
                 }
             });
 
@@ -300,8 +310,8 @@ angular.module('MetronicApp')
                     var series = [];
                     var xAxis = [];
                     //TODO 改list
-
-
+                    console.log(response);//alert('加载顺序有问题');
+                    $scope.agilentTime=response;
                     // agilent = echarts.init(document.getElementById('bar2'));
                     // agilent.setOption(agilentOption);
                 });
@@ -334,7 +344,7 @@ angular.module('MetronicApp')
 
     $scope.chList = [];
     $scope.chShowList = [];
-    for(var ch=103;ch<=123;ch++){
+    for(var ch=103;ch<123;ch++){
         $scope.chList.push(ch);
     }
 
@@ -357,12 +367,11 @@ angular.module('MetronicApp')
     var url = "/experipage/getEquipState";
     var data = {equipNo:$state.params.id,equipType:$state.current.name};
     $http.post($rootScope.settings.apiPath + url,JSON.stringify(data)).success(function(json){
-        console.log(json);
+
         $rootScope.getMainExperiMenu = json;
 
     });
 
-    
 
     $scope.getWarnning = function(param,type){
         
@@ -387,14 +396,13 @@ angular.module('MetronicApp')
                 var url = "/equippage/getWarnningMTS";
                 var data = {equipNo:$state.params.id,equipType:"Station",statusType:type};
                 $http.post($rootScope.settings.apiPath + url,JSON.stringify(data)).success(function(json){
-                    
+                    console.log(1,json)
                     // if(typeof $scope.stationTable != "undefined"){
                     //     $scope.stationTable.Rows.Clear();
                     //     // $("#rpc").destroy();
                     // }
-                    
+
                     $scope.station = json;
-                    
 
                 });
 
@@ -519,7 +527,9 @@ angular.module('MetronicApp')
                     smooth:true,
                     symbol: 'none',
                     sampling: 'average',
-                    itemStyle: {normal: {}},
+                    itemStyle: {normal: {
+
+                    }},
                     areaStyle: {normal: {}},
                     // data: data
                     data:timeData
@@ -829,7 +839,7 @@ angular.module('MetronicApp')
         // waterOut.setOption(gaugeOption);
         // oilIn.setOption(gaugeOption);
         // oilOut.setOption(gaugeOption);
-        //上下限显示红线
+        //上下限显示红线范围
         json.oilOutAlarmHeighValue=json.oilOutAlarmHeighValue==''?100:json.oilOutAlarmHeighValue;
         gaugeOption.series[0].axisLine.lineStyle.color=[[json.oilOutAlarmLowValue/100, '#2EC5C7'], [json.oilOutAlarmHeighValue, '#5AB1EF'], [1, '#C7737B']];
 
@@ -840,14 +850,18 @@ angular.module('MetronicApp')
         
         gaugeOption.series[0].data[0].name = "出水口温度";
         gaugeOption.series[0].data[0].value = $scope.getIndexMomentHPU.t_WaterOut;
+
         waterOut.setOption(gaugeOption);
         
         gaugeOption.series[0].data[0].name = "进油口温度";
         gaugeOption.series[0].data[0].value = $scope.getIndexMomentHPU.t_OilIn;
+
         oilIn.setOption(gaugeOption);
        
         gaugeOption.series[0].data[0].name = "出油口温度";
         gaugeOption.series[0].data[0].value = $scope.getIndexMomentHPU.t_OilOut;
+
+
         oilOut.setOption(gaugeOption);
 
         console.log('down')
@@ -874,6 +888,9 @@ angular.module('MetronicApp')
 
         var date = time;
         var data = json.equipState;
+        //max min
+        var maxNum=Math.max.apply(null,json.oilIn);
+        maxNum=Math.ceil(maxNum+maxNum*0.2);
         $scope.timeOptionOil = {
             grid:{
                 x:28,
@@ -905,7 +922,7 @@ angular.module('MetronicApp')
                 },
             },
             yAxis: {
-                max:60,
+                max:maxNum,
                 type: 'value',
                 boundaryGap: [0, '100%'],
                 splitLine:{ 
@@ -920,8 +937,8 @@ angular.module('MetronicApp')
             },
             dataZoom: [{
                 type: 'inside',
-                start: 0,
-                end: 10
+                start: 90,
+                end: 100
             }, {
                 start: 0,
                 end: 10,
@@ -938,17 +955,24 @@ angular.module('MetronicApp')
             series: [{
                 name: '进油',
                 type: 'line',
-                data: json.oilIn
+                data: json.oilIn.reverse()
             }, {
                 name: '出油',
                 type: 'line',
-                data: json.oilOut
+                data: json.oilOut.reverse()
+            }, {
+                name: '温差',
+                type: 'line',
+                data: json.oilGap.reverse()
             }]
         };
         renderChart("bar4",$scope.timeOptionOil);
         
         var date = time;
         var data = json.equipState;
+        //max min
+        var maxNum=Math.max.apply(null,json.waterOut);
+        maxNum=Math.ceil(maxNum+maxNum*0.2);
         $scope.timeOptionWater = {
             grid:{
                 x:28,
@@ -969,7 +993,7 @@ angular.module('MetronicApp')
             xAxis: {
                 type: 'category',
                 boundaryGap: false,
-                data: date,
+                data: date.reverse(),
                 splitLine:{ 
                     show:false
                 },
@@ -980,7 +1004,7 @@ angular.module('MetronicApp')
                 },
             },
             yAxis: {
-                max:60,
+                max:maxNum,
                 type: 'value',
                 boundaryGap: [0, '100%'],
                 splitLine:{ 
@@ -995,8 +1019,8 @@ angular.module('MetronicApp')
             },
             dataZoom: [{
                 type: 'inside',
-                start: 0,
-                end: 10
+                start: 90,
+                end: 100
             }, {
                 start: 0,
                 end: 10,
@@ -1013,12 +1037,17 @@ angular.module('MetronicApp')
             series: [{
                 name: '进水',
                 type: 'line',
-                data: json.waterIn
+                data: json.waterIn.reverse()
             }, {
                 name: '出水',
                 type: 'line',
-                data: json.waterOut
-            }],
+                data: json.waterOut.reverse()
+            }, {
+                name: '温差',
+                type: 'line',
+                data: json.waterGap.reverse()
+            }
+            ],
             // series: [
             //     {
             //         name:'当前状态',
@@ -1054,6 +1083,7 @@ angular.module('MetronicApp')
         // var date = time;
         var date  = timeData;
         var data = json.equipState;
+        data=[1,1,1,1,1]
         timeOption = {
             grid:{
                 x:0,
@@ -1095,8 +1125,8 @@ angular.module('MetronicApp')
             },
             dataZoom: [{
                 type: 'inside',
-                start: 0,
-                end: 10
+                start: 10,
+                end: 50
             }, {
                 start: 0,
                 end: 10,
@@ -1117,8 +1147,14 @@ angular.module('MetronicApp')
                     smooth:true,
                     symbol: 'none',
                     sampling: 'average',
-                    itemStyle: {normal: {}},
-                    areaStyle: {normal: {}},
+                    itemStyle: {normal: {
+                    }},
+                    lineStyle: {normal: {
+                        color:'#31A82C'
+                    }},
+                    areaStyle: {normal: {
+                        color:'#31A82C'
+                    }},
                     data: data
                 }
             ]
