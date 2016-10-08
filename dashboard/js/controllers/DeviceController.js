@@ -839,10 +839,8 @@ angular.module('MetronicApp')
         // waterOut.setOption(gaugeOption);
         // oilIn.setOption(gaugeOption);
         // oilOut.setOption(gaugeOption);
-        //上下限显示红线范围
-        json.oilOutAlarmHeighValue=json.oilOutAlarmHeighValue==''?100:json.oilOutAlarmHeighValue;
-        gaugeOption.series[0].axisLine.lineStyle.color=[[json.oilOutAlarmLowValue/100, '#2EC5C7'], [json.oilOutAlarmHeighValue, '#5AB1EF'], [1, '#C7737B']];
 
+        gaugeOption.series[0].axisLine.lineStyle.color=[[0, '#2EC5C7'], [1, '#5AB1EF'], [1, '#C7737B']]
         gaugeOption.series[0].data[0].value = $scope.getIndexMomentHPU.t_WaterIn;
         gaugeOption.series[0].data[0].name = "进水口温度";
 
@@ -857,7 +855,11 @@ angular.module('MetronicApp')
         gaugeOption.series[0].data[0].value = $scope.getIndexMomentHPU.t_OilIn;
 
         oilIn.setOption(gaugeOption);
-       
+
+        //上下限显示红线范围
+        json.oilOutAlarmHeighValue=json.oilOutAlarmHeighValue==''?100:json.oilOutAlarmHeighValue;
+        gaugeOption.series[0].axisLine.lineStyle.color=[[json.oilOutAlarmLowValue/100, '#C7737B'], [json.oilOutAlarmHeighValue/100, '#5AB1EF'], [1, '#C7737B']];
+
         gaugeOption.series[0].data[0].name = "出油口温度";
         gaugeOption.series[0].data[0].value = $scope.getIndexMomentHPU.t_OilOut;
 
@@ -911,7 +913,7 @@ angular.module('MetronicApp')
             xAxis: {
                 type: 'category',
                 boundaryGap: false,
-                data: date,
+                data: date.reverse(),
                 splitLine:{ 
                     show:false
                 },
