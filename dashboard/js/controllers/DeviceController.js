@@ -778,18 +778,19 @@ angular.module('MetronicApp')
 
     $(window).resize(function(){
         gaugeOption.series[0].data[0].value = $scope.getIndexMomentHPU.t_WaterIn;
-        gaugeOption.series[0].data[0].name = "进水口";
+        gaugeOption.series[0].data[0].name = "进水口温度";
+
         waterIn.setOption(gaugeOption);
         
-        gaugeOption.series[0].data[0].name = "出水口";
+        gaugeOption.series[0].data[0].name = "出水口温度";
         gaugeOption.series[0].data[0].value = $scope.getIndexMomentHPU.t_WaterOut;
         waterOut.setOption(gaugeOption);
         
-        gaugeOption.series[0].data[0].name = "进油口";
+        gaugeOption.series[0].data[0].name = "进油口温度";
         gaugeOption.series[0].data[0].value = $scope.getIndexMomentHPU.t_OilIn;
         oilIn.setOption(gaugeOption);
        
-        gaugeOption.series[0].data[0].name = "出油口";
+        gaugeOption.series[0].data[0].name = "出油口温度";
         gaugeOption.series[0].data[0].value = $scope.getIndexMomentHPU.t_OilOut;
         oilOut.setOption(gaugeOption);
     })
@@ -812,7 +813,8 @@ angular.module('MetronicApp')
         }
     });
 
-    var id = $state.params.id.replace("PE00-01993-0","HPU");
+    //var id = $state.params.id.replace("PE00-01993-0","HPU");
+    var id = $state.params.id;
     //HPU时点
     url = "/equippage/getIndexMomentHPU";
     data = {equipNo:id,indexName:["Iso4U","Iso6U","Iso14U","NAS","Saturation","T_Env","T_WaterIn","T_WaterOut","T_OilIn","T_OilOut","WaterPressure"]};
@@ -827,20 +829,24 @@ angular.module('MetronicApp')
         // waterOut.setOption(gaugeOption);
         // oilIn.setOption(gaugeOption);
         // oilOut.setOption(gaugeOption);
+        //上下限显示红线
+        json.oilOutAlarmHeighValue=json.oilOutAlarmHeighValue==''?100:json.oilOutAlarmHeighValue;
+        gaugeOption.series[0].axisLine.lineStyle.color=[[json.oilOutAlarmLowValue/100, '#2EC5C7'], [json.oilOutAlarmHeighValue, '#5AB1EF'], [1, '#C7737B']];
 
         gaugeOption.series[0].data[0].value = $scope.getIndexMomentHPU.t_WaterIn;
-        gaugeOption.series[0].data[0].name = "进水口";
+        gaugeOption.series[0].data[0].name = "进水口温度";
+
         waterIn.setOption(gaugeOption);
         
-        gaugeOption.series[0].data[0].name = "出水口";
+        gaugeOption.series[0].data[0].name = "出水口温度";
         gaugeOption.series[0].data[0].value = $scope.getIndexMomentHPU.t_WaterOut;
         waterOut.setOption(gaugeOption);
         
-        gaugeOption.series[0].data[0].name = "进油口";
+        gaugeOption.series[0].data[0].name = "进油口温度";
         gaugeOption.series[0].data[0].value = $scope.getIndexMomentHPU.t_OilIn;
         oilIn.setOption(gaugeOption);
        
-        gaugeOption.series[0].data[0].name = "出油口";
+        gaugeOption.series[0].data[0].name = "出油口温度";
         gaugeOption.series[0].data[0].value = $scope.getIndexMomentHPU.t_OilOut;
         oilOut.setOption(gaugeOption);
 
