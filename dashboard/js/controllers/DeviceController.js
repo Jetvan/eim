@@ -232,6 +232,11 @@ angular.module('MetronicApp')
                     }
                 },
             }],
+            dataZoom: [{
+                type: 'inside',
+                start: 0,
+                end:100//??
+            }],
             yAxis: {
                 splitLine:{ 
                     show:false
@@ -697,6 +702,7 @@ angular.module('MetronicApp')
             x2:0,
             y2:0
         },
+
     tooltip : {
         formatter: "{b} : {c} °C"
     },
@@ -708,6 +714,7 @@ angular.module('MetronicApp')
     // },
     series: [
         {
+            center : ['38%', '50%'],
             title : {
                 offsetCenter: [0, '118%'],
                 textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
@@ -780,29 +787,47 @@ angular.module('MetronicApp')
     var waterOut = echarts.init(document.getElementById("waterOut"),theme);
     var oilIn = echarts.init(document.getElementById("oilIn"),theme);
     var oilOut = echarts.init(document.getElementById("oilOut"),theme);
+    var oilOutAlarmLowValue= 0,oilOutAlarmHeighValue=0;
     waterIn.setOption(gaugeOption);
     waterOut.setOption(gaugeOption);
     oilIn.setOption(gaugeOption);
     oilOut.setOption(gaugeOption);
 
-
+    var ready=true;
     $(window).resize(function(){
-        gaugeOption.series[0].data[0].value = $scope.getIndexMomentHPU.t_WaterIn;
-        gaugeOption.series[0].data[0].name = "进水口温度";
+        if(ready){
+            ready=false;
+            setTimeout(function(){
+                waterIn = echarts.init(document.getElementById("waterIn"),theme);
+                waterOut = echarts.init(document.getElementById("waterOut"),theme);
+                oilIn = echarts.init(document.getElementById("oilIn"),theme);
+                oilOut = echarts.init(document.getElementById("oilOut"),theme);
+                //上下限颜色
+                gaugeOption.series[0].axisLine.lineStyle.color=[[0, '#2EC5C7'], [1, '#5AB1EF'], [1, '#C7737B']];
+                gaugeOption.series[0].data[0].value = $scope.getIndexMomentHPU.t_WaterIn;
+                gaugeOption.series[0].data[0].name = "进水口温度";
 
-        waterIn.setOption(gaugeOption);
-        
-        gaugeOption.series[0].data[0].name = "出水口温度";
-        gaugeOption.series[0].data[0].value = $scope.getIndexMomentHPU.t_WaterOut;
-        waterOut.setOption(gaugeOption);
-        
-        gaugeOption.series[0].data[0].name = "进油口温度";
-        gaugeOption.series[0].data[0].value = $scope.getIndexMomentHPU.t_OilIn;
-        oilIn.setOption(gaugeOption);
-       
-        gaugeOption.series[0].data[0].name = "出油口温度";
-        gaugeOption.series[0].data[0].value = $scope.getIndexMomentHPU.t_OilOut;
-        oilOut.setOption(gaugeOption);
+                waterIn.setOption(gaugeOption);
+
+                gaugeOption.series[0].data[0].name = "出水口温度";
+                gaugeOption.series[0].data[0].value = $scope.getIndexMomentHPU.t_WaterOut;
+                waterOut.setOption(gaugeOption);
+
+                gaugeOption.series[0].data[0].name = "进油口温度";
+                gaugeOption.series[0].data[0].value = $scope.getIndexMomentHPU.t_OilIn;
+                oilIn.setOption(gaugeOption);
+
+                if(oilOutAlarmLowValue==''||oilOutAlarmLowValue==0){
+                    gaugeOption.series[0].axisLine.lineStyle.color=[[0, '#5AB1EF'], [oilOutAlarmHeighValue/100, '#5AB1EF'], [1, '#C7737B']];
+                }else{
+                    gaugeOption.series[0].axisLine.lineStyle.color=[[oilOutAlarmLowValue/100, '#C7737B'], [oilOutAlarmHeighValue/100, '#5AB1EF'], [1, '#C7737B']];
+                }
+                gaugeOption.series[0].data[0].name = "出油口温度";
+                gaugeOption.series[0].data[0].value = $scope.getIndexMomentHPU.t_OilOut;
+                oilOut.setOption(gaugeOption);
+                ready=false;
+            },10);
+        }
     })
     
 
@@ -831,15 +856,12 @@ angular.module('MetronicApp')
     $http.post($rootScope.settings.apiPath + url,JSON.stringify(data)).success(function(json){
         $scope.getIndexMomentHPU = json;
 
-        var waterIn = echarts.init(document.getElementById("waterIn"),theme);
-        var waterOut = echarts.init(document.getElementById("waterOut"),theme);
-        var oilIn = echarts.init(document.getElementById("oilIn"),theme);
-        var oilOut = echarts.init(document.getElementById("oilOut"),theme);
-        // waterIn.setOption(gaugeOption);
-        // waterOut.setOption(gaugeOption);
-        // oilIn.setOption(gaugeOption);
-        // oilOut.setOption(gaugeOption);
+        waterIn = echarts.init(document.getElementById("waterIn"),theme);
+        waterOut = echarts.init(document.getElementById("waterOut"),theme);
+        oilIn = echarts.init(document.getElementById("oilIn"),theme);
+        oilOut = echarts.init(document.getElementById("oilOut"),theme);
 
+        //上下限颜色
         gaugeOption.series[0].axisLine.lineStyle.color=[[0, '#2EC5C7'], [1, '#5AB1EF'], [1, '#C7737B']]
         gaugeOption.series[0].data[0].value = $scope.getIndexMomentHPU.t_WaterIn;
         gaugeOption.series[0].data[0].name = "进水口温度";
@@ -857,8 +879,14 @@ angular.module('MetronicApp')
         oilIn.setOption(gaugeOption);
 
         //上下限显示红线范围
-        json.oilOutAlarmHeighValue=json.oilOutAlarmHeighValue==''?100:json.oilOutAlarmHeighValue;
-        gaugeOption.series[0].axisLine.lineStyle.color=[[json.oilOutAlarmLowValue/100, '#C7737B'], [json.oilOutAlarmHeighValue/100, '#5AB1EF'], [1, '#C7737B']];
+        oilOutAlarmHeighValue=json.oilOutAlarmHeighValue==''?100:json.oilOutAlarmHeighValue;
+
+        oilOutAlarmLowValue=json.oilOutAlarmLowValue;
+        if(oilOutAlarmLowValue==''||oilOutAlarmLowValue==0){
+            gaugeOption.series[0].axisLine.lineStyle.color=[[0, '#5AB1EF'], [oilOutAlarmHeighValue/100, '#5AB1EF'], [1, '#C7737B']];
+        }else{
+            gaugeOption.series[0].axisLine.lineStyle.color=[[oilOutAlarmLowValue/100, '#C7737B'], [oilOutAlarmHeighValue/100, '#5AB1EF'], [1, '#C7737B']];
+        }
 
         gaugeOption.series[0].data[0].name = "出油口温度";
         gaugeOption.series[0].data[0].value = $scope.getIndexMomentHPU.t_OilOut;
@@ -888,7 +916,7 @@ angular.module('MetronicApp')
             return t;
         });
 
-        var date = time;
+        var date = time.reverse();
         var data = json.equipState;
         //max min
         var maxNum=Math.max.apply(null,json.oilIn);
@@ -913,7 +941,7 @@ angular.module('MetronicApp')
             xAxis: {
                 type: 'category',
                 boundaryGap: false,
-                data: date.reverse(),
+                data: date,
                 splitLine:{ 
                     show:false
                 },
@@ -971,6 +999,7 @@ angular.module('MetronicApp')
         renderChart("bar4",$scope.timeOptionOil);
         
         var date = time;
+        console.log(date)
         var data = json.equipState;
         //max min
         var maxNum=Math.max.apply(null,json.waterOut);
@@ -995,7 +1024,7 @@ angular.module('MetronicApp')
             xAxis: {
                 type: 'category',
                 boundaryGap: false,
-                data: date.reverse(),
+                data: date,
                 splitLine:{ 
                     show:false
                 },
@@ -1127,7 +1156,7 @@ angular.module('MetronicApp')
             },
             dataZoom: [{
                 type: 'inside',
-                start: 10,
+                start: 0,
                 end: 50
             }, {
                 start: 0,
