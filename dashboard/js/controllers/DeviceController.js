@@ -191,11 +191,11 @@ angular.module('MetronicApp')
                 calculable: true,
                 xAxis: [{
                     type: 'category',
-                    boundaryGap: false,
+                    boundaryGap: true,//??
                     splitLine:{ 
                         show:false
                     },
-                    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    data: ['', '', '', '', '', '', ''],
                     axisLabel: {
                         textStyle:{
                             color:'#fff'
@@ -273,25 +273,17 @@ angular.module('MetronicApp')
             agilentOption.series=[{
                 name: '',
                 type: 'line',
-                data: [0, 0, 0, 0, 0, 0, 0],
+                data: [0, 0, 0, 0, 0, 0, 0]
 
             }];
             $("#CHList input[type=checkbox]").each(function(i,e){
                 
                 if($(this).is(":checked")){
-                    var id=$(this).attr("data-id");console.log(id);
-                    console.log($scope.agilentTime,'后加载')
-                    /*var tempData=$scope.agilentTime.forEach(function(item,index){
-                        console.log(item)
-                    });*/
+                    var id=$(this).attr("data-id");
                     $scope.chShowList.push(id);
                     $scope.request.push(id);
-                    agilentOption.series.push({
-                        name: 'CH'+id,
-                        type: 'line',
-                        data: [1, -2, 2, 5, 3, 2, id-100]
-                    })
-                    agilent.setOption(agilentOption);
+
+
                 }
             });
 
@@ -308,17 +300,39 @@ angular.module('MetronicApp')
                 //agilent温度
                 var api = $rootScope.settings.apiPath + "/equippage/getAgilentTime";
                 // var request = {channelCode:$scope.request};
-
+                console.log($scope.agilentTemp )
                 $http.post(api,request)
                 .success(function(response){
                     
                     var series = [];
                     var xAxis = [];
                     //TODO 改list
-                    console.log(response);//alert('加载顺序有问题');
+
                     $scope.agilentTime=response;
+                    for(var i=0;i<response.length;i++){
+                        response[i].agilentTemp=[41.5, 41.5, 41.5, 41.5, 41.5, 41.5, 41.5, 41.5, 41.5, 41.5, 41.5, 41.4, 41.4, 41.5, 41.5, 41.5, 41.5, 41.4, 41.4, 41.5, 41.5, 41.5, 41.4, 41.4, 41.4, 41.5, 41.5, 41.4, 41.5, 41.5, 41.5, 41.5, 41.4, 41.5, 41.5, 41.5, 41.5, 41.4, 41.4, 41.5, 41.5, 41.4, 41.4, 41.4, 41.5, 41.5, 41.4, 41.4, 41.5, 41.5, 41.4, 41.4, 41.4, 41.5, 41.4, 41.5, 41.5, 41.4, 41.4];
+                        response[i].agilentTime=["10/2 18:0", "10/2 18:30", "10/2 19:0", "10/2 19:30", "10/2 20:0", "10/2 20:30", "10/2 21:0", "10/2 21:30", "10/2 22:0", "10/2 22:30", "10/2 23:0", "10/2 23:30", "10/3 0:0", "10/3 0:30", "10/3 1:0", "10/3 1:30", "10/3 2:0", "10/3 2:30", "10/3 3:0", "10/3 3:30", "10/3 4:0", "10/3 4:30", "10/3 5:0", "10/3 5:30", "10/3 6:0", "10/3 6:30", "10/3 7:0", "10/3 7:30", "10/3 8:0", "10/3 8:30", "10/3 9:0", "10/3 9:30", "10/3 10:0", "10/3 10:30", "10/3 11:0", "10/3 11:30", "10/3 12:0", "10/3 12:30", "10/3 13:0", "10/3 13:30", "10/3 14:0", "10/3 14:30", "10/3 15:0", "10/3 15:30", "10/3 16:0", "10/3 16:30", "10/3 17:0", "10/3 17:30", "10/3 18:0", "10/3 18:30", "10/3 19:0", "10/3 19:30", "10/3 20:0", "10/3 20:30", "10/3 21:0", "10/3 21:30", "10/3 22:0", "10/3 22:30"];
+                    }
+                    console.log(response)
                     // agilent = echarts.init(document.getElementById('bar2'));
                     // agilent.setOption(agilentOption);
+                    //点击温度更新图表
+
+                    agilentOption.series=[];
+                    agilentOption.xAxis[0].data=[];
+                    if(response.length!=0||response[0].agilentTemp.length!=0){
+                        for(var i=0;i<response.length;i++){
+                            agilentOption.series.push({
+                                name: 'CH'+response[i].channelCode,
+                                type: 'line',
+                                data: response[i].agilentTemp.reverse()
+                            });
+                            agilentOption.xAxis[0].data=response[i].agilentTime;
+
+                        }
+                        agilentOption.xAxis[0].data;
+                        agilent.setOption(agilentOption);
+                    }
                 });
 
             })
@@ -917,7 +931,7 @@ angular.module('MetronicApp')
         });
 
         var date = time.reverse();
-        var data = json.equipState;
+        var data = json.equipState;console.log(json.oilIn,11)
         //max min
         var maxNum=Math.max.apply(null,json.oilIn);
         maxNum=Math.ceil(maxNum+maxNum*0.2);
@@ -945,6 +959,7 @@ angular.module('MetronicApp')
                 splitLine:{ 
                     show:false
                 },
+
                 axisLabel:{
                     textStyle:{
                         color:'#fff',
