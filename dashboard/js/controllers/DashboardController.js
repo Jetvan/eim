@@ -3,10 +3,7 @@ angular.module('MetronicApp')
     $scope.$on('$viewContentLoaded', function() {   
 
         var timer = $interval(function(){
-            console.log($rootScope.threeReady);
             if($rootScope.threeReady){
-
-                console.log(lab0);
                 var position = {
                     w:1000,
                     h:1000,
