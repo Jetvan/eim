@@ -406,7 +406,7 @@ angular.module('MetronicApp')
                 var data = {equipNo:$state.params.id};
                 $http.post($rootScope.settings.apiPath + url,JSON.stringify(data)).success(function(json){
                     if(typeof $scope.rpcTable != "undefined"){
-                        $scope.rpcTable.Rows.Clear();
+                        $scope.rpcTable.destroy();
                     }
                     
                     $scope.rpc = json;
@@ -418,10 +418,10 @@ angular.module('MetronicApp')
                 var data = {equipNo:$state.params.id,equipType:"Station",statusType:type};
                 $http.post($rootScope.settings.apiPath + url,JSON.stringify(data)).success(function(json){
                     console.log(1,json)
-                    // if(typeof $scope.stationTable != "undefined"){
-                    //     $scope.stationTable.Rows.Clear();
-                    //     // $("#rpc").destroy();
-                    // }
+                     if(typeof $scope.stationTable != "undefined"){
+                         $scope.stationTable.destroy();
+                         // $("#rpc").destroy();
+                     }
 
                     $scope.station = json;
 
@@ -437,7 +437,7 @@ angular.module('MetronicApp')
              
                     
                     if(typeof $scope.rpcTable != "undefined"){
-                        $scope.rpcTable.Rows.Clear();
+                        $scope.rpcTable.destroy();
                         // $("#rpc").destroy();
                     }
 
@@ -684,8 +684,8 @@ angular.module('MetronicApp')
             var myChart = echarts.init(document.getElementById('bar1'),theme);
             myChart.setOption(option);
 
-            /*var myChart = echarts.init(document.getElementById('bar2'),theme);
-            myChart.setOption(timeOption);*/
+            var myChart = echarts.init(document.getElementById('bar2'),theme);
+            myChart.setOption(timeOption);
 
             renderChart("bar3",$scope.timeOptionWater);
             renderChart("bar4",$scope.timeOptionOil);
@@ -984,7 +984,7 @@ angular.module('MetronicApp')
             },
             dataZoom: [{
                 type: 'inside',
-                start: 90,
+                start: 0,
                 end: 100
             }, {
                 start: 0,
@@ -1456,10 +1456,10 @@ angular.module('MetronicApp')
             dataZoom: [{
                 type: 'inside',
                 start: 0,
-                end: 10
+                end: 100
             }, {
                 start: 0,
-                end: 10,
+                end: 100,
                 handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
                 handleSize: '80%',
                 handleStyle: {
