@@ -28,7 +28,7 @@
                         </a>
                         <ul class="sub-menu" ng-if="i.child">
                             <li class="nav-item" ng-repeat="j in i.child">
-                                <a href="{{j.url}}" target="_blank" class="nav-link nav-toggle" > 
+                                <a  class="nav-link nav-toggle" > 
                                     <span class="title" ng-click="open(j.url,$event)">{{j.resourceName}}</span>
                                     <span class="arrow" ng-if="j.child"></span>
                                 </a>

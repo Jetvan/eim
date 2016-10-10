@@ -112,7 +112,10 @@ angular.module('MetronicApp')
                 'width':'10%',
                 "searchable": false,
                 "targets":0
-            }]
+            }],
+            "order": [
+                [0, "desc"]
+            ]
         };
 
         $.extend($rootScope.tableConfig,warningMTSConfig);
@@ -158,7 +161,10 @@ angular.module('MetronicApp')
             }, {
                 "searchable": false,
                 "targets": [0,1]
-            }]
+            }],
+        "order": [
+            [0, "desc"]
+        ]
         };
 
         $.extend($rootScope.tableConfig,warningMTSConfig);
@@ -1286,15 +1292,23 @@ angular.module('MetronicApp')
             [ 7, 10, -1],
             [ 7, 10, "All"] // change per page values here
         ],
-        "columnDefs": [{  // set default column settings
+        "columnDefs": [
+            {  // set default column settings
                 'orderable': false,
-                "targets": [0]
-            }, {
+                "targets": [0,1]
+            }, 
+            {
                 "searchable": false,
                 "targets": [0,1]
-            }]};
+            }],
+            "order": [
+                [0, "desc"]
+            ]
+        };
         var tableConfig = $rootScope.tableConfig;
         $.extend(tableConfig,warningBEPConfig);
+
+
         $('#warningBEP').DataTable(tableConfig);
     });
 

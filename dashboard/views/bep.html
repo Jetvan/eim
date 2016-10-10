@@ -206,7 +206,7 @@
                     </thead>
                     <tbody>
                         <tr  ng-repeat="warning in getWarnningBEP" on-repeat-finished>
-                            <td ng-bind="warning.time | date:'MM-dd HH:mm:ss' ">  </td>
+                            <td ng-bind="warning.time | date:'MM-dd HH:mm:ss:sss' ">  </td>
                             <td> {{warning.text}} </td>
                         </tr>
                     </tbody>
