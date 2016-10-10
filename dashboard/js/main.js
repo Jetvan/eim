@@ -88,9 +88,9 @@ MetronicApp.factory('settings', ['$rootScope', function($rootScope) {
         assetsPath: '../assets',
         globalPath: '../assets/global',
         layoutPath: '../assets/layouts/layout',
-        apiPath:'server',
+        apiPath:'',
         jsPath:'',
-        mode:"",
+        mode:'',
         version:'2.0.2',
         api:{
             dashboard:"http://10.203.97.123:7003/pataceim-rest",
@@ -257,7 +257,7 @@ MetronicApp.controller('FooterController', ['$scope', function($scope) {
 MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
 
     var jsPath = '../dashboard/js/3d';
-    var jsPath = '../plugins/3d';
+    // var jsPath = '../plugins';
     // var jsPath = './dashboard/js/3d/';
 
     $urlRouterProvider.otherwise("/dashboard");  
