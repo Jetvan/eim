@@ -258,7 +258,6 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
 
     var jsPath = '../dashboard/js/3d';
     // var jsPath = '../plugins';
-    // var jsPath = './dashboard/js/3d/';
 
     $urlRouterProvider.otherwise("/dashboard");  
     
@@ -616,23 +615,11 @@ MetronicApp.run(["$rootScope", "settings", "$state", "$http", "$interval", funct
                         menu[json[i].parentId]=[];
                     }
 
-                    //权限校验
-
-                    // if(json[i].url && json[i].url.indexOf('lab')>-1){
-
-                    //     var id = json[i].url.split('#/lab/')[1];
-                    //     for(var j=0;j<lab0.objects.length;j++){
-                    //         if(lab0.objects[j].client && lab0.objects[j].client.id == id){
-                                
-                    //             console.log(lab0.objects[j].client.name);
-                    //             lab0.objects[j].client.validateLicense = true;
-                    //             lab0.objects[j].sideColor =  '#e47930';
-                    //             lab0.objects[j].topColor = '#f19149';
-                    //         }
-                    //     }
-                    // }
                 }
 
+
+                // 权限校验
+                $rootScope.license = json;
 
                 $rootScope.threeReady = true;
 
