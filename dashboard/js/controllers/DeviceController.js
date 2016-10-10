@@ -149,8 +149,8 @@ angular.module('MetronicApp')
               }
         ],
         "lengthMenu": [
-            [5, 10, 10, -1],
-            [5, 10, 10, "All"] // change per page values here
+            [5, 10, 15, -1],
+            [5, 10, 15, "All"] // change per page values here
         ],
         "columnDefs": [{  // set default column settings
                 'orderable': false,
@@ -309,10 +309,11 @@ angular.module('MetronicApp')
                     //TODO 改list
 
                     $scope.agilentTime=response;
-                    if(response.length!=0||response[0].agilentTemp.length==0){
+
+                    if(response.length==0||response[0].agilentTemp.length==0){
                         for(var i=0;i<response.length;i++){
                             response[i].agilentTemp=[0,0,0,0,0,0,0,0];
-                            response[i].agilentTime=["10/2 18:0", "10/2 18:30", "10/2 19:0", "10/2 19:30", "10/2 20:0", "10/2 20:30", "10/2 20:30"];
+                            response[i].agilentTime=[" ", " ", " ", " ", " ", "", " "];
                         }
                     }
                     console.log(response)
@@ -322,7 +323,7 @@ angular.module('MetronicApp')
 
                     agilentOption.series=[];
                     agilentOption.xAxis[0].data=[];
-                    if(response.length!=0||response[0].agilentTemp.length!=0){
+                    if(response.length!=0&&response[0].agilentTemp.length!=0){
                         for(var i=0;i<response.length;i++){
                             agilentOption.series.push({
                                 name: 'CH'+response[i].channelCode,
