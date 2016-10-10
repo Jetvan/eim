@@ -105,7 +105,7 @@
                     </thead>
                     <tbody>
                         <tr class="odd gradeX" ng-repeat="data in station" on-repeat-finished>
-                            <td ng-bind="data.time | moment:'fromNow' "></td>
+                            <td ng-bind="data.time | date:'yyyy-MM-dd hh:mm:ss' "></td>
                             <td ng-bind="data.msg"> shuxer </td>
                             
 
@@ -154,7 +154,7 @@
                     <tbody>
                         <tr class="odd gradeX" ng-repeat="data in rpc" on-repeat-finished2>
                             <!-- <td ng-bind="data.sequence"> shuxer </td> -->
-                            <td ng-bind="data.time | moment:'fromNow' "></td>
+                            <td ng-bind="data.time | date:'yyyy-MM-dd hh:mm:ss'"></td>
                             <td ng-bind="data.sequence" style="white-space:normal"> shuxer </td>
                             <td ng-bind="data.channel"> shuxer </td>
                             <td ng-bind="data.currentValue | number:2"> shuxer </td>
