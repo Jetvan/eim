@@ -50,7 +50,7 @@
                         <span class="caption-subject font-white uppercase">作动缸温度 </span>
                     </div>
                     <div class="actions">
-                        <div class="btn-group">
+                        <div class="btn-group" style="z-index: 1000">
                             <a id="hoverBtn" class="btn btn-sm white btn-outline btn-circle" href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true"> 通道
                                 <i class="fa fa-angle-down"></i>
                             </a>
@@ -63,8 +63,8 @@
                     </div>
                 </div>
                 <div class="portlet-body">
-                    <div id="bar2" style="height:200px;top:-32px;"></div>
-                    <div style="height:130px;max-width:420px;position: relative;top:-20px;left:-9px;">
+                    <div id="bar2" style="height:240px;top:-48px;"></div>
+                    <div style="height:130px;max-width:420px;position: relative;top:-70px;left:-9px;">
                         <dl class="patac-temp" style="width: 110%;">
                             <dd ng-repeat="ch in chShowList">
                                 <span>CH{{ch.channelCode}}</span>
