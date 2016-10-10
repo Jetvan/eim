@@ -336,7 +336,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                             files: [
 
                                 './js/controllers/LabController.js',
-                                // './js/3d/3d/data.min.js',
+                                './js/3d/3d/data.min.js',
                                 './js/3d/3d/tooltip.min.js',
                             ] 
                         })
