@@ -149,8 +149,8 @@ angular.module('MetronicApp')
               }
         ],
         "lengthMenu": [
-            [5, 10, 10, -1],
-            [5, 10, 10, "All"] // change per page values here
+            [5, 10, 15, -1],
+            [5, 10, 15, "All"] // change per page values here
         ],
         "columnDefs": [{  // set default column settings
                 'orderable': false,
@@ -183,11 +183,30 @@ angular.module('MetronicApp')
                     x:40,
                     y:43,
                     x2:20,
-                    y2:28
+                    y2:76
                 },
                 tooltip: {
                     trigger: 'axis'
+                    ,
+                    position: function (pt) {
+                        return [pt[0], '10%'];
+                    }
                 },
+                dataZoom:[
+                    {
+                        start: 2,
+                        end: 98,
+                        handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
+                        handleSize: '60%',
+                        handleStyle: {
+                            color: '#fff',
+                            shadowBlur: 3,
+                            shadowColor: 'rgba(0, 0, 0, 0.6)',
+                            shadowOffsetX: 2,
+                            shadowOffsetY: 2
+                        }
+                    }
+                ],
                 calculable: true,
                 xAxis: [{
                     type: 'category',
@@ -235,7 +254,7 @@ angular.module('MetronicApp')
             dataZoom: [{
                 type: 'inside',
                 start: 0,
-                end:100//??
+                end:100
             }],
             yAxis: {
                 splitLine:{ 
@@ -254,7 +273,7 @@ angular.module('MetronicApp')
                 step: 'end',
                 smooth:false,
                 areaStyle: {normal: {}},
-                data: [0, 0, 1,1, 1, 1,1, 0, 0,1,1,1,1, 1, 1,1, 0, 0,1,1,1,1, 1, 1,1, 0, 0,1,1,1,1, 1, 1,1, 0, 0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+                data: [0,0, 1,1, 1, 1,1, 0, 0,1,1,1,1, 1, 1,1, 0, 0,1,1,1,1, 1, 1,1, 0, 0,1,1,1,1, 1, 1,1, 0, 0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
             }]
         };
 
@@ -309,10 +328,11 @@ angular.module('MetronicApp')
                     //TODO 改list
 
                     $scope.agilentTime=response;
-                    if(response.length!=0||response[0].agilentTemp.length==0){
+
+                    if(response.length==0||response[0].agilentTemp.length==0){
                         for(var i=0;i<response.length;i++){
                             response[i].agilentTemp=[0,0,0,0,0,0,0,0];
-                            response[i].agilentTime=["10/2 18:0", "10/2 18:30", "10/2 19:0", "10/2 19:30", "10/2 20:0", "10/2 20:30", "10/2 20:30"];
+                            response[i].agilentTime=[" ", " ", " ", " ", " ", "", " "];
                         }
                     }
                     console.log(response)
@@ -322,7 +342,7 @@ angular.module('MetronicApp')
 
                     agilentOption.series=[];
                     agilentOption.xAxis[0].data=[];
-                    if(response.length!=0||response[0].agilentTemp.length!=0){
+                    if(response.length!=0&&response[0].agilentTemp.length!=0){
                         for(var i=0;i<response.length;i++){
                             agilentOption.series.push({
                                 name: 'CH'+response[i].channelCode,
@@ -524,15 +544,15 @@ angular.module('MetronicApp')
                 },
                 splitNumber: 1,
             },
-            dataZoom: [{
+            dataZoom: [/*{
                 type: 'inside',
                 start: 0,
                 end: 10
-            }, {
-                start: 0,
-                end: 10,
+            },*/ {
+                start: 2,
+                end: 98,
                 handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
-                handleSize: '80%',
+                handleSize: '60%',
                 handleStyle: {
                     color: '#fff',
                     shadowBlur: 3,
