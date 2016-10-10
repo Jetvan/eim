@@ -730,7 +730,7 @@ angular.module('MetronicApp')
     // },
     series: [
         {
-            center : ['38%', '50%'],
+            center : ['51%', '50%'],
             title : {
                 offsetCenter: [0, '118%'],
                 textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
