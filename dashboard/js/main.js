@@ -88,7 +88,7 @@ MetronicApp.factory('settings', ['$rootScope', function($rootScope) {
         assetsPath: '../assets',
         globalPath: '../assets/global',
         layoutPath: '../assets/layouts/layout',
-        apiPath:'',
+        apiPath:'server',
         jsPath:'',
         mode:"",
         version:'2.0.2',
@@ -256,7 +256,10 @@ MetronicApp.controller('FooterController', ['$scope', function($scope) {
 /* Setup Rounting For All Pages */
 MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
 
-    //'./dashboard/js/3d'     './plugins';
+    var jsPath = '../dashboard/js/3d';
+    var jsPath = '../plugins/3d';
+    // var jsPath = './dashboard/js/3d/';
+
     $urlRouterProvider.otherwise("/dashboard");  
     
     $stateProvider
@@ -272,9 +275,9 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                         name: 'MetronicApp',
                         insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
                         files: [
-                           '../plugins/eim/libs/t.min.js',
-                           '../plugins/eim/libs/twaver.min.js',
-                           '../plugins/eim/room/core.min.js'
+                           jsPath + '/eim/libs/t.min.js',
+                           jsPath + '/eim/libs/twaver.min.js',
+                           jsPath + '/eim/room/core.min.js'
                         ] 
                     })
                     .then(function(){
@@ -283,10 +286,10 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                             insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
                             files: [
 
-                                '../plugins/eim/room/inbuilts.min.js',
-                                '../plugins/eim/room/register.js',
-                                '../plugins/eim/building.min.js',
-                                '../plugins/eim/index.js',
+                                jsPath + '/eim/room/inbuilts.min.js',
+                                jsPath + '/eim/room/register.min.js',
+                                jsPath + '/eim/building.min.js',
+                                jsPath + '/eim/index.min.js',
                                 './js/controllers/DashboardController.js',
                             ] 
                         })
@@ -327,8 +330,8 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
 
                             './js/scripts/macarons.js',
                             '../assets/global/plugins/echarts/echarts.js',
-                            '../plugins/3d/libs/t.min.js',
-                            '../plugins/3d/init.min.js',
+                            jsPath + '/3d/libs/t.min.js',
+                            jsPath + '/3d/init.min.js',
                         ] 
                     })
                     .then(function(){
@@ -338,8 +341,8 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                             files: [
 
                                 './js/controllers/LabController.js',
-                                '../plugins/3d/data.min.js',
-                                '../plugins/3d/tooltip.min.js',
+                                jsPath + '/3d/data.min.js',
+                                jsPath + '/3d/tooltip.min.js',
                             ] 
                         })
                     })
