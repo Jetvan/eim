@@ -25,7 +25,11 @@ angular.module('MetronicApp').controller('LabController', function($rootScope, $
             myChart5.setOption($scope.efficiencyCoeff );
         })
 
-        var labInfo = {
+        
+           
+    });
+
+    var labInfo = {
             "LAB02" : {
                 name:"结构试验室",
                 area:[
@@ -48,43 +52,44 @@ angular.module('MetronicApp').controller('LabController', function($rootScope, $
                     }
                 ]
             }
-        }
-        if(typeof labInfo[$state.params.id] == "undefined"){
-            $window.history.back();
-            return;
-        }
+    };
 
-        $rootScope.labName = labInfo[$state.params.id].name;
-        var tooltip = new Tooltip(['设备名：'],['000000']);
+    var tooltip = new Tooltip(['设备名：','设备状态：','试验次数：','试验进度：','故障描述：'],['','','','','']);
 
         
-        if(labInfo[$state.params.id].area.length ==2){
-            
-            var position = {
-                w:800,
-                h:1400,
-                d:1400
-            };
+    if(labInfo[$state.params.id].area.length ==2){
         
-            $scope.doubleLabel = true;
-            $scope.areaName = [labInfo[$state.params.id].area[0].name,labInfo[$state.params.id].area[1].name];
-            demo.init('3d_view1',labInfo[$state.params.id].area[0]['json'],1200,500,position,tooltip);
-            demo.init('3d_view2',labInfo[$state.params.id].area[1]['json'],1200,500,position,tooltip);
+        var position = {
+            w:800,
+            h:1400,
+            d:1400
+        };
+    
+        $scope.doubleLabel = true;
+        $scope.areaName = [labInfo[$state.params.id].area[0].name,labInfo[$state.params.id].area[1].name];
+        demo.init('3d_view1',labInfo[$state.params.id].area[0]['json'],1200,500,position,tooltip);
+        demo.init('3d_view2',labInfo[$state.params.id].area[1]['json'],1200,500,position,tooltip);
 
-        }else if(labInfo[$state.params.id].area.length ==1){
+    }else if(labInfo[$state.params.id].area.length ==1){
 
+    
+        var position = {
+            w:800,
+            h:1400,
+            d:1400
+        };
+        $scope.doubleLabel = false;
+        $scope.areaName = [labInfo[$state.params.id].area[0].name];
+        demo.init('3d_view1',labInfo[$state.params.id].area[0]['json'],360,500,position,tooltip);
+    }
+
+    if(typeof labInfo[$state.params.id] == "undefined"){
+        $window.history.back();
+        return;
+    }
+
+    $rootScope.labName = labInfo[$state.params.id].name;
         
-            var position = {
-                w:800,
-                h:1400,
-                d:1400
-            };
-            $scope.doubleLabel = false;
-            $scope.areaName = [labInfo[$state.params.id].area[0].name];
-            demo.init('3d_view1',labInfo[$state.params.id].area[0]['json'],360,500,position,tooltip);
-        }
-           
-    });
 
     // set sidebar closed and body solid layout mode
     $rootScope.settings.layout.pageContentWhite = true;
@@ -95,25 +100,6 @@ angular.module('MetronicApp').controller('LabController', function($rootScope, $
     $rootScope.settings.layout.setDeviceButton = false;
     $rootScope.settings.layout.setLabButton = true;
 
-    
-    // console.log(labName[$state.params.id]);
-
-    // var url = "/experipage/getExperiIndex";
-    // url = "/equippage/getWarnningBEP";
-    // url = "/equippage/getWarnningRPC";
-    // url = "/equippage/getWarnningMTS";
-    // url = "/equippage/getMainEquipMenu";
-
-    // var data  = {experiNo:"MTS01",indexName:"startRate"} ;
-    // data = {equipNo:"PEC0-03894-0002"};
-    // data = {equipNo:"marshallhis"};
-    // data = {equipNo:"PEC0-02024",equipType:"MPT",statusType:"normal"}; //statusType:warn  type:station
-
-    // var param = [];
-    // $http.get($rootScope.settings.apiPath + url,data).success(function(json){
-    //     // console.log(json);
-    //     $scope.EquipMenu = json;
-    // });
 
      // 指定图表的配置项和数据
     var option = {
@@ -326,6 +312,36 @@ angular.module('MetronicApp').controller('LabController', function($rootScope, $
                 }
             //})(i);
         }
+
+        var tooltip = new Tooltip(['设备名：','设备状态：','试验次数：','试验进度：','故障描述：'],['','','','','']);
+
+        //TODO:
+        
+        // if(labInfo[$state.params.id].area.length ==2){
+            
+        //     var position = {
+        //         w:800,
+        //         h:1400,
+        //         d:1400
+        //     };
+        
+        //     $scope.doubleLabel = true;
+        //     $scope.areaName = [labInfo[$state.params.id].area[0].name,labInfo[$state.params.id].area[1].name];
+        //     demo.init('3d_view1',labInfo[$state.params.id].area[0]['json'],1200,500,position,tooltip);
+        //     demo.init('3d_view2',labInfo[$state.params.id].area[1]['json'],1200,500,position,tooltip);
+
+        // }else if(labInfo[$state.params.id].area.length ==1){
+
+        
+        //     var position = {
+        //         w:800,
+        //         h:1400,
+        //         d:1400
+        //     };
+        //     $scope.doubleLabel = false;
+        //     $scope.areaName = [labInfo[$state.params.id].area[0].name];
+        //     demo.init('3d_view1',labInfo[$state.params.id].area[0]['json'],360,500,position,tooltip);
+        // }
     });
 
     //实验室对应设备
