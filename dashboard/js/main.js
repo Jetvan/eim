@@ -505,7 +505,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
 /* Init global settings and run the app */
 MetronicApp.run(["$rootScope", "settings", "$state", "$http", "$interval", function($rootScope, settings, $state,$http,$interval) {
     var timer = $interval(function(){
-        $rootScope.time = moment().format('YYYY年 MM月D日 hh:mm:ss');
+        $rootScope.time = moment().format('YYYY年 MM月D日 HH:mm:ss');
     },1000);
     
 
