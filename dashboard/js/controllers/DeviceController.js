@@ -1285,9 +1285,9 @@ angular.module('MetronicApp')
         "pagingType":'bootstrap_full_number2',
         "aoColumns": [
               {
-                  sWidth: '130px'
+                  sWidth: '170px'
               },{
-                  sWidth: '400px'
+                  sWidth: '300px'
               }
         ],
         "lengthMenu": [
@@ -1330,7 +1330,7 @@ angular.module('MetronicApp')
                 xAxis: [{
                     type: 'category',
                     boundaryGap: false,
-                    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    data: [' ', ' ', ' ', ' ', ' ', ' ', ' '],
                     splitLine:{ 
                         show:false
                     },
@@ -1373,7 +1373,7 @@ angular.module('MetronicApp')
                 series: [{
                     name: 'High',
                     type: 'line',
-                    data: [11, 11, 15, 13, 12, 13, 10],
+                    data: [ ,  ,  ,  ,  ,  ,  ],
                     // markPoint: {
                     //     data: [{
                     //         type: 'max',
