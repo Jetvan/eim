@@ -1,4 +1,80 @@
 angular.module('MetronicApp').controller('LabController', function($rootScope, $scope, $http, $timeout,$state,$window,$filter) {
+
+    var render3D = function(tooltip){
+
+        if(labInfo[$state.params.id].area.length ==2){
+            
+            var position = {
+                w:800,
+                h:1400,
+                d:1400
+            };
+        
+            $scope.doubleLabel = true;
+            $scope.areaName = [labInfo[$state.params.id].area[0].name,labInfo[$state.params.id].area[1].name];
+
+            var tooltip = new Tooltip(['设备名：','设备状态：','试验次数：','试验进度：','故障描述：'],['','','','','']);
+            var a = demo.init('3d_view1',labInfo[$state.params.id].area[0]['json'],1200,500,position,tooltip);
+            var b = demo.init('3d_view2',labInfo[$state.params.id].area[1]['json'],1200,500,position,tooltip);
+
+
+        }else if(labInfo[$state.params.id].area.length ==1){
+
+        
+            var position = {
+                w:800,
+                h:1400,
+                d:1400
+            };
+            $scope.doubleLabel = false;
+            $scope.areaName = [labInfo[$state.params.id].area[0].name];
+            var tooltip = new Tooltip(['设备名：','设备状态：','故障描述：'],['','','']);
+            demo.init('3d_view1',labInfo[$state.params.id].area[0]['json'],360,500,position,tooltip);
+        }
+    }
+
+
+$scope.statusInfo = {
+    "0":{
+            name:"停止",
+            color:'#DA7C19',
+            sideColor: '#c17424',
+            topColor: '#DA7C19',
+        },
+    "1":{
+            name:"运行",
+            color:'#31A82C',
+            sideColor: '#2d802a',
+            topColor: '#31A82C',
+        },
+    "2":{
+            name:"故障",
+            color:'#e35b5a',
+            sideColor: '#ae5958',
+            topColor: '#e35b5a',
+        },
+    "3":{
+            name:"空闲",
+            color:'#dddddd',
+            sideColor: '#999999',
+            topColor: '#dddddd',
+        },
+    "4":{
+            name:"占位",
+            color:'#e35b5a',
+            sideColor: '#b35554',
+            topColor: '#e35b5a',
+        },
+};
+$scope.status = {
+    "0":0,
+    "1":0,
+    "2":0,
+    "3":0,
+    "4":0,
+    "5":0,
+};
+
     $scope.$on('$viewContentLoaded', function() {  
        
 
@@ -54,34 +130,7 @@ angular.module('MetronicApp').controller('LabController', function($rootScope, $
             }
     };
 
-    var tooltip = new Tooltip(['设备名：','设备状态：','试验次数：','试验进度：','故障描述：'],['','','','','']);
-
-        
-    if(labInfo[$state.params.id].area.length ==2){
-        
-        var position = {
-            w:800,
-            h:1400,
-            d:1400
-        };
-    
-        $scope.doubleLabel = true;
-        $scope.areaName = [labInfo[$state.params.id].area[0].name,labInfo[$state.params.id].area[1].name];
-        demo.init('3d_view1',labInfo[$state.params.id].area[0]['json'],1200,500,position,tooltip);
-        demo.init('3d_view2',labInfo[$state.params.id].area[1]['json'],1200,500,position,tooltip);
-
-    }else if(labInfo[$state.params.id].area.length ==1){
-
-    
-        var position = {
-            w:800,
-            h:1400,
-            d:1400
-        };
-        $scope.doubleLabel = false;
-        $scope.areaName = [labInfo[$state.params.id].area[0].name];
-        demo.init('3d_view1',labInfo[$state.params.id].area[0]['json'],360,500,position,tooltip);
-    }
+    render3D();
 
     if(typeof labInfo[$state.params.id] == "undefined"){
         $window.history.back();
@@ -282,7 +331,7 @@ angular.module('MetronicApp').controller('LabController', function($rootScope, $
                     $scope.utilizRate.series[1].markLine.data[0].yAxis = json[i].indexAvgValue;
                     $scope.utilizRate.series[2].markLine.data[0].yAxis = json[i].indexLastValue;
 
-                    $scope.utilizRate.yAxis[0].max=100;
+                    $scope.utilizRate.yAxis[0].max=maxNum;
                     var myChart3 = echarts.init(document.getElementById('utilizRate'),theme);
                     myChart3.setOption($scope.utilizRate);
 
@@ -294,7 +343,7 @@ angular.module('MetronicApp').controller('LabController', function($rootScope, $
                     $scope.durautilizRate.series[1].markLine.data[0].yAxis = json[i].indexAvgValue;
                     $scope.durautilizRate.series[2].markLine.data[0].yAxis = json[i].indexLastValue;
                     //maxNum=maxNum>100?100:maxNum;
-                    $scope.durautilizRate.yAxis[0].max=300;
+                    $scope.durautilizRate.yAxis[0].max=100;
                     var myChart4 = echarts.init(document.getElementById('durautilizRate'),theme);
                     myChart4.setOption($scope.durautilizRate);
 
@@ -313,69 +362,79 @@ angular.module('MetronicApp').controller('LabController', function($rootScope, $
             //})(i);
         }
 
-        var tooltip = new Tooltip(['设备名：','设备状态：','试验次数：','试验进度：','故障描述：'],['','','','','']);
-
-        //TODO:
-        
-        // if(labInfo[$state.params.id].area.length ==2){
-            
-        //     var position = {
-        //         w:800,
-        //         h:1400,
-        //         d:1400
-        //     };
-        
-        //     $scope.doubleLabel = true;
-        //     $scope.areaName = [labInfo[$state.params.id].area[0].name,labInfo[$state.params.id].area[1].name];
-        //     demo.init('3d_view1',labInfo[$state.params.id].area[0]['json'],1200,500,position,tooltip);
-        //     demo.init('3d_view2',labInfo[$state.params.id].area[1]['json'],1200,500,position,tooltip);
-
-        // }else if(labInfo[$state.params.id].area.length ==1){
-
-        
-        //     var position = {
-        //         w:800,
-        //         h:1400,
-        //         d:1400
-        //     };
-        //     $scope.doubleLabel = false;
-        //     $scope.areaName = [labInfo[$state.params.id].area[0].name];
-        //     demo.init('3d_view1',labInfo[$state.params.id].area[0]['json'],360,500,position,tooltip);
-        // }
     });
 
     //实验室对应设备
     var url = "/experipage/getMainExperiMenu";
     var data  = {experiNo:$state.params.id}  ;
     $http.post($rootScope.settings.apiPath + url,JSON.stringify(data)).success(function(json){
-        // console.log(json);
+        
+        var json3D = null;
+        if(labInfo[$state.params.id].area.length ==2){
+            json3D = labInfo[$state.params.id].area[1]['json'].objects;
+            
+        }else if(labInfo[$state.params.id].area.length ==1){
+            json3D = labInfo[$state.params.id].area[0]['json'].objects;
+        }
+
         $rootScope.getMainExperiMenu = json;
+
+        //change state
+        for(var i=0;i<json.length;i++){
+            for(var j=0;j<json3D.length;j++){
+
+                if(json3D[j].client && json[i].equipNo == json3D[j].client.id){
+                    var status = parseInt(json[i].status) || '0';
+                    status = status.toString();
+                    json3D[j].client.status = $scope.statusInfo[status].name;
+                    json3D[j].client.cycle = json[i].cycle;
+                    json3D[j].client.progress = json[i].progress;
+                    json3D[j].client.faultMsg = json[i].faultMsg;
+                    json3D[j].sideColor = $scope.statusInfo[status].sideColor;
+                    json3D[j].topColor = $scope.statusInfo[status].topColor;
+                }
+            }
+        }
+
+        //render
+        render3D();
     });
 
     var url = "/experipage/getEquipState";
-    $scope.status = {
-        "0":0,
-        "1":0,
-        "2":0,
-        "3":0,
-        "4":0,
-        "5":0,
-    };
-
     if($state.params.id=="LAB02"){
-
         
         var data = {equipType:"MTS"};
         $http.post($rootScope.settings.apiPath + url,JSON.stringify(data)).success(function(json){
             for(var i=0;i<json.length;i++){
                 $scope.status[json[i].status]++;
             }
+
+            var json3D = labInfo[$state.params.id].area[1]['json'].objects;
+
+            $rootScope.getMainExperiMenu = json;
+
+            //change state
+            for(var i=0;i<json.length;i++){
+                for(var j=0;j<json3D.length;j++){
+
+                    if(json3D[j].client && json[i].equipNo == json3D[j].client.id){
+                        var status = parseInt(json[i].status) || '0';
+                        status = status.toString();
+                        json3D[j].client.status = $scope.statusInfo[status].name;
+                        json3D[j].sideColor = $scope.statusInfo[status].sideColor;
+                        json3D[j].topColor = $scope.statusInfo[status].topColor;
+                    }
+                }
+            }
+
+            //render
+            render3D();
         });
 
         var data = {equipType:"HPU"};
         $http.post($rootScope.settings.apiPath + url,JSON.stringify(data)).success(function(json){
             for(var i=0;i<json.length;i++){
-                $scope.status[json[i].status]++;
+                $scope.status[1]++;
             }
         });
 
@@ -387,6 +446,27 @@ angular.module('MetronicApp').controller('LabController', function($rootScope, $
             for(var i=0;i<json.length;i++){
                 $scope.status[json[i].status]++;
             }
+
+            var json3D = labInfo[$state.params.id].area[0]['json'].objects;
+
+            $rootScope.getMainExperiMenu = json;
+
+            //change state
+            for(var i=0;i<json.length;i++){
+                for(var j=0;j<json3D.length;j++){
+
+                    if(json3D[j].client && json[i].equipNo == json3D[j].client.id){
+                        var status = parseInt(json[i].status) || '0';
+                        status = status.toString();
+                        json3D[j].client.status = $scope.statusInfo[status].name;
+                        json3D[j].sideColor = $scope.statusInfo[status].sideColor;
+                        json3D[j].topColor = $scope.statusInfo[status].topColor;
+                    }
+                }
+            }
+
+            //render
+            render3D();
 
         });
     }
