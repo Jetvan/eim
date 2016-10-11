@@ -377,7 +377,9 @@ angular.module('MetronicApp')
                     if(response.length!=0&&response[0].agilentTemp.length!=0){
                         for(var i=0;i<response.length;i++){
                             for(var j= 0,len=response[i].agilentTime.length;j<len;j++){
-                                response[i].agilentTime[j]=getTime({time:response[i].agilentTime[j],rule:'yyyy-MM-dd hh:mm:ss'});
+                                if(response[i].agilentTime[j]!=null){
+                                    response[i].agilentTime[j]=getTime({time:response[i].agilentTime[j],rule:'yyyy-MM-dd hh:mm:ss'});
+                                }
                             }
 
                             agilentOption.series.push({
