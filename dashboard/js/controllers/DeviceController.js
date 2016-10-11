@@ -291,7 +291,32 @@ angular.module('MetronicApp')
         var agilent = echarts.init(document.getElementById('bar2'),theme);
         agilent.setOption(agilentOption);
 
-        
+        var getTime=function(opts){
+            /*获取当前时间*/
+            var d=new Date(opts.time)||new Date();
+            var year=d.getFullYear();
+            var month=d.getMonth()+1;
+            //month=common.fillZero(month);
+            var date=d.getDate();
+            //date=common.fillZero(date);
+            var hours=d.getHours();
+            //hours=common.fillZero(hours);
+            var minutes=d.getMinutes();
+            //minutes=common.fillZero(minutes);
+            var seconds=d.getSeconds();
+            //seconds=common.fillZero(seconds);
+            switch(opts.rule){
+                case "yyyy-MM-dd":
+                    return year+"-"+month+"-"+date;
+                    break;
+                case "yyyy-MM-dd hh:mm:ss":
+                    return month+"/"+date+" "+hours+":"+minutes+":"+seconds;
+                    break;
+                default:
+                    return year+"-"+month+"-"+date+" "+hours+":"+minutes+":"+seconds;
+            }
+
+        };
         $("#hoverBtn").on("hide.bs.dropdown",function(){
             $scope.chShowList=[];
             $scope.request=[];
@@ -348,14 +373,21 @@ angular.module('MetronicApp')
 
                     agilentOption.series=[];
                     agilentOption.xAxis[0].data=[];
+
                     if(response.length!=0&&response[0].agilentTemp.length!=0){
                         for(var i=0;i<response.length;i++){
+                            for(var j= 0,len=response[i].agilentTime.length;j<len;j++){
+                                if(response[i].agilentTime[j]!=null){
+                                    response[i].agilentTime[j]=getTime({time:response[i].agilentTime[j],rule:'yyyy-MM-dd hh:mm:ss'});
+                                }
+                            }
+
                             agilentOption.series.push({
                                 name: 'CH'+response[i].channelCode,
                                 type: 'line',
                                 data: response[i].agilentTemp.reverse()
                             });
-                            agilentOption.xAxis[0].data=response[i].agilentTime;
+                            agilentOption.xAxis[0].data=response[i].agilentTime.reverse();
 
                         }
                         agilentOption.xAxis[0].data;
@@ -1253,9 +1285,9 @@ angular.module('MetronicApp')
         "pagingType":'bootstrap_full_number2',
         "aoColumns": [
               {
-                  sWidth: '130px'
+                  sWidth: '170px'
               },{
-                  sWidth: '400px'
+                  sWidth: '300px'
               }
         ],
         "lengthMenu": [
@@ -1298,7 +1330,7 @@ angular.module('MetronicApp')
                 xAxis: [{
                     type: 'category',
                     boundaryGap: false,
-                    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    data: [' ', ' ', ' ', ' ', ' ', ' ', ' '],
                     splitLine:{ 
                         show:false
                     },
@@ -1341,7 +1373,7 @@ angular.module('MetronicApp')
                 series: [{
                     name: 'High',
                     type: 'line',
-                    data: [11, 11, 15, 13, 12, 13, 10],
+                    data: [ ,  ,  ,  ,  ,  ,  ],
                     // markPoint: {
                     //     data: [{
                     //         type: 'max',
