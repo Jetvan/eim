@@ -106,7 +106,32 @@ MetronicApp.factory("commService",function() {
         }
 
     };
+    commService.getTime=function(opts){
+        /*获取当前时间*/
+        var d=new Date(opts.time)||new Date();
+        var year=d.getFullYear();
+        var month=d.getMonth()+1;
+        //month=common.fillZero(month);
+        var date=d.getDate();
+        //date=common.fillZero(date);
+        var hours=d.getHours();
+        //hours=common.fillZero(hours);
+        var minutes=d.getMinutes();
+        //minutes=common.fillZero(minutes);
+        var seconds=d.getSeconds();
+        //seconds=common.fillZero(seconds);
+        switch(opts.rule){
+            case "yyyy-MM-dd":
+                return year+"-"+month+"-"+date;
+                break;
+            case "yyyy-MM-dd hh:mm:ss":
+                return month+"/"+date+" "+hours+":"+minutes+":"+seconds;
+                break;
+            default:
+                return year+"-"+month+"-"+date+" "+hours+":"+minutes+":"+seconds;
+        }
 
+    };
     return commService;
 });
 //邮箱错误信息
@@ -114,7 +139,7 @@ MetronicApp.directive("errorMsg",function(){
     return {
         restrict: "AE",
         transclude: true,
-        template: '<div  class="emailError" style="display:none;position: absolute;left:0;top:113px;color: red">\
+        template: '<div  class="emailError" style="display:none;position: absolute;left:0;top:113px;color: "red">\
                             <span>{{email.error}}</span>\
                      </div>'
         ,

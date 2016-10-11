@@ -61,7 +61,7 @@ timeData = timeData.map(function (str) {
 
 angular.module('MetronicApp')
 
-.controller('MTSController', function($rootScope, $scope, $http, $timeout,$state) {
+.controller('MTSController', function(commService,$rootScope, $scope, $http, $timeout,$state) {
     
     $scope.$on('ngRepeatFinished2', function(repeatFinishedEvent, element) {
         console.log('ngRepeatFinished2');
@@ -291,32 +291,7 @@ angular.module('MetronicApp')
         var agilent = echarts.init(document.getElementById('bar2'),theme);
         agilent.setOption(agilentOption);
 
-        var getTime=function(opts){
-            /*获取当前时间*/
-            var d=new Date(opts.time)||new Date();
-            var year=d.getFullYear();
-            var month=d.getMonth()+1;
-            //month=common.fillZero(month);
-            var date=d.getDate();
-            //date=common.fillZero(date);
-            var hours=d.getHours();
-            //hours=common.fillZero(hours);
-            var minutes=d.getMinutes();
-            //minutes=common.fillZero(minutes);
-            var seconds=d.getSeconds();
-            //seconds=common.fillZero(seconds);
-            switch(opts.rule){
-                case "yyyy-MM-dd":
-                    return year+"-"+month+"-"+date;
-                    break;
-                case "yyyy-MM-dd hh:mm:ss":
-                    return month+"/"+date+" "+hours+":"+minutes+":"+seconds;
-                    break;
-                default:
-                    return year+"-"+month+"-"+date+" "+hours+":"+minutes+":"+seconds;
-            }
 
-        };
         $("#hoverBtn").on("hide.bs.dropdown",function(){
             $scope.chShowList=[];
             $scope.request=[];
@@ -378,7 +353,7 @@ angular.module('MetronicApp')
                         for(var i=0;i<response.length;i++){
                             for(var j= 0,len=response[i].agilentTime.length;j<len;j++){
                                 if(response[i].agilentTime[j]!=null){
-                                    response[i].agilentTime[j]=getTime({time:response[i].agilentTime[j],rule:'yyyy-MM-dd hh:mm:ss'});
+                                    response[i].agilentTime[j]=commService.getTime({time:response[i].agilentTime[j],rule:'yyyy-MM-dd hh:mm:ss'});
                                 }
                             }
 
@@ -455,7 +430,7 @@ angular.module('MetronicApp')
     $scope.getWarnning = function(param,type){
         
         console.log("xxxxx"+param);
-
+        $scope.MPT={};//MTP==1 show,RPT==0 hide;
         type = type || "normal";
         switch(param){
             case "RPC":
@@ -466,7 +441,7 @@ angular.module('MetronicApp')
                     if(typeof $scope.rpcTable != "undefined"){
                         $scope.rpcTable.destroy();
                     }
-                    
+                    $scope.MPT.show=0;
                     $scope.rpc = json;
                 });
             break;
@@ -487,7 +462,6 @@ angular.module('MetronicApp')
 
             break;
             case "MPT":
-                
                 //log
                 var url = "/equippage/getWarnningMTS";
                 var data = {equipNo:$state.params.id,equipType:"MPT",statusType:type};
@@ -498,8 +472,9 @@ angular.module('MetronicApp')
                         $scope.rpcTable.destroy();
                         // $("#rpc").destroy();
                     }
-
+                    $scope.MPT.show=1;
                     $scope.rpc = json;
+
                 });
 
             break;
@@ -736,17 +711,20 @@ angular.module('MetronicApp')
         // var myChart = echarts.init(document.getElementById('bar2'),theme);
         // myChart.setOption(timeOption);
 
-       
 
+         var barReady2={};
          $(window).resize(function(){
-            var myChart = echarts.init(document.getElementById('bar1'),theme);
-            myChart.setOption(option);
+             clearTimeout(barReady2.timer);
+             barReady2.timer=setTimeout(function(){
+                 var myChart = echarts.init(document.getElementById('bar1'),theme);
+                 myChart.setOption(option);
 
-            var myChart = echarts.init(document.getElementById('bar2'),theme);
-            myChart.setOption(timeOption);
+                 var myChart = echarts.init(document.getElementById('bar2'),theme);
+                 myChart.setOption(timeOption);
 
-            renderChart("bar3",$scope.timeOptionWater);
-            renderChart("bar4",$scope.timeOptionOil);
+                 renderChart("bar3",$scope.timeOptionWater);
+                 renderChart("bar4",$scope.timeOptionOil);
+             },100);
         });
 
     });
@@ -839,24 +817,6 @@ angular.module('MetronicApp')
     ]
 };
 
-    // setInterval(function (){
-    //     gaugeOption.series[0].data[0].value = (Math.random()*10+40).toFixed(2) ;
-    //     gaugeOption.series[0].data[0].name = "进水口";
-    //     waterIn.setOption(gaugeOption);
-        
-    //     gaugeOption.series[0].data[0].name = "出水口";
-    //     gaugeOption.series[0].data[0].value = (Math.random()*10+10).toFixed(2) ;
-    //     waterOut.setOption(gaugeOption);
-        
-    //     gaugeOption.series[0].data[0].name = "进油口";
-    //     gaugeOption.series[0].data[0].value = (Math.random()*10+50).toFixed(2) ;
-    //     oilIn.setOption(gaugeOption);
-       
-    //     gaugeOption.series[0].data[0].name = "出油口";
-    //     gaugeOption.series[0].data[0].value = (Math.random()*10+3).toFixed(2) ;
-    //     oilOut.setOption(gaugeOption);
-    // },2000);
-
     var waterIn = echarts.init(document.getElementById("waterIn"),theme);
     var waterOut = echarts.init(document.getElementById("waterOut"),theme);
     var oilIn = echarts.init(document.getElementById("oilIn"),theme);
@@ -867,11 +827,10 @@ angular.module('MetronicApp')
     oilIn.setOption(gaugeOption);
     oilOut.setOption(gaugeOption);
 
-    var ready=true;
+    var barReady={};
     $(window).resize(function(){
-        if(ready){
-            ready=false;
-            setTimeout(function(){
+        clearTimeout(barReady.timer);
+        barReady.timer=setTimeout(function(){
                 waterIn = echarts.init(document.getElementById("waterIn"),theme);
                 waterOut = echarts.init(document.getElementById("waterOut"),theme);
                 oilIn = echarts.init(document.getElementById("oilIn"),theme);
@@ -899,11 +858,13 @@ angular.module('MetronicApp')
                 gaugeOption.series[0].data[0].name = "出油口温度";
                 gaugeOption.series[0].data[0].value = $scope.getIndexMomentHPU.t_OilOut;
                 oilOut.setOption(gaugeOption);
-                ready=false;
-            },10);
-        }
+
+                //出水温差，出油温差
+                renderChart("bar4",$scope.timeOptionOil);
+                renderChart("bar3",$scope.timeOptionWater);
+        },100);
+
     })
-    
 
     //设备菜单
     var url = "/equippage/getMainEquipMenu";
@@ -968,7 +929,6 @@ angular.module('MetronicApp')
 
         oilOut.setOption(gaugeOption);
 
-        console.log('down')
 
 
     });
@@ -979,7 +939,7 @@ angular.module('MetronicApp')
     $http.post($rootScope.settings.apiPath + url,JSON.stringify(data)).success(function(json){
         
         $scope.getTractiveEffort = json;
-
+        console.log(json)
         var time = json.timeHPU;
         if(time == null) return;
 
@@ -991,7 +951,7 @@ angular.module('MetronicApp')
         });
 
         var date = time.reverse();
-        var data = json.equipState;console.log(json.oilIn,11)
+        var data = json.equipState;
         //max min
         var maxNum=Math.max.apply(null,json.oilIn);
         maxNum=Math.ceil(maxNum+maxNum*0.2);
@@ -1074,7 +1034,7 @@ angular.module('MetronicApp')
         renderChart("bar4",$scope.timeOptionOil);
         
         var date = time;
-        console.log(date)
+
         var data = json.equipState;
         //max min
         var maxNum=Math.max.apply(null,json.waterOut);
@@ -1274,7 +1234,7 @@ angular.module('MetronicApp')
 })
 
 
-.controller('BEPController', function($rootScope, $scope, $http, $timeout,$state) {
+.controller('BEPController', function(commService,$rootScope, $scope, $http, $timeout,$state) {
     $scope.$on('ngRepeatFinished', function(repeatFinishedEvent, element) {
         var warningBEPConfig = {
             "bStateSave": false,
@@ -1373,7 +1333,7 @@ angular.module('MetronicApp')
                 series: [{
                     name: 'High',
                     type: 'line',
-                    data: [ ,  ,  ,  ,  ,  ,  ],
+                    data: [ ,  ,  ,  ,  ,  ,  ]
                     // markPoint: {
                     //     data: [{
                     //         type: 'max',
@@ -1391,7 +1351,7 @@ angular.module('MetronicApp')
                     // }
                 }]
             };
-
+        $scope.option=option;
         
 
         // 基于准备好的dom，初始化echarts实例
@@ -1406,8 +1366,8 @@ angular.module('MetronicApp')
             var myChart = echarts.init(document.getElementById('bar1'),theme);
             myChart.setOption(option);
 
-            // var myChart = echarts.init(document.getElementById('bar2'),theme);
-            // myChart.setOption(StateOption);
+             var myChart = echarts.init(document.getElementById('bar2'),theme);
+             myChart.setOption(StateOption);
         });
 
     });
@@ -1463,8 +1423,21 @@ angular.module('MetronicApp')
     url = "/equippage/getTractiveEffort";
     data = {equipNo:$state.params.id};
     $http.post($rootScope.settings.apiPath + url,JSON.stringify(data)).success(function(json){
-        
+        //commService
         $scope.getTractiveEffort = json;
+
+        if(json.tractiveEffortTime&&json.tractiveEffortTime.length>=1){
+            var timeArr=[];
+            json.tractiveEffortTime.forEach(function(item,index){
+                timeArr.push(commService.getTime({time:item,rule:'yyyy-MM-dd hh:mm:ss'}));
+            });
+            $scope.option.xAxis[0].data=timeArr;
+            $scope.option.series[0].data=json.tractiveEffort;
+            var myChart = echarts.init(document.getElementById('bar1'),theme);
+            myChart.setOption($scope.option);
+        }
+
+
     });
 
     //时序
