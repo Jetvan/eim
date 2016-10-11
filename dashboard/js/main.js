@@ -91,7 +91,6 @@ MetronicApp.factory('settings', ['$rootScope', function($rootScope) {
         apiPath:'',
         jsPath:'',
 
-        mode:'server',
         version:'2.1.2',
 
         api:{
