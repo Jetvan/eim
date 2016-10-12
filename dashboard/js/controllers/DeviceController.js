@@ -62,7 +62,7 @@ timeData = timeData.map(function (str) {
 angular.module('MetronicApp')
 
 .controller('MTSController', function(commService,$rootScope, $scope, $http, $timeout,$state) {
-    
+
     $scope.$on('ngRepeatFinished2', function(repeatFinishedEvent, element) {
         console.log('ngRepeatFinished2');
         $("#rpc").removeClass("hide");
@@ -178,7 +178,73 @@ angular.module('MetronicApp')
 
         
     });
-    
+    //mpt表格初始化
+    $scope.$on('ngRepeatFinished3', function(repeatFinishedEvent, element) {
+        console.log('ngRepeatFinished3');
+        var $mpt=$("#mpt");
+        //$mpt.removeClass("hide");
+        var warningMTSConfig = {
+
+            "bStateSave": false,
+            "orderable": false,
+            "autoWidth": false,
+            "aoColumns": [
+                {
+                    sWidth: '85px'
+                },{
+                    sWidth: '60px'
+                },{
+                    sWidth: '60px'
+                },{
+                    sWidth: '40px'
+                },{
+                    sWidth: '60px'
+                }
+            ],
+            "pagingType":'bootstrap_full_number2',
+            "bProcessing": true,
+            "bLengthChange":false,
+            "searching":false,
+            "lengthMenu": [
+                [5, 10, 10, -1],
+                [5, 10, 10, "All"] // change per page values here
+            ],
+            "columnDefs": [{  // set default column settings
+                'width':'20%',
+                'orderable': false,
+                "targets":0
+            }, {
+                'width':'40%',
+                "searchable": false,
+                "targets":0
+            }, {
+                'width':'20%',
+                "searchable": false,
+                "targets":0
+            }, {
+                'width':'10%',
+                "searchable": false,
+                "targets":0
+            }, {
+                'width':'10%',
+                "searchable": false,
+                "targets":0
+            }],
+            "order": [
+                [0, "desc"]
+            ]
+        };
+
+        $.extend($rootScope.tableConfig,warningMTSConfig);
+
+        // if(typeof $scope.rpcTable != "undefined"){
+        //     $scope.rpcTable.Rows.Clear();
+        //     // $("#station").DataTable().destroy();
+        // }
+
+
+        $scope.rpcTable = $mpt.DataTable($rootScope.tableConfig);
+    });
     $scope.$on('$viewContentLoaded', function() {   
         $(".btn-group button").click(function(){
             $(this).parent().find('.active').removeClass('active');
@@ -210,6 +276,9 @@ angular.module('MetronicApp')
                             shadowColor: 'rgba(0, 0, 0, 0.6)',
                             shadowOffsetX: 2,
                             shadowOffsetY: 2
+                        },
+                        textStyle:{
+                            color:'#fff'
                         }
                     }
                 ],
@@ -353,7 +422,7 @@ angular.module('MetronicApp')
                         for(var i=0;i<response.length;i++){
                             for(var j= 0,len=response[i].agilentTime.length;j<len;j++){
                                 if(response[i].agilentTime[j]!=null){
-                                    response[i].agilentTime[j]=commService.getTime({time:response[i].agilentTime[j],rule:'yyyy-MM-dd hh:mm:ss'});
+                                    response[i].agilentTime[j]=commService.getTime({time:response[i].agilentTime[j],rule:'MM-dd hh:mm:ss'});
                                 }
                             }
 
@@ -372,14 +441,17 @@ angular.module('MetronicApp')
 
             })
         })
+        var chartReady4={};
+        window.onresize=function(){
+            clearTimeout(chartReady4.timer);
+            chartReady4.timer=setTimeout(function(){
+                var myChart = echarts.init(document.getElementById('bar1'),theme);
+                myChart.setOption(StateOption);
 
-         $(window).resize(function(){
-             myChart = echarts.init(document.getElementById('bar1'),theme);
-             myChart.setOption(StateOption);
-
-            agilent = echarts.init(document.getElementById('bar2'),theme);
-            agilent.setOption(agilentOption);
-        });
+                agilent = echarts.init(document.getElementById('bar2'),theme);
+                agilent.setOption(agilentOption);
+            },100)
+        }
 
     });
 
@@ -430,7 +502,7 @@ angular.module('MetronicApp')
     $scope.getWarnning = function(param,type){
         
         console.log("xxxxx"+param);
-        $scope.MPT={};//MTP==1 show,RPT==0 hide;
+
         type = type || "normal";
         switch(param){
             case "RPC":
@@ -441,8 +513,7 @@ angular.module('MetronicApp')
                     if(typeof $scope.rpcTable != "undefined"){
                         $scope.rpcTable.destroy();
                     }
-                    $scope.MPT.show=0;
-                    $scope.rpc = json;
+                    $scope.rpc = json;console.log(1,$scope.rpc)
                 });
             break;
             case "Station":
@@ -467,12 +538,12 @@ angular.module('MetronicApp')
                 var data = {equipNo:$state.params.id,equipType:"MPT",statusType:type};
                 $http.post($rootScope.settings.apiPath + url,JSON.stringify(data)).success(function(json){
              
-                    
+                    console.log($scope.rpcTable,json)
                     if(typeof $scope.rpcTable != "undefined"){
                         $scope.rpcTable.destroy();
                         // $("#rpc").destroy();
                     }
-                    $scope.MPT.show=1;
+
                     $scope.rpc = json;
 
                 });
@@ -484,7 +555,44 @@ angular.module('MetronicApp')
 
     $scope.getWarnning("Station","warning");
     $scope.getWarnning("RPC","warning");
+    $scope.getWarnning("MPT");
+    var RPCData=[{
+        channel:"RF Brake Force  XDCR",
+        currentValue: 0.845445,
+        equipNo: "PEC0-01991",
+        limitValue: -0.35723,
+        seq:null,
+        sequence: "rro_4_withouttwist_nobrake_5_DRV_RSP",
+        time:0}];
+    var MTSData=[{
+        equipNo: "PEC0-02025-05",
+        level: "6",
+        msg: "Undefined Controlling Application.",
+        time: 1471269693000}];
 
+    //一开始就加载，非点击才加载
+    $scope.MPT={};//MTP==1 show,RPT==0 hide;
+    $scope.RPC={};
+    $scope.showWarnningData=function(param,type){
+        $scope.RPC.show=0;
+        $scope.MPT.show=0;
+        type = type || "normal";
+        switch(param) {
+            case "RPC":
+                $scope.RPC.show=1;
+                //$scope.RPC.data=RPCData;
+                break;
+            case "Station":
+
+
+                break;
+            case "MPT":
+                $scope.MPT.show=1;
+                //$scope.MPT.data=MTSData;
+                break;
+        }
+    }
+    $scope.showWarnningData("RPC","warning");
     //时序
     url = "/equippage/getEquipTimeStatus";
     data = {equipNo:$state.params.id,equipType:$state.current.name};
@@ -502,9 +610,9 @@ angular.module('MetronicApp')
         });
 
         
-        var date = time;
+        var date = time.reverse();
         var data = json.equipState;
-        timeOption = {
+        $scope.timeOption = {
             grid:{
                 x:0,
                 y:23,
@@ -572,6 +680,9 @@ angular.module('MetronicApp')
                     shadowColor: 'rgba(0, 0, 0, 0.6)',
                     shadowOffsetX: 2,
                     shadowOffsetY: 2
+                },
+                textStyle:{
+                    color:'#fff'
                 }
             }],
             series: [
@@ -593,7 +704,15 @@ angular.module('MetronicApp')
 
 
         var myChart = echarts.init(document.getElementById('bar1'),theme);
-        myChart.setOption(timeOption);
+        myChart.setOption($scope.timeOption);
+        var chartReady3={};
+        window.onresize=function(){
+            clearTimeout(chartReady3.timer);
+            chartReady3.timer=setTimeout(function(){
+                myChart = echarts.init(document.getElementById('bar1'),theme);
+                myChart.setOption($scope.timeOption);
+            },100)
+        }
     });
 
 })
@@ -1015,6 +1134,9 @@ angular.module('MetronicApp')
                     shadowColor: 'rgba(0, 0, 0, 0.6)',
                     shadowOffsetX: 2,
                     shadowOffsetY: 2
+                },
+                textStyle:{
+                    color:'#fff'
                 }
             }],
             series: [{
@@ -1098,6 +1220,9 @@ angular.module('MetronicApp')
                     shadowColor: 'rgba(0, 0, 0, 0.6)',
                     shadowOffsetX: 2,
                     shadowOffsetY: 2
+                },
+                textStyle:{
+                    color:'#fff'
                 }
             }],
             series: [{
@@ -1204,6 +1329,9 @@ angular.module('MetronicApp')
                     shadowColor: 'rgba(0, 0, 0, 0.6)',
                     shadowOffsetX: 2,
                     shadowOffsetY: 2
+                },
+                textStyle:{
+                    color:'#fff'
                 }
             }],
             series: [
@@ -1328,6 +1456,9 @@ angular.module('MetronicApp')
                         shadowColor: 'rgba(0, 0, 0, 0.6)',
                         shadowOffsetX: 2,
                         shadowOffsetY: 2
+                    },
+                    textStyle:{
+                        color:'#fff'
                     }
                 }],
                 series: [{
@@ -1397,7 +1528,7 @@ angular.module('MetronicApp')
         for(var i=0;i<json.length;i++){
             if(json[i].equipNo == $state.params.id){
                 $rootScope.deviceName = json[i].equipName;
-                console.log(json[i].equipNo,$state.params.id);
+                //console.log(json[i].equipNo,$state.params.id);
             }
         }
 
@@ -1429,7 +1560,7 @@ angular.module('MetronicApp')
         if(json.tractiveEffortTime&&json.tractiveEffortTime.length>=1){
             var timeArr=[];
             json.tractiveEffortTime.forEach(function(item,index){
-                timeArr.push(commService.getTime({time:item,rule:'yyyy-MM-dd hh:mm:ss'}));
+                timeArr.unshift(commService.getTime({time:item,rule:'MM-dd hh:mm:ss'}));
             });
             $scope.option.xAxis[0].data=timeArr;
             $scope.option.series[0].data=json.tractiveEffort;
@@ -1455,8 +1586,8 @@ angular.module('MetronicApp')
             return t;
         });
 
-        
-        var date = time;
+        //bep设备启停状态.当前状态
+        var date = time.reverse();
         var data = json.equipState;
         timeOption = {
             grid:{
@@ -1525,6 +1656,9 @@ angular.module('MetronicApp')
                     shadowColor: 'rgba(0, 0, 0, 0.6)',
                     shadowOffsetX: 2,
                     shadowOffsetY: 2
+                },
+                textStyle:{
+                    color:'#fff'
                 }
             }],
             series: [

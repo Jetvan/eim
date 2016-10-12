@@ -124,7 +124,7 @@ MetronicApp.factory("commService",function() {
             case "yyyy-MM-dd":
                 return year+"-"+month+"-"+date;
                 break;
-            case "yyyy-MM-dd hh:mm:ss":
+            case "MM-dd hh:mm:ss":
                 return month+"/"+date+" "+hours+":"+minutes+":"+seconds;
                 break;
             default:

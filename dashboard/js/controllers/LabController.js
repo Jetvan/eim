@@ -384,7 +384,7 @@ $scope.status = {
             for(var j=0;j<json3D.length;j++){
 
                 if(json3D[j].client && json[i].equipNo == json3D[j].client.id){
-                    var status = parseInt(json[i].status) || '0';
+                    var status = parseInt(json[i].status) || '1';//??
                     status = status.toString();
                     json3D[j].client.status = $scope.statusInfo[status].name;
                     json3D[j].client.cycle = json[i].cycle;
