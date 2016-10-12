@@ -722,50 +722,11 @@ angular.module('MetronicApp')
                     }
                 }]
             };
-        // 指定图表的配置项和数据
-        // var StateOption = {
-
-        //     xAxis : [
-        //     {
-        //         type : 'category',
-        //         boundaryGap : false,
-        //         axisLine: {onZero: true},
-        //         data: timeData,
-        //         axisLabel:{
-        //             textStyle:{
-        //                 color:'#fff',
-        //             }
-        //         },
-        //     }],
-        //     yAxis: {
-        //         splitLine:{ 
-        //             show:false
-                // },
-                // axisLabel:{
-                //     textStyle:{
-                //         color:'#fff',
-                //     }
-                // },
-        //         splitNumber: 1,
-        //     },
-        //     series: [{
-        //         name: '启停状态',
-        //         type: 'line',
-        //         step: 'end',
-        //         smooth:false,
-        //         areaStyle: {normal: {}},
-        //         data: [0, 0, 1,1, 1, 1,1, 0, 0,1,1,1,1, 1, 1,1, 0, 0,1,1,1,1, 1, 1,1, 0, 0,1,1,1,1, 1, 1,1, 0, 0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
-        //     }]
-        // };
 
         // 基于准备好的dom，初始化echarts实例
         var myChart = echarts.init(document.getElementById('bar1'),theme);
         // 使用刚指定的配置项和数据显示图表。
         myChart.setOption(option);
-
-        // var myChart = echarts.init(document.getElementById('bar2'),theme);
-        // myChart.setOption(timeOption);
-
 
          var barReady2={};
          $(window).resize(function(){
@@ -774,8 +735,8 @@ angular.module('MetronicApp')
                  var myChart = echarts.init(document.getElementById('bar1'),theme);
                  myChart.setOption(option);
 
-                 var myChart = echarts.init(document.getElementById('bar2'),theme);
-                 myChart.setOption(timeOption);
+                 var json = $scope.getEquipTimeStatus;
+                 $scope.renderEquipTimeStatus(json.equipState,json.equipTime);
 
                  renderChart("bar3",$scope.timeOptionWater);
                  renderChart("bar4",$scope.timeOptionOil);
@@ -970,8 +931,6 @@ angular.module('MetronicApp')
     $(window).resize(function(){
         clearTimeout(barReady.timer);
         barReady.timer=setTimeout(function(){
-                var json = $scope.getEquipTimeStatus;
-                $scope.renderEquipTimeStatus(json.equipState,json.equipTime);
 
                 waterIn = echarts.init(document.getElementById("waterIn"),theme);
                 waterOut = echarts.init(document.getElementById("waterOut"),theme);
@@ -1281,7 +1240,7 @@ angular.module('MetronicApp')
     var timeOption={};
     //时序
     url = "/equippage/getEquipTimeStatus";
-    data = {equipNo:"BEP",equipType:"PEC0-03896-0002"};
+    data = {equipNo:"BEP",equipType:id};
     $http.post($rootScope.settings.apiPath + url,JSON.stringify(data)).success(function(json){
         $scope.getEquipTimeStatus = json;
         $scope.renderEquipTimeStatus(json.equipState,json.equipTime);
