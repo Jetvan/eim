@@ -61,8 +61,91 @@ timeData = timeData.map(function (str) {
 
 angular.module('MetronicApp')
 
-.controller('MTSController', function(commService,$rootScope, $scope, $http, $timeout,$state) {
+.controller('MTSController', function(commService,$rootScope, $scope, $http, $timeout,$state,$filter) {
 
+    //渲染时序
+    $scope.renderEquipTimeStatus = function(equipState,equipTime){
+        var equipData = [];
+        for(var i=0;i<equipTime.length;i++){
+            equipData.push([equipTime[i],   equipState[i]]);
+        }
+
+        var StateOption = {
+            grid:{
+                x:40,
+                y:43,
+                x2:20,
+                y2:76
+            },
+            tooltip: {
+                
+                formatter:function(a,b,c,d){
+                    var date = $filter('date')(new Date(a.value[0]), 'yyyy/MM/dd hh:mm:ss');
+                    var status = parseInt(a.value[1])==1?"运行":"停止";
+                    return date+" "+status;
+                }
+            },
+            dataZoom:[
+                {
+                    start: 2,
+                    end: 98,
+                    handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
+                    handleSize: '60%',
+                    handleStyle: {
+                        color: '#fff',
+                        shadowBlur: 3,
+                        shadowColor: 'rgba(0, 0, 0, 0.6)',
+                        shadowOffsetX: 2,
+                        shadowOffsetY: 2
+                    },
+                    textStyle:{
+                        color:'#fff'
+                    }
+                }
+            ],
+            calculable: true,
+            xAxis: [{
+                type: 'time',
+                boundaryGap: true,//??
+                splitLine:{ 
+                    show:false
+                },
+                axisLabel: {
+                    textStyle:{
+                        color:'#fff'
+                    }
+                }
+            }],
+            yAxis: [{
+                max:1,
+                type: 'value',
+                splitLine:{ 
+                    show:false
+                },
+                axisLabel: {
+                    formatter: function(a){
+                        return a==1?"运行":"停止";
+                    },
+
+                    textStyle:{
+                        color:'#fff'
+                    }
+                },
+                splitNumber: 1
+            }],
+            series: [{
+                name: '状态',
+                type: 'line',
+                step: 'begin',
+                smooth:false,
+                areaStyle: {normal: {}},
+                data: equipData
+            }]
+        };
+
+        var myChart = echarts.init(document.getElementById('TimeStatus'),theme);
+        myChart.setOption(StateOption);
+    }
     $scope.$on('ngRepeatFinished2', function(repeatFinishedEvent, element) {
         console.log('ngRepeatFinished2');
         $("#rpc").removeClass("hide");
@@ -174,9 +257,7 @@ angular.module('MetronicApp')
         //     // $("#station").DataTable().destroy();
         // }
 
-        $scope.stationTable = $("#station").DataTable(warningMTSConfig);
-
-        
+        $scope.stationTable = $("#station").DataTable(warningMTSConfig);  
     });
     //mpt表格初始化
     $scope.$on('ngRepeatFinished3', function(repeatFinishedEvent, element) {
@@ -245,11 +326,24 @@ angular.module('MetronicApp')
 
         $scope.rpcTable = $mpt.DataTable($rootScope.tableConfig);
     });
+
     $scope.$on('$viewContentLoaded', function() {   
         $(".btn-group button").click(function(){
             $(this).parent().find('.active').removeClass('active');
             $(this).addClass('active');
         })
+
+        /////////假数据参考，上线前删除
+        var json = {
+            "isSuccess": null,
+            "errorMessage": null,
+            "equipNo": null,
+            "equipState": [/*"0.0",*/ "1.0", "0.0", "1.0", "0.0", "1.0", "0.0", "1.0", "0.0", "1.0", "0.0", "1.0", "0.0", "1.0", "0.0", "1.0", "0.0", "1.0", "0.0", "1.0", "0.0", "1.0", "0.0", "1.0", "0.0", "1.0", "0.0", "1.0", "0.0", "1.0", "0.0", "1.0", "0.0", "1.0", "0.0", "1.0", "0.0", "1.0", "0.0", "1.0", "0.0", "1.0", "0.0", "1.0", "0.0", "1.0", "0.0", "1.0", "0.0", "1.0", "0.0", "1.0", "0.0", "1.0", "0.0", "1.0", "0.0", "1.0", "0.0", "1.0", "0.0", "1.0", "0.0", "1.0", "0.0", "1.0", "0.0", "1.0", "0.0", "1.0", "0.0", "1.0", "0.0", "1.0", "0.0", "1.0", "0.0", "1.0", "0.0", "1.0", "0.0", "1.0", "0.0", "1.0", "0.0"],
+            "equipTime": [/*1475699008126, */1467971971000, 1467970047000, 1467935844000, 1467933841000, 1467889014000, 1467887537000, 1467885694000, 1467882319000, 1467868120000, 1467865834000, 1467863797000, 1467863717000, 1467848705000, 1467846416000, 1467829271000, 1467824107000, 1467812753000, 1467806170000, 1467803002000, 1467802907000, 1467789236000, 1467788916000, 1467778015000, 1467777850000, 1467764035000, 1467761049000, 1467712835000, 1467710946000, 1467703853000, 1467703688000, 1467692858000, 1467692762000, 1467675701000, 1467674475000, 1467668654000, 1467668607000, 1467647741000, 1467647715000, 1467627679000, 1467624644000, 1467604229000, 1467603667000, 1467590578000, 1467588223000, 1467539850000, 1467536811000, 1467529263000, 1467529158000, 1467500412000, 1467499344000, 1467473856000, 1467473345000, 1467454204000, 1467454138000, 1467366663000, 1467365057000, 1467357132000, 1467356978000, 1467347568000, 1467347434000, 1467330504000, 1467328839000, 1467326082000, 1467325939000, 1467321927000, 1467321229000, 1467303259000, 1467303157000, 1467282545000, 1467278912000, 1467243709000, 1467242611000, 1467211236000, 1467210926000, 1467197924000, 1467196964000, 1467192898000, 1467191796000, 1467178364000, 1467178190000, 1467157679000, 1467155447000, 1467155438000, 1467155421000]
+        };
+        $scope.renderEquipTimeStatus(json.equipState,json.equipTime);
+        //////假数据参考，上线前删除
+
         var agilentOption = {
                 grid:{
                     x:40,
@@ -311,52 +405,6 @@ angular.module('MetronicApp')
                 }],
                 series: []
         };
-
-        var StateOption = {
-
-            xAxis : [
-            {
-                type : 'category',
-                boundaryGap : false,
-                axisLine: {onZero: true},
-                data: timeData,
-                axisLabel:{
-                    textStyle:{
-                        color:'#fff',
-                    }
-                },
-            }],
-            dataZoom: [{
-                type: 'inside',
-                start: 0,
-                end:100
-            }],
-            yAxis: {
-                splitLine:{ 
-                    show:false
-                },
-                axisLabel:{
-                    textStyle:{
-                        color:'#fff',
-                    }
-                },
-                splitNumber: 1,
-            },
-            series: [{
-                name: '状态',
-                type: 'line',
-                step: 'end',
-                smooth:false,
-                areaStyle: {normal: {}},
-                data: [0,0, 1,1, 1, 1,1, 0, 0,1,1,1,1, 1, 1,1, 0, 0,1,1,1,1, 1, 1,1, 0, 0,1,1,1,1, 1, 1,1, 0, 0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
-            }]
-        };
-
-        // 基于准备好的dom，初始化echarts实例
-        // var myChart = echarts.init(document.getElementById('bar1'),theme);
-        // // 使用刚指定的配置项和数据显示图表。
-        // myChart.setOption(StateOption);
-
         var agilent = echarts.init(document.getElementById('bar2'),theme);
         agilent.setOption(agilentOption);
 
@@ -441,12 +489,14 @@ angular.module('MetronicApp')
 
             })
         })
+
+
         var chartReady4={};
         window.onresize=function(){
             clearTimeout(chartReady4.timer);
             chartReady4.timer=setTimeout(function(){
-                var myChart = echarts.init(document.getElementById('bar1'),theme);
-                myChart.setOption(StateOption);
+                var json = $scope.getEquipTimeStatus;
+                $scope.renderEquipTimeStatus(json.equipState,json.equipTime);
 
                 agilent = echarts.init(document.getElementById('bar2'),theme);
                 agilent.setOption(agilentOption);
@@ -500,8 +550,6 @@ angular.module('MetronicApp')
 
 
     $scope.getWarnning = function(param,type){
-        
-        console.log("xxxxx"+param);
 
         type = type || "normal";
         switch(param){
@@ -593,126 +641,14 @@ angular.module('MetronicApp')
         }
     }
     $scope.showWarnningData("RPC","warning");
+
     //时序
     url = "/equippage/getEquipTimeStatus";
     data = {equipNo:$state.params.id,equipType:$state.current.name};
     $http.post($rootScope.settings.apiPath + url,JSON.stringify(data)).success(function(json){
-        
+        $scope.getEquipTimeStatus = json;
+        $scope.renderEquipTimeStatus(json.equipState,json.equipTime);
 
-        var time = json.equipTime;
-        if(time == null) return;
-
-        time = time.map(function (str) {
-            var d = new Date(str);
-            var t = (d.getMonth()+1)+"/"+d.getDate()+" "+d.getHours()+":"+d.getMinutes();
-            console.log(t);
-            return t;
-        });
-
-        
-        var date = time.reverse();
-        var data = json.equipState;
-        $scope.timeOption = {
-            grid:{
-                x:0,
-                y:23,
-                x2:0,
-                y2:68
-            },
-            tooltip: {
-                trigger: 'axis',
-                position: function (pt) {
-                    return [pt[0], '10%'];
-                }
-            },
-            legend: {
-                top: 'bottom',
-                data:['意向']
-            },
-            // toolbox: {
-            //     feature: {
-            //         dataZoom: {
-            //             yAxisIndex: 'none'
-            //         },
-            //         restore: {},
-            //         saveAsImage: {}
-            //     }
-            // },
-            xAxis: {
-                type: 'category',
-                boundaryGap: false,
-                // data: date,
-                data:timeData,
-                splitLine:{ 
-                    show:false
-                },
-                axisLabel:{
-                    textStyle:{
-                        color:'#fff',
-                    }
-                },
-            },
-            yAxis: {
-                type: 'value',
-                boundaryGap: [0, '100%'],
-                splitLine:{ 
-                    show:false
-                },
-                axisLabel:{
-                    textStyle:{
-                        color:'#fff',
-                    }
-                },
-                splitNumber: 1,
-            },
-            dataZoom: [/*{
-                type: 'inside',
-                start: 0,
-                end: 10
-            },*/ {
-                start: 2,
-                end: 98,
-                handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
-                handleSize: '60%',
-                handleStyle: {
-                    color: '#fff',
-                    shadowBlur: 3,
-                    shadowColor: 'rgba(0, 0, 0, 0.6)',
-                    shadowOffsetX: 2,
-                    shadowOffsetY: 2
-                },
-                textStyle:{
-                    color:'#fff'
-                }
-            }],
-            series: [
-                {
-                    name:'当前状态',
-                    type:'line',
-                    smooth:true,
-                    symbol: 'none',
-                    sampling: 'average',
-                    itemStyle: {normal: {
-
-                    }},
-                    areaStyle: {normal: {}},
-                    // data: data
-                    data:timeData
-                }
-            ]
-        };
-
-
-        var myChart = echarts.init(document.getElementById('bar1'),theme);
-        myChart.setOption($scope.timeOption);
-        var chartReady3={};
-        window.onresize=function(){
-            clearTimeout(chartReady3.timer);
-            chartReady3.timer=setTimeout(function(){
-                myChart = echarts.init(document.getElementById('bar1'),theme);
-                myChart.setOption($scope.timeOption);
-            },100)
-        }
     });
 
 })
@@ -853,6 +789,90 @@ angular.module('MetronicApp')
         myChart.setOption(option);
     }
 
+    //渲染时序
+    $scope.renderEquipTimeStatus = function(equipState,equipTime){
+        var equipData = [];
+        for(var i=0;i<equipTime.length;i++){
+            equipData.push([equipTime[i],   equipState[i]]);
+        }
+
+        var StateOption = {
+            grid:{
+                x:40,
+                y:43,
+                x2:20,
+                y2:76
+            },
+            tooltip: {
+                
+                formatter:function(a,b,c,d){
+                    var date = $filter('date')(new Date(a.value[0]), 'yyyy/MM/dd hh:mm:ss');
+                    var status = parseInt(a.value[1])==1?"运行":"停止";
+                    return date+" "+status;
+                }
+            },
+            dataZoom:[
+                {
+                    start: 2,
+                    end: 98,
+                    handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
+                    handleSize: '60%',
+                    handleStyle: {
+                        color: '#fff',
+                        shadowBlur: 3,
+                        shadowColor: 'rgba(0, 0, 0, 0.6)',
+                        shadowOffsetX: 2,
+                        shadowOffsetY: 2
+                    },
+                    textStyle:{
+                        color:'#fff'
+                    }
+                }
+            ],
+            calculable: true,
+            xAxis: [{
+                type: 'time',
+                boundaryGap: true,//??
+                splitLine:{ 
+                    show:false
+                },
+                axisLabel: {
+                    textStyle:{
+                        color:'#fff'
+                    }
+                }
+            }],
+            yAxis: [{
+                max:1,
+                type: 'value',
+                splitLine:{ 
+                    show:false
+                },
+                axisLabel: {
+                    formatter: function(a){
+                        return a==1?"运行":"停止";
+                    },
+
+                    textStyle:{
+                        color:'#fff'
+                    }
+                },
+                splitNumber: 1
+            }],
+            series: [{
+                name: '状态',
+                type: 'line',
+                step: 'begin',
+                smooth:false,
+                areaStyle: {normal: {}},
+                data: equipData
+            }]
+        };
+
+        var myChart = echarts.init(document.getElementById('TimeStatus'),theme);
+        myChart.setOption(StateOption);
+    }
+
     // set sidebar closed and body solid layout mode
     $rootScope.settings.layout.pageContentWhite = true;
     $rootScope.settings.layout.pageBodySolid = false;
@@ -874,67 +894,67 @@ angular.module('MetronicApp')
             y2:0
         },
 
-    tooltip : {
-        formatter: "{b} : {c} °C"
-    },
-    // toolbox: {
-    //     feature: {
-    //         restore: {},
-    //         saveAsImage: {}
-    //     }
-    // },
-    series: [
-        {
-            center : ['51%', '50%'],
-            title : {
-                offsetCenter: [0, '118%'],
-                textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-                    fontWeight: 'bolder',
-                    fontSize: 14,
-                    fontStyle: '雅黑',
-                    color:"#fff"
+        tooltip : {
+            formatter: "{b} : {c} °C"
+        },
+        // toolbox: {
+        //     feature: {
+        //         restore: {},
+        //         saveAsImage: {}
+        //     }
+        // },
+        series: [
+            {
+                center : ['51%', '50%'],
+                title : {
+                    offsetCenter: [0, '118%'],
+                    textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                        fontWeight: 'bolder',
+                        fontSize: 14,
+                        fontStyle: '雅黑',
+                        color:"#fff"
+                    }
+                },
+                type: 'gauge',
+                detail: {
+                    formatter:'{value} °C',
+                    offsetCenter: [2, '78%'],  
+                    textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                        color:'#fff',
+                        fontSize:12
+                    }},
+                data: [{value: 50, name: '进水口温度'}],
+                axisLine: {// 坐标轴线
+                    length: 1,
+                    lineStyle: {       // 属性lineStyle控制线条样式
+                        width: 5
+                    }
+                },
+                axisLabel: {            // 坐标轴小标记
+                    textStyle: {       // 属性lineStyle控制线条样式
+                        fontWeight: 'bolder',
+                        color: '#fff',
+                        shadowColor : '#fff', //默认透明
+                        shadowBlur: 10
+                     }
+                },
+                axisTick: {            // 坐标轴小标记
+                    splitNumber: 5,
+                    length:9,        // 属性length控制线长
+                    lineStyle: {       // 属性lineStyle控制线条样式
+                        color: 'auto',
+                        width:1
+                    }
+                },
+                splitLine: {           // 分隔线
+                    length :10,         // 属性length控制线长
+                    lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
+                        width:4
+                    }
                 }
-            },
-            type: 'gauge',
-            detail: {
-                formatter:'{value} °C',
-                offsetCenter: [2, '78%'],  
-                textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-                    color:'#fff',
-                    fontSize:12
-                }},
-            data: [{value: 50, name: '进水口温度'}],
-            axisLine: {// 坐标轴线
-                length: 1,
-                lineStyle: {       // 属性lineStyle控制线条样式
-                    width: 5
-                }
-            },
-            axisLabel: {            // 坐标轴小标记
-                textStyle: {       // 属性lineStyle控制线条样式
-                    fontWeight: 'bolder',
-                    color: '#fff',
-                    shadowColor : '#fff', //默认透明
-                    shadowBlur: 10
-                 }
-            },
-            axisTick: {            // 坐标轴小标记
-                splitNumber: 5,
-                length:9,        // 属性length控制线长
-                lineStyle: {       // 属性lineStyle控制线条样式
-                    color: 'auto',
-                    width:1
-                }
-            },
-            splitLine: {           // 分隔线
-                length :10,         // 属性length控制线长
-                lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
-                    width:4
-                }
-            }
-        }   
-    ]
-};
+            }   
+        ]
+    };
 
     var waterIn = echarts.init(document.getElementById("waterIn"),theme);
     var waterOut = echarts.init(document.getElementById("waterOut"),theme);
@@ -950,6 +970,9 @@ angular.module('MetronicApp')
     $(window).resize(function(){
         clearTimeout(barReady.timer);
         barReady.timer=setTimeout(function(){
+                var json = $scope.getEquipTimeStatus;
+                $scope.renderEquipTimeStatus(json.equipState,json.equipTime);
+
                 waterIn = echarts.init(document.getElementById("waterIn"),theme);
                 waterOut = echarts.init(document.getElementById("waterOut"),theme);
                 oilIn = echarts.init(document.getElementById("oilIn"),theme);
@@ -1260,140 +1283,46 @@ angular.module('MetronicApp')
     url = "/equippage/getEquipTimeStatus";
     data = {equipNo:"BEP",equipType:"PEC0-03896-0002"};
     $http.post($rootScope.settings.apiPath + url,JSON.stringify(data)).success(function(json){
-        
-
-        var time = json.equipTime;
-        time = time.map(function (str) {
-            var d = new Date(str);
-            var t = (d.getMonth()+1)+"/"+d.getDate()+" "+d.getHours()+":"+d.getMinutes();
-            console.log(t);
-            return t;
-        });
-
-        
-        // var date = time;
-        var date  = timeData;
-        var data = json.equipState;
-        data=[1,1,1,1,1]
-        timeOption = {
-            grid:{
-                x:0,
-                y:23,
-                x2:0,
-                y2:68
-            },
-            tooltip: {
-                trigger: 'axis',
-                position: function (pt) {
-                    return [pt[0], '10%'];
-                }
-            },
-            xAxis: {
-                type: 'category',
-                boundaryGap: false,
-                data: date,
-                splitLine:{ 
-                    show:false
-                },
-                axisLabel:{
-                    textStyle:{
-                        color:'#fff',
-                    }
-                },
-            },
-            yAxis: {
-                type: 'value',
-                boundaryGap: [0, '100%'],
-                splitLine:{ 
-                    show:false
-                },
-                axisLabel:{
-                    textStyle:{
-                        color:'#fff',
-                    }
-                },
-                splitNumber: 1,
-            },
-            dataZoom: [{
-                type: 'inside',
-                start: 0,
-                end: 50
-            }, {
-                start: 0,
-                end: 10,
-                handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
-                handleSize: '80%',
-                handleStyle: {
-                    color: '#fff',
-                    shadowBlur: 3,
-                    shadowColor: 'rgba(0, 0, 0, 0.6)',
-                    shadowOffsetX: 2,
-                    shadowOffsetY: 2
-                },
-                textStyle:{
-                    color:'#fff'
-                }
-            }],
-            series: [
-                {
-                    name:'当前状态',
-                    type:'line',
-                    smooth:true,
-                    symbol: 'none',
-                    sampling: 'average',
-                    itemStyle: {normal: {
-                    }},
-                    lineStyle: {normal: {
-                        color:'#31A82C'
-                    }},
-                    areaStyle: {normal: {
-                        color:'#31A82C'
-                    }},
-                    data: data
-                }
-            ]
-        };
-
-
-        var myChart = echarts.init(document.getElementById('bar2'),theme);
-        myChart.setOption(timeOption);
+        $scope.getEquipTimeStatus = json;
+        $scope.renderEquipTimeStatus(json.equipState,json.equipTime);
     });
 
 })
 
 
 .controller('BEPController', function(commService,$rootScope, $scope, $http, $timeout,$state) {
+    
     $scope.$on('ngRepeatFinished', function(repeatFinishedEvent, element) {
         var warningBEPConfig = {
             "bStateSave": false,
             "orderable": false,
             "autoWidth": false,
-        "bLengthChange":false,
-        "searching":false,
-        "pagingType":'bootstrap_full_number2',
-        "aoColumns": [
-              {
-                  sWidth: '170px'
-              },{
-                  sWidth: '300px'
-              }
-        ],
-        "lengthMenu": [
-            [ 7, 10, -1],
-            [ 7, 10, "All"] // change per page values here
-        ],
-        "columnDefs": [
-            {  // set default column settings
-                'orderable': false,
-                "targets": [0,1]
-            }, 
-            {
-                "searchable": false,
-                "targets": [0,1]
-            }],
-            "order": [
-                [0, "desc"]
-            ]
+            "bLengthChange":false,
+            "searching":false,
+            "pagingType":'bootstrap_full_number2',
+            "aoColumns": [
+                  {
+                      sWidth: '170px'
+                  },{
+                      sWidth: '300px'
+                  }
+            ],
+            "lengthMenu": [
+                [ 7, 10, -1],
+                [ 7, 10, "All"] // change per page values here
+            ],
+            "columnDefs": [
+                {  // set default column settings
+                    'orderable': false,
+                    "targets": [0,1]
+                }, 
+                {
+                    "searchable": false,
+                    "targets": [0,1]
+                }],
+                "order": [
+                    [0, "desc"]
+                ]
         };
         var tableConfig = $rootScope.tableConfig;
         $.extend(tableConfig,warningBEPConfig);
@@ -1494,8 +1423,8 @@ angular.module('MetronicApp')
         // myChart.setOption(StateOption);
 
          $(window).resize(function(){
-            var myChart = echarts.init(document.getElementById('bar1'),theme);
-            myChart.setOption(option);
+            var json = $scope.getEquipTimeStatus;
+            $scope.renderEquipTimeStatus(json.equipState,json.equipTime);
 
              var myChart = echarts.init(document.getElementById('bar2'),theme);
              myChart.setOption(StateOption);
@@ -1503,8 +1432,91 @@ angular.module('MetronicApp')
 
     });
 
+    //渲染时序
+    $scope.renderEquipTimeStatus = function(equipState,equipTime){
+        var equipData = [];
+        for(var i=0;i<equipTime.length;i++){
+            equipData.push([equipTime[i],   equipState[i]]);
+        }
+
+        var StateOption = {
+            grid:{
+                x:40,
+                y:43,
+                x2:20,
+                y2:76
+            },
+            tooltip: {
+                
+                formatter:function(a,b,c,d){
+                    var date = $filter('date')(new Date(a.value[0]), 'yyyy/MM/dd hh:mm:ss');
+                    var status = parseInt(a.value[1])==1?"运行":"停止";
+                    return date+" "+status;
+                }
+            },
+            dataZoom:[
+                {
+                    start: 2,
+                    end: 98,
+                    handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
+                    handleSize: '60%',
+                    handleStyle: {
+                        color: '#fff',
+                        shadowBlur: 3,
+                        shadowColor: 'rgba(0, 0, 0, 0.6)',
+                        shadowOffsetX: 2,
+                        shadowOffsetY: 2
+                    },
+                    textStyle:{
+                        color:'#fff'
+                    }
+                }
+            ],
+            calculable: true,
+            xAxis: [{
+                type: 'time',
+                boundaryGap: true,//??
+                splitLine:{ 
+                    show:false
+                },
+                axisLabel: {
+                    textStyle:{
+                        color:'#fff'
+                    }
+                }
+            }],
+            yAxis: [{
+                max:1,
+                type: 'value',
+                splitLine:{ 
+                    show:false
+                },
+                axisLabel: {
+                    formatter: function(a){
+                        return a==1?"运行":"停止";
+                    },
+
+                    textStyle:{
+                        color:'#fff'
+                    }
+                },
+                splitNumber: 1
+            }],
+            series: [{
+                name: '状态',
+                type: 'line',
+                step: 'begin',
+                smooth:false,
+                areaStyle: {normal: {}},
+                data: equipData
+            }]
+        };
+
+        var myChart = echarts.init(document.getElementById('TimeStatus'),theme);
+        myChart.setOption(StateOption);
+    }
+
     var timeOption = {};
-    
 
     // set sidebar closed and body solid layout mode
     $rootScope.settings.layout.pageContentWhite = true;
@@ -1575,109 +1587,8 @@ angular.module('MetronicApp')
     url = "/equippage/getEquipTimeStatus";
     data = {equipNo:$state.params.id,equipType:$state.current.name};
     $http.post($rootScope.settings.apiPath + url,JSON.stringify(data)).success(function(json){
-        
-
-        var time = json.equipTime;
-        if(time==null) return;
-        time = time.map(function (str) {
-            var d = new Date(str);
-            var t = (d.getMonth()+1)+"/"+d.getDate()+" "+d.getHours()+":"+d.getMinutes();
-            console.log(t);
-            return t;
-        });
-
-        //bep设备启停状态.当前状态
-        var date = time.reverse();
-        var data = json.equipState;
-        timeOption = {
-            grid:{
-                x:0,
-                y:23,
-                x2:0,
-                y2:68
-            },
-            tooltip: {
-                trigger: 'axis',
-                position: function (pt) {
-                    return [pt[0], '10%'];
-                }
-            },
-            legend: {
-                top: 'bottom',
-                data:['意向']
-            },
-            // toolbox: {
-            //     feature: {
-            //         dataZoom: {
-            //             yAxisIndex: 'none'
-            //         },
-            //         restore: {},
-            //         saveAsImage: {}
-            //     }
-            // },
-            xAxis: {
-                type: 'category',
-                boundaryGap: false,
-                data: date,
-                splitLine:{ 
-                    show:false
-                },
-                axisLabel:{
-                    textStyle:{
-                        color:'#fff',
-                    }
-                },
-            },
-            yAxis: {
-                type: 'value',
-                boundaryGap: [0, '100%'],
-                splitLine:{ 
-                    show:false
-                },
-                axisLabel:{
-                    textStyle:{
-                        color:'#fff',
-                    }
-                },
-                splitNumber: 1,
-            },
-            dataZoom: [{
-                type: 'inside',
-                start: 0,
-                end: 100
-            }, {
-                start: 0,
-                end: 100,
-                handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
-                handleSize: '80%',
-                handleStyle: {
-                    color: '#fff',
-                    shadowBlur: 3,
-                    shadowColor: 'rgba(0, 0, 0, 0.6)',
-                    shadowOffsetX: 2,
-                    shadowOffsetY: 2
-                },
-                textStyle:{
-                    color:'#fff'
-                }
-            }],
-            series: [
-                {
-                    name:'当前状态',
-                    type:'line',
-                    smooth:true,
-                    symbol: 'none',
-                    sampling: 'average',
-                    itemStyle: {normal: {}},
-                    areaStyle: {normal: {}},
-                    data: data
-                }
-            ]
-        };
-
-
-        var myChart = echarts.init(document.getElementById('bar2'),theme);
-        myChart.setOption(timeOption);
+        $scope.getEquipTimeStatus = json;
+        $scope.renderEquipTimeStatus(json.equipState,json.equipTime);
     });
 
 
