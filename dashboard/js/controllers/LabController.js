@@ -348,7 +348,7 @@ $scope.status = {
                     $scope.durautilizRate.series[1].markLine.data[0].yAxis = json[i].indexAvgValue;
                     $scope.durautilizRate.series[2].markLine.data[0].yAxis = json[i].indexLastValue;
                     //maxNum=maxNum>100?100:maxNum;
-                    $scope.durautilizRate.yAxis[0].max=100;
+                    $scope.durautilizRate.yAxis[0].max=300;
                     var myChart4 = echarts.init(document.getElementById('durautilizRate'),theme);
                     myChart4.setOption($scope.durautilizRate);
 

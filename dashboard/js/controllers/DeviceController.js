@@ -660,8 +660,8 @@ angular.module('MetronicApp')
             $http.post($rootScope.settings.apiPath + url,JSON.stringify(data)).success(function(json){
 
                 //console.log($scope.rpcTable,json)
-                if(typeof $scope.mptWarninglTable != "undefined"){
-                    $scope.mptWarninglTable.destroy();
+                if(typeof $scope.mptWarningTable != "undefined"){
+                    $scope.mptWarningTable.destroy();
                     // $("#rpc").destroy();
                 }
 
@@ -759,7 +759,7 @@ angular.module('MetronicApp')
         time:0}];
     var mptWarningData=[{
         equipNo: "mptWarningData",
-        level: "6",
+        level: "4",
         msg: "Undefined Controlling Application.",
         time: 1471269693000}];
     var mptNormalData=[{
