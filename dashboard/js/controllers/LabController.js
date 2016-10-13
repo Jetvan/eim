@@ -447,7 +447,7 @@ $scope.status = {
         /*var data = {equipType:"HPU"};
         $http.post($rootScope.settings.apiPath + url,JSON.stringify(data)).success(function(json){
             for(var i=0;i<json.length;i++){
-                $scope.status[1]++;
+                $scope.status[json[i].status]++;
             }
         });*/
 
