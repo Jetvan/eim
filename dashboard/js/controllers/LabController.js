@@ -13,7 +13,7 @@ angular.module('MetronicApp').controller('LabController', function($rootScope, $
             $scope.doubleLabel = true;
             $scope.areaName = [labInfo[$state.params.id].area[0].name,labInfo[$state.params.id].area[1].name];
 
-            var tooltip = new Tooltip(['设备名：','设备状态：','试验次数：','试验进度：','故障描述：'],['','','','','']);
+            var tooltip = new Tooltip(['设备名称：','设备状态：','试验次数：','试验进度：','故障描述：'],['','','','','']);
             var a = demo.init('3d_view1',labInfo[$state.params.id].area[0]['json'],1200,500,position,tooltip);
             var b = demo.init('3d_view2',labInfo[$state.params.id].area[1]['json'],1200,500,position,tooltip);
 
@@ -28,7 +28,7 @@ angular.module('MetronicApp').controller('LabController', function($rootScope, $
             };
             $scope.doubleLabel = false;
             $scope.areaName = [labInfo[$state.params.id].area[0].name];
-            var tooltip = new Tooltip(['设备名：','设备状态：','故障描述：'],['','','']);
+            var tooltip = new Tooltip(['设备名称：','设备状态：','故障描述：'],['','','']);
             demo.init('3d_view1',labInfo[$state.params.id].area[0]['json'],360,500,position,tooltip);
         }
     }
@@ -286,13 +286,11 @@ $scope.status = {
     // myChart.setOption(option);
 
 
-    console.log("LabController");
 
     //实验室对应指标
     var url = "/experipage/getExperiIndex";
     var data  = {experiNo:$state.params.id,indexName:["startRate","intactRate","utilizRate","durautilizRate","efficiencyCoeff"]} ;
     $http.post($rootScope.settings.apiPath + url,JSON.stringify(data)).success(function(json){
-        
         $scope.getExperiIndex = json;
 
         for(var i=0;i<json.length;i++){
@@ -300,7 +298,7 @@ $scope.status = {
             //(function(i){
             var maxNum=Math.max(json[i].indexAvgValue,json[i].indexLastValue,Math.max.apply(null,json[i].indexValue));
                 maxNum=Math.ceil(maxNum+maxNum*0.2);
-                if(json[i].indexName==="startRate"){console.log(option)
+                if(json[i].indexName==="startRate"){
                     var op=JSON.stringify(option);
                     $scope.startRate=JSON.parse(op);
                     $scope.startRate.tooltip.text = "设备开动率";
@@ -319,19 +317,26 @@ $scope.status = {
                     $scope.intactRate.series[0].data = json[i].indexValue;
                     $scope.intactRate.series[1].markLine.data[0].yAxis = json[i].indexAvgValue;
                     $scope.intactRate.series[2].markLine.data[0].yAxis = json[i].indexLastValue;
-                    maxNum=maxNum>100?100:maxNum;
-                    $scope.intactRate.yAxis[0].max=maxNum;
+                    //maxNum=maxNum>100?100:maxNum;
+                    $scope.intactRate.yAxis[0].max=110;
+                    $scope.intactRate.yAxis[0].min=80;
                     var myChart2 = echarts.init(document.getElementById('intactRate'),theme);
                     myChart2.setOption($scope.intactRate);
 
                 }else if(json[i].indexName==="utilizRate"){
-                    var op=JSON.stringify(option);
+                    var op=JSON.stringify(option);console.log(json[i])
                     $scope.utilizRate = JSON.parse(op);
-                    $scope.utilizRate.series[0].data = json[i].indexValue;
+                    if(json[i].indexValue){
+                        json[i].indexValue=json[i].indexValue.map(function(item,index){
+                            return item<20?'&nbps;':item;
+                        });
+                    }
+                    $scope.utilizRate.series[0].data =json[i].indexValue;
                     $scope.utilizRate.series[1].markLine.data[0].yAxis = json[i].indexAvgValue;
                     $scope.utilizRate.series[2].markLine.data[0].yAxis = json[i].indexLastValue;
 
-                    $scope.utilizRate.yAxis[0].max=100;
+                    $scope.utilizRate.yAxis[0].max=80;
+                    $scope.utilizRate.yAxis[0].min=20;
                     var myChart3 = echarts.init(document.getElementById('utilizRate'),theme);
                     myChart3.setOption($scope.utilizRate);
 
@@ -343,7 +348,7 @@ $scope.status = {
                     $scope.durautilizRate.series[1].markLine.data[0].yAxis = json[i].indexAvgValue;
                     $scope.durautilizRate.series[2].markLine.data[0].yAxis = json[i].indexLastValue;
                     //maxNum=maxNum>100?100:maxNum;
-                    $scope.durautilizRate.yAxis[0].max=300;
+                    $scope.durautilizRate.yAxis[0].max=100;
                     var myChart4 = echarts.init(document.getElementById('durautilizRate'),theme);
                     myChart4.setOption($scope.durautilizRate);
 
@@ -381,10 +386,18 @@ $scope.status = {
 
         //change state
         for(var i=0;i<json.length;i++){
+            if(json[i].status==1){
+                $scope.status[1]++;
+            }
+            $scope.status[json[i].status]++;
+        }
+        for(var i=0;i<json.length;i++){
+
             for(var j=0;j<json3D.length;j++){
 
                 if(json3D[j].client && json[i].equipNo == json3D[j].client.id){
-                    var status = parseInt(json[i].status) || '1';//??
+                    //$scope.status[1]++;
+                    var status = parseInt(json[i].status) || '0';//??
                     status = status.toString();
                     json3D[j].client.status = $scope.statusInfo[status].name;
                     json3D[j].client.cycle = json[i].cycle;
@@ -403,7 +416,7 @@ $scope.status = {
     var url = "/experipage/getEquipState";
     if($state.params.id=="LAB02"){
         
-        var data = {equipType:"MTS"};
+        /*var data = {equipType:"MTS"};
         $http.post($rootScope.settings.apiPath + url,JSON.stringify(data)).success(function(json){
             for(var i=0;i<json.length;i++){
                 $scope.status[json[i].status]++;
@@ -429,14 +442,14 @@ $scope.status = {
 
             //render
             render3D();
-        });
+        });*/
 
-        var data = {equipType:"HPU"};
+        /*var data = {equipType:"HPU"};
         $http.post($rootScope.settings.apiPath + url,JSON.stringify(data)).success(function(json){
             for(var i=0;i<json.length;i++){
                 $scope.status[1]++;
             }
-        });
+        });*/
 
     }else if($state.params.id=="LAB03"){
 

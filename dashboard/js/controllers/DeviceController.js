@@ -182,7 +182,7 @@ angular.module('MetronicApp')
     $scope.$on('ngRepeatFinished3', function(repeatFinishedEvent, element) {
         console.log('ngRepeatFinished3');
         var $mpt=$("#mpt");
-        //$mpt.removeClass("hide");
+        $mpt.removeClass("hide");
         var warningMTSConfig = {
 
             "bStateSave": false,
@@ -190,13 +190,11 @@ angular.module('MetronicApp')
             "autoWidth": false,
             "aoColumns": [
                 {
-                    sWidth: '85px'
+                    sWidth: '90px'
                 },{
                     sWidth: '60px'
                 },{
-                    sWidth: '60px'
-                },{
-                    sWidth: '40px'
+                    sWidth: '30px'
                 },{
                     sWidth: '60px'
                 }
@@ -225,10 +223,6 @@ angular.module('MetronicApp')
                 'width':'10%',
                 "searchable": false,
                 "targets":0
-            }, {
-                'width':'10%',
-                "searchable": false,
-                "targets":0
             }],
             "order": [
                 [0, "desc"]
@@ -237,15 +231,10 @@ angular.module('MetronicApp')
 
         $.extend($rootScope.tableConfig,warningMTSConfig);
 
-        // if(typeof $scope.rpcTable != "undefined"){
-        //     $scope.rpcTable.Rows.Clear();
-        //     // $("#station").DataTable().destroy();
-        // }
-
-
-        $scope.rpcTable = $mpt.DataTable($rootScope.tableConfig);
+        $scope.mptTable = $mpt.DataTable($rootScope.tableConfig);
     });
-    $scope.$on('$viewContentLoaded', function() {   
+    $scope.$on('$viewContentLoaded', function() {
+        console.log('$viewContentLoaded')
         $(".btn-group button").click(function(){
             $(this).parent().find('.active').removeClass('active');
             $(this).addClass('active');
@@ -314,23 +303,78 @@ angular.module('MetronicApp')
 
         var StateOption = {
 
-            xAxis : [
-            {
-                type : 'category',
-                boundaryGap : false,
-                axisLine: {onZero: true},
-                data: timeData,
-                axisLabel:{
-                    textStyle:{
-                        color:'#fff',
+                grid:{
+                    x:0,
+                    y:23,
+                    x2:0,
+                    y2:68
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    position: function (pt) {
+                        return [pt[0], '10%'];
                     }
                 },
-            }],
-            dataZoom: [{
-                type: 'inside',
-                start: 0,
-                end:100
-            }],
+                legend: {
+                    top: 'bottom',
+                    data:['意向']
+                },
+                // toolbox: {
+                //     feature: {
+                //         dataZoom: {
+                //             yAxisIndex: 'none'
+                //         },
+                //         restore: {},
+                //         saveAsImage: {}
+                //     }
+                // },
+                xAxis: {
+                    type: 'time',
+                    boundaryGap: false,
+                    // data: date,
+                    data:timeData,
+                    splitLine:{
+                        show:false
+                    },
+                    axisLabel:{
+                        textStyle:{
+                            color:'#fff',
+                        }
+                    },
+                },
+                yAxis: {
+                    type: 'value',
+                    boundaryGap: [0, '100%'],
+                    splitLine:{
+                        show:false
+                    },
+                    axisLabel:{
+                        textStyle:{
+                            color:'#fff',
+                        }
+                    },
+                    splitNumber: 1,
+                },
+                dataZoom: [/*{
+                 type: 'inside',
+                 start: 0,
+                 end: 10
+                 },*/ {
+                    start: 2,
+                    end: 98,
+                    handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
+                    handleSize: '60%',
+                    handleStyle: {
+                        color: '#fff',
+                        shadowBlur: 3,
+                        shadowColor: 'rgba(0, 0, 0, 0.6)',
+                        shadowOffsetX: 2,
+                        shadowOffsetY: 2
+                    },
+                    textStyle:{
+                        color:'#fff'
+                    }
+                }],
             yAxis: {
                 splitLine:{ 
                     show:false
@@ -343,19 +387,38 @@ angular.module('MetronicApp')
                 splitNumber: 1,
             },
             series: [{
-                name: '状态',
-                type: 'line',
-                step: 'end',
+                name:'当前状态',
+                type:'line',
+                symbol: 'none',
+                sampling: 'average',
+                step: 'start',
                 smooth:false,
-                areaStyle: {normal: {}},
-                data: [0,0, 1,1, 1, 1,1, 0, 0,1,1,1,1, 1, 1,1, 0, 0,1,1,1,1, 1, 1,1, 0, 0,1,1,1,1, 1, 1,1, 0, 0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+                itemStyle: {normal: {}},
+                areaStyle: {
+                    normal: {
+                        color:'#A6E528'
+                    }
+                },
+                lineStyle: {
+                    normal: {
+                        color:'#A6E528'
+                    }
+                },
+                //data: [1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,0,0,0,1,1,1,1,1,]
+                data:(function(data,time){
+                    var arr=[];
+                    for(var i=0;i<data.length;i++){
+                        arr.unshift([new Date(2014, 1, 1, 0, i * 10000),data[i]]);
+                    }
+                    return arr;
+                })([1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,0,0,0,1,1,1,1,1])
             }]
         };
 
         // 基于准备好的dom，初始化echarts实例
-        // var myChart = echarts.init(document.getElementById('bar1'),theme);
-        // // 使用刚指定的配置项和数据显示图表。
-        // myChart.setOption(StateOption);
+         var myChart = echarts.init(document.getElementById('bar1'),theme);
+         // 使用刚指定的配置项和数据显示图表。
+         myChart.setOption(StateOption);
 
         var agilent = echarts.init(document.getElementById('bar2'),theme);
         agilent.setOption(agilentOption);
@@ -441,7 +504,7 @@ angular.module('MetronicApp')
 
             })
         })
-        var chartReady4={};
+        /*var chartReady4={};
         window.onresize=function(){
             clearTimeout(chartReady4.timer);
             chartReady4.timer=setTimeout(function(){
@@ -451,7 +514,7 @@ angular.module('MetronicApp')
                 agilent = echarts.init(document.getElementById('bar2'),theme);
                 agilent.setOption(agilentOption);
             },100)
-        }
+        }*/
 
     });
 
@@ -493,9 +556,8 @@ angular.module('MetronicApp')
     var url = "/experipage/getEquipState";
     var data = {equipNo:$state.params.id,equipType:$state.current.name};
     $http.post($rootScope.settings.apiPath + url,JSON.stringify(data)).success(function(json){
-
         $rootScope.getMainExperiMenu = json;
-
+        //$scope.statusText=json.status==1?'运行':'停止';
     });
 
 
@@ -503,7 +565,7 @@ angular.module('MetronicApp')
         
         console.log("xxxxx"+param);
 
-        type = type || "normal";
+        var type = type || "normal";
         switch(param){
             case "RPC":
                 //log
@@ -513,7 +575,7 @@ angular.module('MetronicApp')
                     if(typeof $scope.rpcTable != "undefined"){
                         $scope.rpcTable.destroy();
                     }
-                    $scope.rpc = json;console.log(1,$scope.rpc)
+                    $scope.RPC.data= json;
                 });
             break;
             case "Station":
@@ -521,7 +583,7 @@ angular.module('MetronicApp')
                 var url = "/equippage/getWarnningMTS";
                 var data = {equipNo:$state.params.id,equipType:"Station",statusType:type};
                 $http.post($rootScope.settings.apiPath + url,JSON.stringify(data)).success(function(json){
-                    console.log(1,json)
+                    //console.log(1,json)
                      if(typeof $scope.stationTable != "undefined"){
                          $scope.stationTable.destroy();
                          // $("#rpc").destroy();
@@ -537,14 +599,12 @@ angular.module('MetronicApp')
                 var url = "/equippage/getWarnningMTS";
                 var data = {equipNo:$state.params.id,equipType:"MPT",statusType:type};
                 $http.post($rootScope.settings.apiPath + url,JSON.stringify(data)).success(function(json){
-             
-                    console.log($scope.rpcTable,json)
-                    if(typeof $scope.rpcTable != "undefined"){
-                        $scope.rpcTable.destroy();
+
+                    if(typeof $scope.mptTable != "undefined"){
+                        $scope.mptTable.destroy();
                         // $("#rpc").destroy();
                     }
-
-                    $scope.rpc = json;
+                    $scope.MPT.data = json;
 
                 });
 
@@ -556,27 +616,30 @@ angular.module('MetronicApp')
     $scope.getWarnning("Station","warning");
     $scope.getWarnning("RPC","warning");
     $scope.getWarnning("MPT");
-    var RPCData=[{
-        channel:"RF Brake Force  XDCR",
-        currentValue: 0.845445,
-        equipNo: "PEC0-01991",
-        limitValue: -0.35723,
-        seq:null,
-        sequence: "rro_4_withouttwist_nobrake_5_DRV_RSP",
-        time:0}];
-    var MTSData=[{
-        equipNo: "PEC0-02025-05",
-        level: "6",
-        msg: "Undefined Controlling Application.",
-        time: 1471269693000}];
-
+   /* setTimeout(function(){
+        var RPCData=[{
+            channel:"RF Brake Force  XDCR",
+            currentValue: 0.845445,
+            equipNo: "PEC0-01991",
+            limitValue: -0.35723,
+            seq:null,
+            sequence: "rro_4_withouttwist_nobrake_5_DRV_RSP",
+            time:0}];
+        var MTSData=[{
+            equipNo: "PEC0-02025-05",
+            level: "6",
+            msg: "Undefined Controlling Application.",
+            time: 1471269693000}];
+        $scope.RPC.data=RPCData;
+        $scope.MPT.data=MTSData;
+    },2000)*/
     //一开始就加载，非点击才加载
     $scope.MPT={};//MTP==1 show,RPT==0 hide;
     $scope.RPC={};
     $scope.showWarnningData=function(param,type){
         $scope.RPC.show=0;
         $scope.MPT.show=0;
-        type = type || "normal";
+        var type = type || "normal";
         switch(param) {
             case "RPC":
                 $scope.RPC.show=1;
@@ -597,21 +660,34 @@ angular.module('MetronicApp')
     url = "/equippage/getEquipTimeStatus";
     data = {equipNo:$state.params.id,equipType:$state.current.name};
     $http.post($rootScope.settings.apiPath + url,JSON.stringify(data)).success(function(json){
-        
-
+    //MTS设备启停状态
         var time = json.equipTime;
         if(time == null) return;
-
+       /* for(var i= 0,len=time.length;i<len;i++){
+            var dis=time[i+1]-time[i];
+            if(typeof dis=='number' && dis<1800000){
+                var arr=[];
+                var time2=time[i];
+                var len2=Math.floor(Math.abs(time[i+1]-time[i])/1800000);
+                for(var j= 0;j<len2;j++){
+                    arr.push(time2+=1800000);
+                }
+                arr.unshift(0);
+                arr.unshift(i);
+                Array.prototype.splice.apply(time,arr);
+                i+=len2;
+                len+=len2;
+            }
+        }*/
         time = time.map(function (str) {
             var d = new Date(str);
             var t = (d.getMonth()+1)+"/"+d.getDate()+" "+d.getHours()+":"+d.getMinutes();
-            console.log(t);
             return t;
         });
 
-        
-        var date = time.reverse();
+        var date = time;
         var data = json.equipState;
+        //console.log(date)
         $scope.timeOption = {
             grid:{
                 x:0,
@@ -626,8 +702,7 @@ angular.module('MetronicApp')
                 }
             },
             legend: {
-                top: 'bottom',
-                data:['意向']
+                //data:['当前状态']
             },
             // toolbox: {
             //     feature: {
@@ -639,11 +714,12 @@ angular.module('MetronicApp')
             //     }
             // },
             xAxis: {
+                //type: 'time',
                 type: 'category',
-                boundaryGap: false,
-                // data: date,
+                //boundaryGap: false,
+                //data: date,
                 data:timeData,
-                splitLine:{ 
+                splitLine:{
                     show:false
                 },
                 axisLabel:{
@@ -665,15 +741,15 @@ angular.module('MetronicApp')
                 },
                 splitNumber: 1,
             },
-            dataZoom: [/*{
+            dataZoom: [{
                 type: 'inside',
                 start: 0,
-                end: 10
-            },*/ {
-                start: 2,
-                end: 98,
+                end: 100
+            }, {
+                start: 0,
+                end: 100,
                 handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
-                handleSize: '60%',
+                handleSize: '80%',
                 handleStyle: {
                     color: '#fff',
                     shadowBlur: 3,
@@ -689,15 +765,30 @@ angular.module('MetronicApp')
                 {
                     name:'当前状态',
                     type:'line',
-                    smooth:true,
                     symbol: 'none',
                     sampling: 'average',
-                    itemStyle: {normal: {
-
-                    }},
-                    areaStyle: {normal: {}},
-                    // data: data
-                    data:timeData
+                    step: 'middle',
+                    smooth:false,
+                    itemStyle: {normal: {}},
+                    areaStyle: {
+                        normal: {
+                            color:'#A6E528'
+                        }
+                    },
+                    lineStyle: {
+                        normal: {
+                            color:'#A6E528'
+                        }
+                    },
+                    //data: data
+                    data:["0.0","1.0","1.0","1.0","1.0","1.0","0.0","1.0","0.0","1.0","1.0","1.0","1.0","1.0","1.0","1.0","0.0","1.0","1.0","1.0","1.0","1.0","1.0","1.0","0.0"]
+                    /*data:(function(data,time){
+                        var arr=[];
+                        for(var i=0;i<data.length/2;i++){
+                            arr.push([new Date(time[i]),data[i]]);
+                        }
+                        return arr;
+                    })(data,date)*/
                 }
             ]
         };
@@ -1289,7 +1380,7 @@ angular.module('MetronicApp')
                 }
             },
             xAxis: {
-                type: 'category',
+                type: 'time',
                 boundaryGap: false,
                 data: date,
                 splitLine:{ 
@@ -1349,7 +1440,13 @@ angular.module('MetronicApp')
                     areaStyle: {normal: {
                         color:'#31A82C'
                     }},
-                    data: data
+                    data:(function(data){
+                        var arr=[];
+                        for(var i=0;i<data.length;i++){
+                            arr.unshift([data[i],date[i]]);
+                        }
+                        return arr;
+                    })(data)
                 }
             ]
         };
@@ -1493,13 +1590,6 @@ angular.module('MetronicApp')
         // var myChart = echarts.init(document.getElementById('bar2'),theme);
         // myChart.setOption(StateOption);
 
-         $(window).resize(function(){
-            var myChart = echarts.init(document.getElementById('bar1'),theme);
-            myChart.setOption(option);
-
-             var myChart = echarts.init(document.getElementById('bar2'),theme);
-             myChart.setOption(StateOption);
-        });
 
     });
 
@@ -1556,7 +1646,6 @@ angular.module('MetronicApp')
     $http.post($rootScope.settings.apiPath + url,JSON.stringify(data)).success(function(json){
         //commService
         $scope.getTractiveEffort = json;
-
         if(json.tractiveEffortTime&&json.tractiveEffortTime.length>=1){
             var timeArr=[];
             json.tractiveEffortTime.forEach(function(item,index){
@@ -1575,14 +1664,12 @@ angular.module('MetronicApp')
     url = "/equippage/getEquipTimeStatus";
     data = {equipNo:$state.params.id,equipType:$state.current.name};
     $http.post($rootScope.settings.apiPath + url,JSON.stringify(data)).success(function(json){
-        
 
         var time = json.equipTime;
         if(time==null) return;
         time = time.map(function (str) {
             var d = new Date(str);
             var t = (d.getMonth()+1)+"/"+d.getDate()+" "+d.getHours()+":"+d.getMinutes();
-            console.log(t);
             return t;
         });
 
@@ -1616,12 +1703,15 @@ angular.module('MetronicApp')
             //     }
             // },
             xAxis: {
+                //type: 'time',
                 type: 'category',
                 boundaryGap: false,
                 data: date,
+
                 splitLine:{ 
                     show:false
                 },
+                scale:false,
                 axisLabel:{
                     textStyle:{
                         color:'#fff',
@@ -1665,12 +1755,29 @@ angular.module('MetronicApp')
                 {
                     name:'当前状态',
                     type:'line',
-                    smooth:true,
                     symbol: 'none',
                     sampling: 'average',
+                    step: 'middle',
+                    smooth:false,
                     itemStyle: {normal: {}},
-                    areaStyle: {normal: {}},
-                    data: data
+                    areaStyle: {
+                        normal: {
+                            color:'#A6E528'
+                        }
+                    },
+                    lineStyle: {
+                        normal: {
+                            color:'#A6E528'
+                        }
+                    },
+                    data:data
+                    /*data:(function(data,time){
+                        var arr=[];
+                        for(var i=0;i<data.length;i++){
+                            arr.unshift([time[i],data[i]]);
+                        }
+                        return arr;
+                    })(data,date)*/
                 }
             ]
         };
@@ -1678,6 +1785,14 @@ angular.module('MetronicApp')
 
         var myChart = echarts.init(document.getElementById('bar2'),theme);
         myChart.setOption(timeOption);
+        var chartReady4={};
+        $(window).resize(function(){
+            clearTimeout(chartReady4.timer);
+            chartReady4.timer=setTimeout(function(){
+                var myChart = echarts.init(document.getElementById('bar2'),theme);
+                myChart.setOption(timeOption);
+            },100);
+        });
     });
 
 

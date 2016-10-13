@@ -437,3 +437,6 @@ dl.patac-temp{
 	font-size: 16px;
 	white-space:nowrap;
 }
+.patac-tooltip>table>tr>td{
+	white-space: nowrap;
+}
