@@ -34,7 +34,7 @@
                 <div class="portlet-body">
                     <div>
                     
-                    <span style="color:#a6e528;line-height:100px;display:block;margin:0 40px;font-size:24px;text-align:center;font-size:60px;font-weight:bold;" bind="statusText">运 行</span>
+                    <span ng-style="statusColor" style="color:#a6e528;line-height:100px;display:block;margin:0 40px;font-size:24px;text-align:center;font-size:60px;font-weight:bold;" ng-bind="statusText">运 行</span>
                     </div>
 
                     <div id="TimeStatus" style="height:200px;"></div>
@@ -132,8 +132,8 @@
                 </div>
                 <div class="btn-group btn-group-circle pull-right"  ng-show="MPT.show==1">
                     <!--<div class="btn-group btn-group-circle">-->
-                        <button ng-click="getWarnning('RPC','warning')" class="btn btn-sm white active">报警</button>
-                        <button ng-click="getWarnning('RPC','normal')" class="btn btn-sm white">其他</button>
+                        <button ng-click="showWarnningData('MPT','warning')" class="btn btn-sm white active">报警</button>
+                        <button ng-click="showWarnningData('MPT','normal')" class="btn btn-sm white">其他</button>
                     <!--</div>-->
                 </div>
             </div>
@@ -160,27 +160,49 @@
                             <td ng-bind="data.currentValue | number:2"> shuxer </td>
                             <td ng-bind="data.limitValue | number:2"> shuxer </td>
 
-
-
                         </tr>
                     </tbody>
                 </table>
             </div>
-            <div class="portlet-body" ng-show="MPT.show==1">
+            <div class="portlet-body" ng-show="mptWarning.show==1">
 
-                <table class="table table-striped table-bordered  order-column m-t-lg hide" id="mpt">
+                <table class="table table-striped table-bordered  order-column m-t-lg" id="mpt-warning">
                     <thead>
                     <tr>
                         <!-- <th> 报警信息 </th> -->
                         <th> Time </th>
                         <th> EquipNo </th>
                         <th> Level </th>
-                        <th> Msg </th>
+                        <th> Log </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="odd gradeX" ng-repeat="data in mptWarning.data" on-repeat-finished3>
+                        <!-- <td ng-bind="data.sequence"> shuxer </td> -->
+                        <td ng-bind="data.time | date:'yyyy-MM-dd hh:mm:ss:sss'"></td>
+                        <td ng-bind="data.equipNo" style="white-space:normal"> shuxer </td>
+                        <td ng-bind="data.level"> shuxer </td>
+                        <td ng-bind="data.msg"> shuxer </td>
+
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="portlet-body" ng-show="mptNormal.show==1">
+
+                <table class="table table-striped table-bordered  order-column m-t-lg" id="mpt-normal">
+                    <thead>
+                    <tr>
+                        <!-- <th> 报警信息 </th> -->
+                        <th> Time </th>
+                        <th> EquipNo </th>
+                        <th> Level </th>
+                        <th> Log </th>
 
                     </tr>
                     </thead>
                     <tbody>
-                    <tr class="odd gradeX" ng-repeat="data in MPT.data" on-repeat-finished3>
+                    <tr class="odd gradeX" ng-repeat="data in mptNormal.data" on-repeat-finished4>
                         <!-- <td ng-bind="data.sequence"> shuxer </td> -->
                         <td ng-bind="data.time | date:'yyyy-MM-dd hh:mm:ss:sss'"></td>
                         <td ng-bind="data.equipNo" style="white-space:normal"> shuxer </td>

@@ -386,10 +386,7 @@ $scope.status = {
 
         //change state
         for(var i=0;i<json.length;i++){
-            if(json[i].status==1){
-                $scope.status[1]++;
-            }
-            $scope.status[json[i].status]++;
+            $scope.status[json[i].status-0]++;
         }
         for(var i=0;i<json.length;i++){
 
@@ -453,7 +450,7 @@ $scope.status = {
 
     }else if($state.params.id=="LAB03"){
 
-        var data = {equipType:"BEP"};
+        /*var data = {equipType:"BEP"};
         $http.post($rootScope.settings.apiPath + url,JSON.stringify(data)).success(function(json){
             
             for(var i=0;i<json.length;i++){
@@ -481,7 +478,7 @@ $scope.status = {
             //render
             render3D();
 
-        });
+        });*/
     }
     
 

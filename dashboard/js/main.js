@@ -94,8 +94,8 @@ MetronicApp.factory('settings', ['$rootScope', function($rootScope) {
         version:'2.1.3',
         api:{
             dashboard:"http://10.203.97.123:7003/pataceim-rest",
-            //local:"http://10.6.96.46:8080/pataceim-rest",
-            local:"http://10.203.97.123:7003/pataceim-rest",
+            local:"http://10.6.96.47:8080/pataceim-rest",
+            //local:"http://10.203.97.123:7003/pataceim-rest",
         },
         debug: {
         	request:false,
@@ -176,7 +176,7 @@ MetronicApp.directive('onRepeatFinished2', function($timeout) {
             }
         }
     };
-})
+});
 MetronicApp.directive('onRepeatFinished3', function($timeout) {
     return {
         restrict: 'A',
@@ -188,7 +188,19 @@ MetronicApp.directive('onRepeatFinished3', function($timeout) {
             }
         }
     };
-})
+});
+MetronicApp.directive('onRepeatFinished4', function($timeout) {
+    return {
+        restrict: 'A',
+        link: function(scope) {
+            if (scope.$last === true) {
+                $timeout(function() {
+                    scope.$emit('ngRepeatFinished4');
+                });
+            }
+        }
+    };
+});
 /* Setup App Main Controller */
 MetronicApp.controller('AppController', ['$scope', '$rootScope', function($scope, $rootScope) {
     $scope.$on('$viewContentLoaded', function() {
