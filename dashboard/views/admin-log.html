@@ -31,7 +31,7 @@
                             <th> 设备号</th>
                             <th> 设备名称</th>
                             <th> 通知邮箱 </th>
-                            <th> 是否有效 </th>
+                            <th> 报警是否可用</th>
                             <th> 操作</th>
                         </tr>
                     </thead>
@@ -98,6 +98,7 @@
                                     <div class="form-group form-md-line-input">
                                         <textarea rows="4" class="form-control" id="email" name="email" rows="3" ng-model="temp.email" email></textarea>
                                         <label for="email">通知邮箱</label>
+                                        <error-msg></error-msg>
                                     </div>
                                 </div>
                                 </div>

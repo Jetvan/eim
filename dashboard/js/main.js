@@ -89,12 +89,13 @@ MetronicApp.factory('settings', ['$rootScope', function($rootScope) {
         globalPath: '../assets/global',
         layoutPath: '../assets/layouts/layout',
         apiPath:'',
-        mode:"",
-        version:'2.0.2',
+        jsPath:'',
+        mode:'local',
+        version:'2.1.3',
         api:{
             dashboard:"http://10.203.97.123:7003/pataceim-rest",
-            // local:"http://10.6.96.2:8080/pataceim-rest", 
-            local:"http://10.203.97.123:7003/pataceim-rest",
+            local:"http://10.6.96.47:8080/pataceim-rest",
+            //local:"http://10.203.97.123:7003/pataceim-rest",
         },
         debug: {
         	request:false,
@@ -175,8 +176,31 @@ MetronicApp.directive('onRepeatFinished2', function($timeout) {
             }
         }
     };
-})
-
+});
+MetronicApp.directive('onRepeatFinished3', function($timeout) {
+    return {
+        restrict: 'A',
+        link: function(scope) {
+            if (scope.$last === true) {
+                $timeout(function() {
+                    scope.$emit('ngRepeatFinished3');
+                });
+            }
+        }
+    };
+});
+MetronicApp.directive('onRepeatFinished4', function($timeout) {
+    return {
+        restrict: 'A',
+        link: function(scope) {
+            if (scope.$last === true) {
+                $timeout(function() {
+                    scope.$emit('ngRepeatFinished4');
+                });
+            }
+        }
+    };
+});
 /* Setup App Main Controller */
 MetronicApp.controller('AppController', ['$scope', '$rootScope', function($scope, $rootScope) {
     $scope.$on('$viewContentLoaded', function() {
@@ -254,7 +278,10 @@ MetronicApp.controller('FooterController', ['$scope', function($scope) {
 
 /* Setup Rounting For All Pages */
 MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
-    // Redirect any unmatched url
+
+    var jsPath = '../dashboard/js/3d';
+    // var jsPath = '../plugins';
+
     $urlRouterProvider.otherwise("/dashboard");  
     
     $stateProvider
@@ -270,9 +297,9 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                         name: 'MetronicApp',
                         insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
                         files: [
-                            './js/plugins/eim/libs/t.js',
-                            './js/plugins/eim/libs/twaver.js',
-                            './js/plugins/eim/room/core.js',
+                           jsPath + '/eim/libs/t.min.js',
+                           jsPath + '/eim/libs/twaver.min.js',
+                           jsPath + '/eim/room/core.min.js'
                         ] 
                     })
                     .then(function(){
@@ -281,10 +308,10 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                             insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
                             files: [
 
-                                './js/plugins/eim/room/inbuilts.js',
-                                './js/plugins/eim/room/register.js',
-                                './js/plugins/eim/building.js',
-                                './js/plugins/eim/index.js',
+                                jsPath + '/eim/room/inbuilts.min.js',
+                                jsPath + '/eim/room/register.min.js',
+                                jsPath + '/eim/building.min.js',
+                                jsPath + '/eim/index.min.js',
                                 './js/controllers/DashboardController.js',
                             ] 
                         })
@@ -325,8 +352,8 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
 
                             './js/scripts/macarons.js',
                             '../assets/global/plugins/echarts/echarts.js',
-                            './js/plugins/3d/libs/t.js',
-                            './js/plugins/3d/init.js',
+                            jsPath + '/3d/libs/t.min.js',
+                            jsPath + '/3d/init.min.js',
                         ] 
                     })
                     .then(function(){
@@ -336,8 +363,8 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                             files: [
 
                                 './js/controllers/LabController.js',
-                                // './js/plugins/3d/data.js',
-                                './js/plugins/3d/tooltip.js',
+                                jsPath + '/3d/data.min.js',
+                                jsPath + '/3d/tooltip.min.js',
                             ] 
                         })
                     })
@@ -503,7 +530,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
 /* Init global settings and run the app */
 MetronicApp.run(["$rootScope", "settings", "$state", "$http", "$interval", function($rootScope, settings, $state,$http,$interval) {
     var timer = $interval(function(){
-        $rootScope.time = moment().format('YYYY年 MM月D日 hh:mm:ss');
+        $rootScope.time = moment().format('YYYY年 MM月D日 HH:mm:ss');
     },1000);
     
 
@@ -611,23 +638,11 @@ MetronicApp.run(["$rootScope", "settings", "$state", "$http", "$interval", funct
                         menu[json[i].parentId]=[];
                     }
 
-                    //权限校验
-
-                    // if(json[i].url && json[i].url.indexOf('lab')>-1){
-
-                    //     var id = json[i].url.split('#/lab/')[1];
-                    //     for(var j=0;j<lab0.objects.length;j++){
-                    //         if(lab0.objects[j].client && lab0.objects[j].client.id == id){
-                                
-                    //             console.log(lab0.objects[j].client.name);
-                    //             lab0.objects[j].client.validateLicense = true;
-                    //             lab0.objects[j].sideColor =  '#e47930';
-                    //             lab0.objects[j].topColor = '#f19149';
-                    //         }
-                    //     }
-                    // }
                 }
 
+
+                // 权限校验
+                $rootScope.license = json;
 
                 $rootScope.threeReady = true;
 
@@ -654,7 +669,6 @@ MetronicApp.run(["$rootScope", "settings", "$state", "$http", "$interval", funct
 
                 $rootScope.menu = menuList;
 
-                console.log()
             }); 
         })
 

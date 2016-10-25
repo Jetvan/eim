@@ -1,6 +1,6 @@
 angular.module('MetronicApp')
 
-.controller('UserController', function($rootScope, $scope, $http, $timeout,$state) {
+.controller('UserController', function(commService,$rootScope, $scope, $http, $timeout,$state) {
     
     // set sidebar closed and body solid layout mode
     $rootScope.settings.layout.pageContentWhite = true;
@@ -31,7 +31,7 @@ angular.module('MetronicApp')
         var table = $("#"+$scope.obj);
 
         table.removeClass("hide");
-        table.find(".checkboxes").uniform();
+       // table.find(".checkboxes").uniform();
         table.find('.group-checkable').change(function () {
             var set = jQuery(this).attr("data-set");
             var checked = jQuery(this).is(":checked");
@@ -79,13 +79,21 @@ angular.module('MetronicApp')
     $scope.getUserList = function(){
         $http.get($rootScope.settings.apiPath+"/"+ $scope.obj +"/list").success(function(json){
             $scope.datas = json;
-            $('#'+ $scope.obj +' .checkboxes').uniform();
+            //$('#'+ $scope.obj +' .checkboxes').uniform();
         });
     }
 
     $scope.getUserList();
 
     $scope.save = function(form){
+        var result=commService.emailPattern($scope.data.email);
+
+        if(result&&result.error==1){
+            $scope.emailPattern(result.msg,'simple');
+            return false;
+        }else if(result){
+            $scope.emailPattern(result.msg,'simple');
+        }
 
         if(!form.validate()) {
             return;
@@ -93,6 +101,7 @@ angular.module('MetronicApp')
 
         var selectedElmsIds = $('#tree_2').jstree("get_selected");
         $scope.data.roleids = selectedElmsIds.join(",");
+
 
         $(".modal").modal('hide');
         $http.post($rootScope.settings.apiPath+"/"+ $scope.obj +"/addOrUpdate",$scope.data).success(function(json){
@@ -508,7 +517,7 @@ angular.module('MetronicApp')
     $scope.getResourceList = function(){
         $http.get($rootScope.settings.apiPath+"/"+ $scope.obj +"/list").success(function(json){
             $scope.datas = json;
-            $('#'+ $scope.obj +' .checkboxes').uniform();
+            //$('#'+ $scope.obj +' .checkboxes').uniform();
         });
     }
     $scope.getResourceList();
@@ -568,7 +577,7 @@ angular.module('MetronicApp')
 
 })
 
-.controller('WarningController', function($rootScope, $scope, $http, $timeout) {
+.controller('WarningController', function(commService,$rootScope, $scope, $http, $timeout) {
     
     // set sidebar closed and body solid layout mode
     $rootScope.settings.layout.pageContentWhite = true;
@@ -666,7 +675,11 @@ angular.module('MetronicApp')
             console.log('fail');
             return;
         }
-
+        var result=commService.emailPattern($scope.temp.email);
+        if(result&&result.error==1){
+            $scope.emailPattern(result.msg);
+            return false;
+        }
         $http.post($rootScope.settings.apiPath+"/hpualarm/addOrUpdate",$scope.temp).success(function(json){
 
             $(".modal").modal('hide');
@@ -697,7 +710,7 @@ angular.module('MetronicApp')
 
 })
 
-.controller('LogController', function($rootScope, $scope, $http, $timeout) {
+.controller('LogController', function(commService,$rootScope, $scope, $http, $timeout) {
     
     // set sidebar closed and body solid layout mode
     $rootScope.settings.layout.pageContentWhite = true;
@@ -773,7 +786,11 @@ angular.module('MetronicApp')
             console.log('fail');
             return;
         }
-
+        var result=commService.emailPattern($scope.temp.email);
+        if(result&&result.error==1){
+            $scope.emailPattern(result.msg);
+            return false;
+        }
         $http.post($rootScope.settings.apiPath+"/eqptlogAlarm/addOrUpdate",$scope.temp).success(function(json){
             $(".modal").modal('hide');
             window.location.reload();
@@ -851,6 +868,7 @@ angular.module('MetronicApp')
         };
     })
 .config(function ($validatorProvider) {
+
     $validatorProvider.setDefaults({
         errorElement: 'span',
         errorClass: 'help-block',

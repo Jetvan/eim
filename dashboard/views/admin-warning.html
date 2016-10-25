@@ -33,7 +33,7 @@
                             <th> 上限值 </th>
                             <th> 下限值 </th>
                             <th> 通知邮箱 </th>
-                            <th> 是否有效 </th>
+                            <th> 报警是否可用 </th>
                             <th> 操作</th>
                         </tr>
                     </thead>
@@ -83,7 +83,7 @@
                                         </div>
                                         <div class="col-md-3">
                                              <div class="form-group form-md-line-input">
-                                                <input type="text" class="form-control" name="highAlarmVal" id="highAlarmVal" placeholder="请输入上限值"
+                                                <input type="number" class="form-control" name="highAlarmVal" id="highAlarmVal" placeholder="请输入上限值"
                                                 ng-model="temp.highAlarmVal">
                                                 <label for="highAlarmVal">上限值
                                                 </label>
@@ -91,8 +91,8 @@
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-group form-md-line-input">
-                                                <input type="text" class="form-control" id="lowAlarmVal" name="lowAlarmVal" placeholder="请输入下限值"
-                                                ng-model="temp.lowAlarmVal">
+                                                <input type="number" class="form-control" id="lowAlarmVal" name="lowAlarmVal" placeholder="请输入下限值"
+                                                ng-model="temp.lowAlarmVal" number>
                                                 <label for="lowAlarmVal">下限值
                                                 </label>
                                             </div>
@@ -121,6 +121,7 @@
                                     <div class="form-group form-md-line-input">
                                         <textarea rows="4" class="form-control" id="email" name="email" rows="3" ng-model="temp.email" email></textarea>
                                         <label for="email">通知邮箱</label>
+                                        <error-msg></error-msg>
                                     </div>
                                     
                                     

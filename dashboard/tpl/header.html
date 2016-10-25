@@ -6,7 +6,7 @@
                 <img src="./css/PATAC-logo.png" alt="logo" class="logo-default" /> 
                 <span>EIM设备管理系统</span> 
         </div>
-        <div class="btn-group m-t-sm" ng-hide="!settings.layout.setDeviceButton">
+        <div class="btn-group m-t-sm " ng-hide="!settings.layout.setDeviceButton">
             <button type="button" class="btn btn-circle btn-outline white dropdown-toggle" data-toggle="dropdown">
                 <span class="hidden-sm hidden-xs" ng-bind="deviceName">设备选择&nbsp;</span>&nbsp;
                 <i class="fa fa-angle-down"></i>
@@ -31,8 +31,8 @@
 
             <ul class="nav navbar-nav pull-right">
                 <li class="dropdown" ng-if="isLogin">
-                    <a href="#/dashboard" class="dropdown-toggle">
-                        <i class="icon-home font-white"></i>
+                    <a href="#/dashboard" class="dropdown-toggle font-white">
+                        <i class="icon-home font-white"></i> 主页
                     </a>
                 </li>
 
@@ -53,8 +53,8 @@
                 
 
                 <li class="dropdown" ng-if="isLogin">
-                    <a ng-click="logInOut(false)" class="dropdown-toggle" alt="登出">
-                        <i class="icon-logout font-white"></i>
+                    <a ng-click="logInOut(false)" class="dropdown-toggle font-white" alt="登出">
+                        <i class="icon-logout font-white"></i> 退出
                     </a>
                 </li>
                 <!-- END QUICK SIDEBAR TOGGLER -->
