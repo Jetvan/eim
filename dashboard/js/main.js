@@ -13,7 +13,7 @@ var MetronicApp = angular.module("MetronicApp", [
 /* Configure ocLazyLoader(refer: https://github.com/ocombe/ocLazyLoad) */
 MetronicApp.config(['$ocLazyLoadProvider', function($ocLazyLoadProvider) {
     $ocLazyLoadProvider.config({
-        // global configs go here
+        // global mconfigs go here
     });
 }]);
 
