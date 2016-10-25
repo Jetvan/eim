@@ -1,4 +1,4 @@
-angular.module('MetronicApp').controller('LabController', function($rootScope, $scope, $http, $timeout,$state,$window,$filter) {
+;angular.module('SeanApp').controller('LabController', ['$rootScope', '$scope', '$http', '$timeout','$state','$window','$filter',function($rootScope, $scope, $http, $timeout,$state,$window,$filter) {
 
     var render3D = function(tooltip){
 
@@ -34,46 +34,46 @@ angular.module('MetronicApp').controller('LabController', function($rootScope, $
     }
 
 
-$scope.statusInfo = {
-    "0":{
-            name:"停止",
-            color:'#DA7C19',
-            sideColor: '#c17424',
-            topColor: '#DA7C19',
-        },
-    "1":{
-            name:"运行",
-            color:'#31A82C',
-            sideColor: '#2d802a',
-            topColor: '#31A82C',
-        },
-    "2":{
-            name:"故障",
-            color:'#e35b5a',
-            sideColor: '#ae5958',
-            topColor: '#e35b5a',
-        },
-    "3":{
-            name:"空闲",
-            color:'#dddddd',
-            sideColor: '#999999',
-            topColor: '#dddddd',
-        },
-    "4":{
-            name:"占位",
-            color:'#e35b5a',
-            sideColor: '#b35554',
-            topColor: '#e35b5a',
-        },
-};
-$scope.status = {
-    "0":0,
-    "1":0,
-    "2":0,
-    "3":0,
-    "4":0,
-    "5":0,
-};
+    $scope.statusInfo = {
+        "0":{
+                name:"停止",
+                color:'#DA7C19',
+                sideColor: '#c17424',
+                topColor: '#DA7C19',
+            },
+        "1":{
+                name:"运行",
+                color:'#31A82C',
+                sideColor: '#2d802a',
+                topColor: '#31A82C',
+            },
+        "2":{
+                name:"故障",
+                color:'#e35b5a',
+                sideColor: '#ae5958',
+                topColor: '#e35b5a',
+            },
+        "3":{
+                name:"空闲",
+                color:'#dddddd',
+                sideColor: '#999999',
+                topColor: '#dddddd',
+            },
+        "4":{
+                name:"占位",
+                color:'#e35b5a',
+                sideColor: '#b35554',
+                topColor: '#e35b5a',
+            },
+    };
+    $scope.status = {
+        "0":0,
+        "1":0,
+        "2":0,
+        "3":0,
+        "4":0,
+        "5":0,
+    };
 
     $scope.$on('$viewContentLoaded', function() {  
        
@@ -481,5 +481,4 @@ $scope.status = {
         });*/
     }
     
-
-});
+}]);

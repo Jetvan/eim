@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <title>eim王港3D</title>
+    <script type="text/javascript" src = "../../libs/t.js"></script>
+	<script type="text/javascript" src = "../../libs/twaver.js"></script>
+	<script type="text/javascript" src = "./room/core.js"></script>
+	<script type="text/javascript" src = "./room/inbuilts.js"></script>
+	<script type="text/javascript" src = "./room/register.js"></script>
+	
+	<script type="text/javascript" src = "building.js"></script>
+	<script type="text/javascript" src = "index.js"></script>
+	<style>
+		div .tgl_annotation{
+			font-family:Calibri, 'Microsoft Yahei', Verdana, Helvetica, Arial, sans-serif;
+			color: rgb(60, 59, 59);
+		}
+		div .tgl_annotation_tooltip{
+			font-size: 14px;
+			font-family:Calibri, 'Microsoft Yahei', Verdana, Helvetica, Arial, sans-serif;
+			color: rgb(60, 59, 59);
+			border: 1px solid rgb(216, 208, 208);
+			background: rgb(208, 224, 242);
+		}
+		div .tgl_annotation_tooltip:after{
+			border-color: rgb(208, 224, 242) transparent transparent;
+			border-width: 12px 11px 0px 4px;
+			left: 14px;
+		}
+		div .tgl_annotation_tooltip:before{
+			border-color: rgb(216, 208, 208) transparent transparent;
+			border-width: 13px 14px 0px 4px;
+			left: 13px;
+		}
+		.view{
+			position: absolute;
+			top:0;
+			bottom: 0;
+			width: 100%;
+		}
+	</style>
+</head>
+
+<body onload = 'demo.Default.setupRoomFiled("3d_view")' style="margin:0px;">
+	<div id='3d_view' class="view"></div>
+</body>
+</html>

@@ -1,6 +1,7 @@
-angular.module('MetronicApp')
-.controller('DashboardController', function($rootScope, $scope, $http, $timeout,$interval) {
-    $scope.$on('$viewContentLoaded', function() {   
+;angular.module('SeanApp')
+.controller('DashboardController',['$rootScope', '$scope','$http', '$timeout','$interval', function($rootScope, $scope, $http, $timeout,$interval) {
+    $scope.$on('$viewContentLoaded', function() {
+
 
         var timer = $interval(function(){
 
@@ -13,7 +14,7 @@ angular.module('MetronicApp')
 
                             if(fieldJson.objects[j].client && fieldJson.objects[j].client.id == id && $rootScope.license[i].url.indexOf('lab')>-1){
                                 
-                                // console.log(fieldJson.objects[j].client.name);
+                                //  console.log(fieldJson.objects[j].client.name);
                                 fieldJson.objects[j].client.validateLicense = true;
                                 // fieldJson.objects[j].sideColor =  '#759bc2';
                                 // fieldJson.objects[j].topColor = '#759bc2';
@@ -39,8 +40,8 @@ angular.module('MetronicApp')
 
                     if(fieldJson.objects[j].client){
                         fieldJson.objects[j].client.validateLicense = true;
-                        // fieldJson.objects[j].sideColor =  '#759bc2';
-                        // fieldJson.objects[j].topColor = '#759bc2';
+                        fieldJson.objects[j].sideColor =  '#ff6b02';
+                        fieldJson.objects[j].topColor = '#ff6b02';
                         fieldJson.objects[j].client['m.envmap.image'] =  ['./js/3d/eim/images/sky.png','./js/3d/eim/images/sky.png','./js/3d/eim/images/sky.png','./js/3d/eim/images/sky.png','./js/3d/eim/images/sky.png','./js/3d/eim/images/sky.png'];
                     }
                 }
@@ -80,4 +81,4 @@ angular.module('MetronicApp')
     // });
 
 
-});
+}]);

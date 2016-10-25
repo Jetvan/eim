@@ -1,9 +1,9 @@
 /***
-Metronic AngularJS App Main Script
+Sean AngularJS App Main Script
 ***/
 
-/* Metronic App */
-var MetronicApp = angular.module("MetronicApp", [
+/* Sean App */
+var SeanApp = angular.module("SeanApp", [
     "ui.router", 
     "ui.bootstrap", 
     "oc.lazyLoad",  
@@ -11,57 +11,19 @@ var MetronicApp = angular.module("MetronicApp", [
 ]); 
 
 /* Configure ocLazyLoader(refer: https://github.com/ocombe/ocLazyLoad) */
-MetronicApp.config(['$ocLazyLoadProvider', function($ocLazyLoadProvider) {
+SeanApp.config(['$ocLazyLoadProvider', function($ocLazyLoadProvider) {
     $ocLazyLoadProvider.config({
-        // global mconfigs go here
+        // global configs go here
     });
 }]);
 
 /*Content-Type application/json*/
-MetronicApp.config(['$httpProvider', function($httpProvider){
+SeanApp.config(['$httpProvider', function($httpProvider){
     $httpProvider.interceptors.push("$httpInterceptor");
 }]);
 
-/********************************************
- BEGIN: BREAKING CHANGE in AngularJS v1.3.x:
-*********************************************/
-/**
-`$controller` will no longer look for controllers on `window`.
-The old behavior of looking on `window` for controllers was originally intended
-for use in examples, demos, and toy apps. We found that allowing global controller
-functions encouraged poor practices, so we resolved to disable this behavior by
-default.
-
-To migrate, register your controllers with modules rather than exposing them
-as globals:
-
-Before:
-
-```javascript
-function MyController() {
-  // ...
-}
-```
-
-After:
-
-```javascript
-angular.module('myApp', []).controller('MyController', [function() {
-  // ...
-}]);
-
-Although it's not recommended, you can re-enable the old behavior like this:
-
-```javascript
-angular.module('myModule').config(['$controllerProvider', function($controllerProvider) {
-  // this option might be handy for migrating old apps, but please don't use it
-  // in new ones!
-  $controllerProvider.allowGlobals();
-}]);
-**/
-
 //AngularJS v1.3.x workaround for old style controller declarition in HTML
-MetronicApp.config(['$controllerProvider', function($controllerProvider) {
+SeanApp.config(['$controllerProvider', function($controllerProvider) {
   // this option might be handy for migrating old apps, but please don't use it
   // in new ones!
   $controllerProvider.allowGlobals();
@@ -72,7 +34,7 @@ MetronicApp.config(['$controllerProvider', function($controllerProvider) {
 *********************************************/
 
 /* Setup global settings */
-MetronicApp.factory('settings', ['$rootScope', function($rootScope) {
+SeanApp.factory('settings', ['$rootScope', function($rootScope) {
     // supported languages
     var settings = {
         layout: {
@@ -90,8 +52,8 @@ MetronicApp.factory('settings', ['$rootScope', function($rootScope) {
         layoutPath: '../assets/layouts/layout',
         apiPath:'',
         jsPath:'',
-        mode:'local',
-        version:'2.1.3',
+        mode:'server',
+        version:'3.0',
         api:{
             dashboard:"http://10.203.97.123:7003/pataceim-rest",
             local:"http://10.6.96.47:8080/pataceim-rest",
@@ -114,7 +76,7 @@ MetronicApp.factory('settings', ['$rootScope', function($rootScope) {
 
 
 /*HttpInterceptor Factory*/
-MetronicApp.factory("$httpInterceptor",["$q", "$rootScope", function($q, $rootScope) {
+SeanApp.factory("$httpInterceptor",["$q", "$rootScope", function($q, $rootScope) {
 	return {
 		request: function(json) {
 			if($rootScope.settings.debug.request){
@@ -152,7 +114,7 @@ MetronicApp.factory("$httpInterceptor",["$q", "$rootScope", function($q, $rootSc
 	};
 }]);
 
-MetronicApp.directive('onRepeatFinished', function($timeout) {
+SeanApp.directive('onRepeatFinished', ['$timeout',function($timeout) {
     return {
         restrict: 'A',
         link: function(scope) {
@@ -163,9 +125,8 @@ MetronicApp.directive('onRepeatFinished', function($timeout) {
             }
         }
     };
-})
-
-MetronicApp.directive('onRepeatFinished2', function($timeout) {
+}])
+.directive('onRepeatFinished2', ['$timeout',function($timeout) {
     return {
         restrict: 'A',
         link: function(scope) {
@@ -176,8 +137,8 @@ MetronicApp.directive('onRepeatFinished2', function($timeout) {
             }
         }
     };
-});
-MetronicApp.directive('onRepeatFinished3', function($timeout) {
+}])
+.directive('onRepeatFinished3', ['$timeout',function($timeout) {
     return {
         restrict: 'A',
         link: function(scope) {
@@ -188,8 +149,8 @@ MetronicApp.directive('onRepeatFinished3', function($timeout) {
             }
         }
     };
-});
-MetronicApp.directive('onRepeatFinished4', function($timeout) {
+}])
+.directive('onRepeatFinished4', ['$timeout',function($timeout) {
     return {
         restrict: 'A',
         link: function(scope) {
@@ -200,9 +161,9 @@ MetronicApp.directive('onRepeatFinished4', function($timeout) {
             }
         }
     };
-});
+}]);
 /* Setup App Main Controller */
-MetronicApp.controller('AppController', ['$scope', '$rootScope', function($scope, $rootScope) {
+SeanApp.controller('AppController', ['$scope', function($scope) {
     $scope.$on('$viewContentLoaded', function() {
         App.initComponents(); // init core components
         //Layout.init(); //  Init entire layout(header, footer, sidebar, etc) on page load if the partials included in server side instead of loading with ng-include directive 
@@ -216,7 +177,7 @@ initialization can be disabled and Layout.init() should be called on page load c
 ***/
 
 /* Setup Layout Part - Header */
-MetronicApp.controller('HeaderController', ['$rootScope','$scope','$http','$state', function($rootScope,$scope,$http,$state) {
+SeanApp.controller('HeaderController', ['$rootScope','$scope','$http','$state', function($rootScope,$scope,$http,$state) {
     $scope.$on('$includeContentLoaded', function() {
         Layout.initHeader(); // init header
     });
@@ -242,7 +203,7 @@ MetronicApp.controller('HeaderController', ['$rootScope','$scope','$http','$stat
 }]);
 
 /* Setup Layout Part - Sidebar */
-MetronicApp.controller('SidebarController', ['$scope', function($scope,$state) {
+SeanApp.controller('SidebarController', ['$scope','$state', function($scope,$state) {
     $scope.$on('$includeContentLoaded', function() {
         Layout.initSidebar(); // init sidebar
     });
@@ -254,7 +215,7 @@ MetronicApp.controller('SidebarController', ['$scope', function($scope,$state) {
 }]);
 
 /* Setup Layout Part - Quick Sidebar */
-MetronicApp.controller('QuickSidebarController', ['$scope', function($scope) {    
+SeanApp.controller('QuickSidebarController', ['$scope', function($scope) {    
     $scope.$on('$includeContentLoaded', function() {
        setTimeout(function(){
             QuickSidebar.init(); // init quick sidebar        
@@ -263,21 +224,21 @@ MetronicApp.controller('QuickSidebarController', ['$scope', function($scope) {
 }]);
 
 /* Setup Layout Part - Theme Panel */
-MetronicApp.controller('ThemePanelController', ['$scope', function($scope) {    
+SeanApp.controller('ThemePanelController', ['$scope', function($scope) {    
     $scope.$on('$includeContentLoaded', function() {
         Demo.init(); // init theme panel
     });
 }]);
 
 /* Setup Layout Part - Footer */
-MetronicApp.controller('FooterController', ['$scope', function($scope) {
+SeanApp.controller('FooterController', ['$scope', function($scope) {
     $scope.$on('$includeContentLoaded', function() {
         Layout.initFooter(); // init footer
     });
 }]);
 
 /* Setup Rounting For All Pages */
-MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
+SeanApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
 
     var jsPath = '../dashboard/js/3d';
     // var jsPath = '../plugins';
@@ -294,24 +255,18 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
             resolve: {
                 deps: ['$ocLazyLoad', function($ocLazyLoad) {
                     return $ocLazyLoad.load({
-                        name: 'MetronicApp',
+                        name: 'SeanApp',
                         insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
                         files: [
-                           jsPath + '/eim/libs/t.min.js',
-                           jsPath + '/eim/libs/twaver.min.js',
-                           jsPath + '/eim/room/core.min.js'
+                           jsPath + '/lib3d.js'
                         ] 
                     })
                     .then(function(){
                         return $ocLazyLoad.load({
-                            name: 'MetronicApp',
+                            name: 'SeanApp',
                             insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
                             files: [
-
-                                jsPath + '/eim/room/inbuilts.min.js',
-                                jsPath + '/eim/room/register.min.js',
-                                jsPath + '/eim/building.min.js',
-                                jsPath + '/eim/index.min.js',
+                                jsPath + '/eim.js',
                                 './js/controllers/DashboardController.js',
                             ] 
                         })
@@ -346,25 +301,23 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
             resolve: {
                 deps: ['$ocLazyLoad', function($ocLazyLoad) {
                     return $ocLazyLoad.load({
-                        name: 'MetronicApp',
+                        name: 'SeanApp',
                         insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
                         files: [
 
                             './js/scripts/macarons.js',
                             '../assets/global/plugins/echarts/echarts.js',
-                            jsPath + '/3d/libs/t.min.js',
-                            jsPath + '/3d/init.min.js',
+                            jsPath + '/lib3d.js'
                         ] 
                     })
                     .then(function(){
                         return $ocLazyLoad.load({
-                            name: 'MetronicApp',
+                            name: 'SeanApp',
                             insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
                             files: [
 
+                                 jsPath + '/device.js',
                                 './js/controllers/LabController.js',
-                                jsPath + '/3d/data.min.js',
-                                jsPath + '/3d/tooltip.min.js',
                             ] 
                         })
                     })
@@ -382,7 +335,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
             resolve: {
                 deps: ['$ocLazyLoad', function($ocLazyLoad) {
                     return $ocLazyLoad.load({
-                        name: 'MetronicApp',
+                        name: 'SeanApp',
                         insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
                         files: [
 
@@ -410,7 +363,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
             resolve: {
                 deps: ['$ocLazyLoad', function($ocLazyLoad) {
                     return $ocLazyLoad.load({
-                        name: 'MetronicApp',
+                        name: 'SeanApp',
                         insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
                         files: [
                             './js/scripts/macarons.js',
@@ -431,7 +384,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
             resolve: {
                 deps: ['$ocLazyLoad', function($ocLazyLoad) {
                     return $ocLazyLoad.load({
-                        name: 'MetronicApp',
+                        name: 'SeanApp',
                         insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
                         files: [
 
@@ -456,7 +409,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
             resolve: {
                 deps: ['$ocLazyLoad', function($ocLazyLoad) {
                     return $ocLazyLoad.load({
-                        name: 'MetronicApp',
+                        name: 'SeanApp',
                         insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
                         files: [
                             '../assets/global/plugins/jstree/dist/themes/default/style.min.css',
@@ -528,7 +481,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
 }]);
 
 /* Init global settings and run the app */
-MetronicApp.run(["$rootScope", "settings", "$state", "$http", "$interval", function($rootScope, settings, $state,$http,$interval) {
+SeanApp.run(["$rootScope", "settings", "$state", "$http", "$interval", function($rootScope, settings, $state,$http,$interval) {
     var timer = $interval(function(){
         $rootScope.time = moment().format('YYYY年 MM月D日 HH:mm:ss');
     },1000);
@@ -592,7 +545,9 @@ MetronicApp.run(["$rootScope", "settings", "$state", "$http", "$interval", funct
             }]
         };
 
-        if($rootScope.settings.mode==="") $rootScope.threeReady = true;
+        if($rootScope.settings.mode != "server"){
+            $rootScope.threeReady = true;
+        }
 
         //server apis
         $http.get($rootScope.settings.apiPath+"/user/getLoginUser")
@@ -626,51 +581,220 @@ MetronicApp.run(["$rootScope", "settings", "$state", "$http", "$interval", funct
 
                 $http.post($rootScope.settings.apiPath+"/user/login",{userName:$rootScope.userName})
                 .success(function(json){
-                var menu = [];
+                    var menu = [];
 
-                for(var i=0;i<json.length;i++){
+                    for(var i=0;i<json.length;i++){
 
-                    if(json[i].parentId == undefined){
-                        json[i].parentId=0;
-                    }
-
-                    if(typeof menu[json[i].parentId] == "undefined"){
-                        menu[json[i].parentId]=[];
-                    }
-
-                }
-
-
-                // 权限校验
-                $rootScope.license = json;
-
-                $rootScope.threeReady = true;
-
-                
-
-                var tmp = [];
-                for(var i=json.length-1;i>=0;i--){
-                    for(var j=0;j<json.length;j++){
-                        if(json[j].id==json[i].parentId){
-                            if(json[j]['child']==undefined) json[j]['child'] = [];
-                            json[j]['child'].unshift( json[i] );
+                        if(json[i].parentId == undefined){
+                            json[i].parentId=0;
                         }
-                    }
-                   
-                }
 
-                var menuList = [];
-                for(var i=0;i<json.length;i++){
-                    if(json[i].parentId==0){
-                        menuList.push(json[i]);
+                        if(typeof menu[json[i].parentId] == "undefined"){
+                            menu[json[i].parentId]=[];
+                        }
+
                     }
 
-                }
 
-                $rootScope.menu = menuList;
+                    // 权限校验
+                    $rootScope.license = json;
 
-            }); 
+                    $rootScope.threeReady = true;
+
+                    
+
+                    var tmp = [];
+                    for(var i=json.length-1;i>=0;i--){
+                        for(var j=0;j<json.length;j++){
+                            if(json[j].id==json[i].parentId){
+                                if(json[j]['child']==undefined) json[j]['child'] = [];
+                                json[j]['child'].unshift( json[i] );
+                            }
+                        }
+                       
+                    }
+
+                    var menuList = [];
+                    for(var i=0;i<json.length;i++){
+                        if(json[i].parentId==0){
+                            menuList.push(json[i]);
+                        }
+
+                    }
+
+                    $rootScope.menu = menuList;
+
+                }); 
         })
 
         
 }]);
+/***
+GLobal Directives
+***/
+
+// Route State Load Spinner(used on page or content load)
+SeanApp.directive('ngSpinnerBar', ['$rootScope','$http','$state',
+    function($rootScope,$http,$state) {
+        return {
+            link: function(scope, element, attrs) {
+                // by defult hide the spinner bar
+                element.addClass('hide'); // hide spinner bar by default
+
+                // display the spinner bar whenever the route changes(the content part started loading)
+                $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
+                    element.removeClass('hide'); // show spinner bar
+
+                    if(toState.name=='login') return;
+
+                });
+
+                // hide the spinner bar on rounte change success(after the content loaded)
+                $rootScope.$on('$stateChangeSuccess', function() {
+                    element.addClass('hide'); // hide spinner bar
+                    $('body').removeClass('page-on-load'); // remove page loading indicator
+                    // Layout.setSidebarMenuActiveLink('match'); // activate selected link in the sidebar menu
+                    
+                   
+                    // auto scorll to page top
+                    // setTimeout(function () {
+                    //     App.scrollTop(); // scroll to the top on content load
+                    // }, $rootScope.settings.layout.pageAutoScrollOnLoad);     
+                });
+
+                // handle errors
+                $rootScope.$on('$stateNotFound', function() {
+                    element.addClass('hide'); // hide spinner bar
+                });
+
+                // handle errors
+                $rootScope.$on('$stateChangeError', function() {
+                    element.addClass('hide'); // hide spinner bar
+                });
+            }
+        };
+    }
+])
+
+// Handle global LINK click
+SeanApp.directive('a', function() {
+    return {
+        restrict: 'E',
+        link: function(scope, elem, attrs) {
+            if (attrs.ngClick || attrs.href === '' || attrs.href === '#') {
+                elem.on('click', function(e) {
+                    e.preventDefault(); // prevent link click for above criteria
+                });
+            }
+        }
+    };
+});
+
+// Handle Dropdown Hover Plugin Integration
+SeanApp.directive('dropdownMenuHover', function () {
+  return {
+    link: function (scope, elem) {
+      elem.dropdownHover();
+    }
+  };  
+});
+SeanApp.factory("commService",function() {
+    var commService={};
+    commService.emailPattern=function(email){
+        var result={};
+        result.error=0;
+        if(email!="" && email!=undefined){
+            var emailPattern=/\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}/;
+            //var emailPattern=/\w[-\w.+]*@saic-gm.com/;
+            var arr=email.split(";");
+            for (var i = 0; i < arr.length; i++) {
+                if(!emailPattern.test(arr[i])&&arr[i]!=""){
+                    if(arr.length==1){
+                        //alert("邮箱有误");
+                        result.error=1;
+                        result.msg="邮箱有误";
+                        return result;
+                    }
+                    //alert("第"+(i+1)+"个邮箱有误");
+                    result.error=1;
+                    result.msg="第"+(i+1)+"个邮箱有误";
+                    return result;
+                }else if(arr[i]==""){
+                    //alert("第"+(i+1)+"个为空邮箱");
+                    result.error=1;
+                    result.msg="第"+(i+1)+"个为空邮箱";
+                    return result;
+                }else if(/\,|\:|\；/.test(email)){
+                    //alert("邮箱分隔符有误");
+                    result.error=1;
+                    result.msg="邮箱分隔符有误";
+                    return result;
+                }
+            }
+            result.error=0;
+            result.msg='';
+            return result;
+        }
+
+    };
+    commService.getTime=function(opts){
+        /*获取当前时间*/
+        var d=new Date(opts.time)||new Date();
+        var year=d.getFullYear();
+        var month=d.getMonth()+1;
+        //month=common.fillZero(month);
+        var date=d.getDate();
+        //date=common.fillZero(date);
+        var hours=d.getHours();
+        //hours=common.fillZero(hours);
+        var minutes=d.getMinutes();
+        //minutes=common.fillZero(minutes);
+        var seconds=d.getSeconds();
+        //seconds=common.fillZero(seconds);
+        switch(opts.rule){
+            case "yyyy-MM-dd":
+                return year+"-"+month+"-"+date;
+                break;
+            case "MM-dd hh:mm:ss":
+                return month+"/"+date+" "+hours+":"+minutes+":"+seconds;
+                break;
+            default:
+                return year+"-"+month+"-"+date+" "+hours+":"+minutes+":"+seconds;
+        }
+
+    };
+    return commService;
+});
+//邮箱错误信息
+SeanApp.directive("errorMsg",function(){
+    return {
+        restrict: "AE",
+        transclude: true,
+        template: '<div  class="emailError" style="display:none;position: absolute;left:0;top:113px;color: "red">\
+                            <span>{{email.error}}</span>\
+                     </div>'
+        ,
+        link: function (scope, element, attr) {
+            //console.log(scope,element,attr)
+            var email=element[0].querySelector(".emailError");
+            scope.email={};
+            scope.emailPattern=function(msg,simple){
+                console.log(msg)
+                if(!simple){
+                    scope.email.error=msg;
+                    email.style.display="block";
+                }else{
+                    console.log(msg)
+                    if(msg==""){
+                        email.parentNode.parentNode.classList.remove("has-error");
+                    }else{
+                        email.parentNode.parentNode.classList.add("has-error");
+                    }
+
+                }
+            };
+            //has-error
+
+        }
+    }
+});

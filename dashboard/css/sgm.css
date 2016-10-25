@@ -440,3 +440,43 @@ dl.patac-temp{
 .patac-tooltip>table>tr>td{
 	white-space: nowrap;
 }
+
+
+/* New */
+.page-header.navbar {}
+.page-content-wrapper {background:#0d0d0d;}
+
+.num-row {margin:5px 0 15px 0;}
+.num-col {float:left;padding:0 5px;width:20%;}
+.num-div {height:34px;line-height:34px;color:#fff;background:#585858;}
+.num-div-green {background:#4eb3a5;}
+.num-div-blue {background:#5c9bd1;}
+.num-div-gray {background:#7f7f7f;}
+.num-div-yellow {background:#ffc000;}
+.num-div-red {background:#f36a5a;}
+.num-div [class^='icon-'],
+.num-div .glyphicon,
+.num-div .fa {float:left;padding-left:30px;line-height:34px;font-size:20px;}
+.num-div .num {float:right;padding-right:30px;font-size:24px;}
+
+.chart-row {margin:20px -5px;}
+.chart-row .chart-wrapper {padding:0 20px;height:240px;border:1px solid #585858;} 
+.chart-row .chart-wrapper h3,
+.chart-row .chart-wrapper p {margin:10px 0;padding:0;line-height:1em;color:#b7b7b7;}
+.chart-row .chart-wrapper h3 {margin-top:15px;font-size:48px;font-weight:bold;color:#4eb2a8;}
+.chart-row .chart-wrapper .h3-red {color:#ef6b56;} 
+.chart-row .chart-wrapper .progress {margin:15px 0 -3px 0;background-color:#3a3a3a;}
+.chart-row .chart-wrapper .progress-bar {background-color:#4eb2a8;}
+.chart-row .chart-wrapper .progress-bar-red {background-color:#ef6b56;}
+.chart-row .chart-wrapper p .left {float:left;font-size:12px;}
+.chart-row .chart-wrapper p .right {float:right;font-size:12px;}
+.chart-row .chart-wrapper .chart-div {clear:both;margin-top:28px;height:80px;}
+
+.chart-row .chart-wrapper-m {height:230px;cursor:default;}
+.chart-row .chart-wrapper-m .chart-meta {float:left;padding-right:30px;width:33.33333%;height:230px;}
+.chart-row .chart-wrapper-m .chart-div {clear:none;float:right;margin-top:20px;width:66%;height:180px;}
+.chart-row .chart-wrapper-m h3 {margin-bottom:20px;font-size:72px;font-weight:bold;}
+.chart-row .chart-wrapper-m p {font-size:18px;}
+.chart-row .chart-wrapper-m .progress {margin:25px 0 0 0;height:14px;}
+.chart-row .chart-wrapper-m .portlet.patac-portlet {padding:0 10px;}
+.chart-row .chart-wrapper-m .portlet>.portlet-title{margin-left:1px;margin-bottom:0;line-height:24px;}

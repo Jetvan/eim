@@ -1,6 +1,6 @@
-angular.module('MetronicApp')
+;angular.module('SeanApp')
 
-.controller('UserController', function(commService,$rootScope, $scope, $http, $timeout,$state) {
+.controller('UserController', ['commService','$rootScope', '$scope', '$http', '$timeout','$state',function(commService,$rootScope, $scope, $http, $timeout,$state) {
     
     // set sidebar closed and body solid layout mode
     $rootScope.settings.layout.pageContentWhite = true;
@@ -226,9 +226,8 @@ angular.module('MetronicApp')
             window.location.reload();
         })
     }
-
-})
-.controller('RoleController', function($rootScope, $scope, $http, $timeout) {
+}])
+.controller('RoleController',['$rootScope', '$scope', '$http', '$timeout', function($rootScope, $scope, $http, $timeout) {
     
     $scope.obj = "role";
     $scope.$on('$viewContentLoaded', function() {   
@@ -446,10 +445,8 @@ angular.module('MetronicApp')
             window.location.reload();
         })
     }
-})
-
-
-.controller('ResourceController', function($rootScope, $scope, $http, $timeout) {
+}])
+.controller('ResourceController', ['$rootScope', '$scope', '$http', '$timeout', function($rootScope, $scope, $http, $timeout) {
     
     // set sidebar closed and body solid layout mode
     $rootScope.settings.layout.pageContentWhite = true;
@@ -574,10 +571,8 @@ angular.module('MetronicApp')
             window.location.reload();
         })
     }
-
-})
-
-.controller('WarningController', function(commService,$rootScope, $scope, $http, $timeout) {
+}])
+.controller('WarningController',['commService','$rootScope', '$scope', '$http', '$timeout',function(commService,$rootScope, $scope, $http, $timeout) {
     
     // set sidebar closed and body solid layout mode
     $rootScope.settings.layout.pageContentWhite = true;
@@ -707,10 +702,8 @@ angular.module('MetronicApp')
         }
         $scope.action = "编辑HPU出油口温度";
     }
-
-})
-
-.controller('LogController', function(commService,$rootScope, $scope, $http, $timeout) {
+}])
+.controller('LogController',['commService','$rootScope', '$scope', '$http', '$timeout', function(commService,$rootScope, $scope, $http, $timeout) {
     
     // set sidebar closed and body solid layout mode
     $rootScope.settings.layout.pageContentWhite = true;
@@ -817,8 +810,7 @@ angular.module('MetronicApp')
         }
         $scope.action = "编辑报警日志阀值";
     }
-
-})
+}])
 
 .filter('userStatus', function () {
   return function (input, userStatus /*, param1, param2, ...param n */) {

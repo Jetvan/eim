@@ -1,143 +1,351 @@
-<style>
-
+<style type="text/css">
+	body {overflow:auto!important;}
 </style>
-<!-- BEGIN PAGE CONTENT-->
-<div class="row">
-    <div class="col-md-3 col-sm-6">
-        <!-- BEGIN TODO SIDEBAR -->
-        <div class="portlet patac-portlet">
-            <div class="portlet-title">
-                <div class="caption">
-                    <span class="caption-subject font-white uppercase">重点设备完好率(%) </span>
-                </div>
-                
-            </div>
-            <div class="portlet-body">
-                
-                <div id="intactRate" style="height:180px;"></div>
-            </div>
-        </div>
-        <!-- END TODO SIDEBAR -->
-    </div>
-    
-    <div class="col-md-3 col-sm-6">
-        <!-- BEGIN TODO SIDEBAR -->
-        <div class="portlet patac-portlet">
-            <div class="portlet-title">
-                <div class="caption">
-                    <span class="caption-subject font-white uppercase">耐久型设备利用率(%) </span>
-                </div>
-                
-            </div>
-            <div class="portlet-body">
-                <div id="utilizRate" style="height:180px;"></div>
-            </div>
-        </div>
-        <!-- END TODO SIDEBAR -->
-    </div>
 
-    <div class="col-md-3 col-sm-6">
-        <!-- BEGIN TODO SIDEBAR -->
-        <div class="portlet patac-portlet">
-            <div class="portlet-title">
-                <div class="caption">
-                    <span class="caption-subject font-white uppercase">非耐久型设备利用率(%) </span>
-                </div>
-                
-            </div>
-            <div class="portlet-body">
-                <div id="durautilizRate" style="height:180px;"></div>
-            </div>
-        </div>
-        <!-- END TODO SIDEBAR -->
-    </div>
-
-    <div class="col-md-3 col-sm-6">
-        <!-- BEGIN TODO SIDEBAR -->
-        <div class="portlet patac-portlet" >
-            <div class="portlet-title">
-                <div class="caption">
-                    <span class="caption-subject font-white uppercase">设备状态统计 </span>
-                </div>
-                
-            </div>
-            <div class="portlet-body" style="margin-top: 21px;">
-
-                <div class="row">
-                <div class="col-md-6  col-sm-6 form-group"><span class="btn btn-lg btn-block green patac-btn"><i class="fa fa-cogs"></i> 运行 <span ng-bind="status[1]">0</span>台</span></div>
-                    <div class="col-md-6  col-sm-6 form-group"><span class="btn btn-lg btn-block red-intense patac-btn"><i class="fa fa-cogs"></i> 故障 <span ng-bind="status[2]">0</span>台</span></div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6  col-sm-6 form-group"><span class="btn btn-lg btn-block blue patac-btn"><i class="fa fa-cogs"></i> 占位 <span ng-bind="status[4]">0</span>台</span></div>
-                    <div class="col-md-6  col-sm-6 form-group"><span class="btn btn-lg btn-block yellow patac-btn"><i class="fa fa-cogs"></i> 停止 <span ng-bind="status[0]">0</span>台</span></div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6  col-sm-6 form-group"><span class="btn btn-lg btn-block gray patac-btn" style="background: #DDDDDD"><i class="fa fa-cogs"></i> 空闲 <span ng-bind="status[3]">0</span>台</span></div>
-                    <!-- <div class="col-md-6 form-group"><button class="btn btn-lg btn-block red red patac-btn"><i class="fa fa-cogs"></i> 报警 <span ng-bind="status[5]">0</span>台</button></div> -->
-                </div>
-            </div>
-        </div>
-        <!-- END TODO SIDEBAR -->
-    </div>
+<div class="row num-row">
+	<div class="num-col">
+		<div class="num-div num-div-green">
+			<span class="icon-control-play"></span>
+			<span class="num" ng-bind="status[1]">0</span>
+		</div>
+	</div>
+	<div class="num-col">
+		<div class="num-div num-div-blue">
+			<span class="icon-control-pause"></span>
+			<span class="num" ng-bind="status[4]">0</span>
+		</div>
+	</div>
+	<div class="num-col">
+		<div class="num-div num-div-gray">
+			<i class="fa fa-history"></i>
+			<span class="num" ng-bind="status[3]">0</span>
+		</div>
+	</div>
+	<div class="num-col">
+		<div class="num-div num-div-yellow">
+			<i class="fa fa-square-o"></i>
+			<span class="num" ng-bind="status[0]">0</span>
+		</div>
+	</div>
+	<div class="num-col">
+		<div class="num-div num-div-red">
+			<i class="fa fa-exclamation-triangle"></i>
+			<span class="num" ng-bind="status[2]">0</span>
+		</div>
+	</div>
 </div>
 
-<div class="row">
-    <div class="col-md-3 col-sm-12">
-        <div class="portlet patac-portlet" >
-            <div class="portlet-title">
-                <div class="caption">
-                    <span class="caption-subject font-white uppercase">在线设备开动率(%) </span>
-                </div>
-                
-            </div>
-            <div class="portlet-body">
-                <div id="startRate" style="height:180px;"></div>
-            </div>
-        </div>
-
-        <div class="portlet patac-portlet" >
-            <div class="portlet-title">
-                <div class="caption">
-                    <span class="caption-subject font-white uppercase">试验效能系数 </span>
-                </div>
-                
-            </div>
-            <div class="portlet-body">
-                <div id="efficiencyCoeff" style="height:180px;"></div>
-            </div>
-        </div>
-    </div>
-    
-    <div ng-class="{true: 'col-md-4 col-sm-6', false: 'col-md-9 col-sm-12'}[doubleLabel]">
-        
-        <div class="portlet patac-portlet" style="height:536px;">
-            <div class="portlet-title">
-                <div class="caption">
-                    <span class="caption-subject font-white uppercase" ng-bind="areaName[0]">LAB车身试验区 </span>
-                </div>
-                
-            </div>
-            <div class="portlet-body">
-                <div id="3d_view1" ></div>
-            </div>
-        </div>
-    </div>
-
-    <div ng-class="{true: 'col-md-5 col-sm-6', false: 'hide'}[doubleLabel]">
-        
-        <div class="portlet patac-portlet" style="height:536px;">
-            <div class="portlet-title">
-                <div class="caption">
-                    <span class="caption-subject font-white uppercase" ng-bind="areaName[1]">LAB车身试验区 </span>
-                </div>
-                
-            </div>
-            <div class="portlet-body">
-                <div id="3d_view2" ></div>
-            </div>
-        </div>
-    </div>
-
+<div class="row chart-row">
+	<div class="col-md-9">
+		<div class="chart-wrapper chart-wrapper-m" id="chartWrapper">
+			<div class="chart-meta">
+				<h3>1.6</h3>
+				<p>实验效能指数</p>
+				<div class="progress">
+				  	<div class="progress-bar" role="progressbar" data-val="45.45"></div>
+				</div>
+				<p>
+					<span class="left">同比</span>
+					<span class="right"><i class="fa fa-long-arrow-up"></i> <span class="chart-num">45.45</span>%</span>
+				</p>
+			</div>
+			<div class="chart-div" id="efficiencyCoeffDiv"></div>
+		</div>
+	</div>
+	<div class="col-md-3">
+		<div class="chart-wrapper chart-wrapper-m" style="padding:0;">
+			<div class="carousel slide" data-ride="carousel" id="carousel3D">
+			  	<!--<ol class="carousel-indicators">
+			    	<li data-target="#carousel3D" data-slide-to="0" class="active"></li>
+			    	<li data-target="#carousel3D" data-slide-to="1"></li>
+			  	</ol>-->
+			  	<div class="carousel-inner" role="listbox">
+				    <div ng-class="{true:'hidden', false:'item active'}[doubleLabel]">
+				    	<div class="portlet patac-portlet" style="height:220px;">
+				            <div class="portlet-title">
+				                <div class="caption">
+				                    <span class="caption-subject font-white uppercase" ng-bind="areaName[0]">LAB车身试验区 </span>
+				                </div>
+				            </div>
+				            <div class="portlet-body">
+				                <div id="3d_view1" ></div>
+				            </div>
+				        </div>
+				    </div>
+				    <div ng-class="{true:'item active', false:'hidden'}[doubleLabel]">
+						<div class="portlet patac-portlet" style="height:220px;">
+				            <div class="portlet-title">
+				                <div class="caption">
+				                    <span class="caption-subject font-white uppercase" ng-bind="areaName[1]">LAB车身试验区 </span>
+				                </div>
+				            </div>
+				            <div class="portlet-body">
+				                <div id="3d_view2" ></div>
+				            </div>
+				        </div>
+				    </div>
+			  	</div>
+			</div>
+       	</div>
+	</div>
 </div>
 
-<!-- END PAGE CONTENT
+<div class="row chart-row">
+	<div class="col-md-3">
+		<div class="chart-wrapper">
+			<div class="chart-meta">
+				<h3 class="h3-red">91</h3>
+				<p>重点设备完好率(%)</p>
+				<div class="progress">
+				  	<div class="progress-bar progress-bar-red" role="progressbar" data-val="3.19"></div>
+				</div>
+				<p>
+					<span class="left">同比</span>
+					<span class="right"><i class="fa fa-long-arrow-down"></i> <span class="chart-num">3.19</span>%</span>
+				</p>
+			</div>
+			<div class="chart-div" id="intactRateDiv"></div>
+		</div>
+	</div>
+	<div class="col-md-3">
+		<div class="chart-wrapper">
+			<div class="chart-meta">
+				<h3>54</h3>
+				<p>耐久型设备利用率(%)</p>
+				<div class="progress">
+				  	<div class="progress-bar" role="progressbar" data-val="50"></div>
+				</div>
+				<p>
+					<span class="left">同比</span>
+					<span class="right"><i class="fa fa-long-arrow-up"></i> <span class="chart-num">50</span>%</span>
+				</p>
+			</div>
+			<div class="chart-div" id="utilizRateDiv"></div>
+		</div>
+	</div>
+	<div class="col-md-3">
+		<div class="chart-wrapper">
+			<div class="chart-meta">
+				<h3 class="h3-red">244</h3>
+				<p>非耐久型设备利用率(%)</p>
+				<div class="progress">
+				  	<div class="progress-bar progress-bar-red" role="progressbar" data-val="13.48"></div>
+				</div>
+				<p>
+					<span class="left">同比</span>
+					<span class="right"><i class="fa fa-long-arrow-down"></i> <span class="chart-num">13.48</span>%</span>
+				</p>
+			</div>
+			<div class="chart-div" id="durautilizRateDiv"></div>
+		</div>
+	</div>
+	<div class="col-md-3">
+		<div class="chart-wrapper">
+			<div class="chart-meta">
+				<h3 class="h3-red">48</h3>
+				<p>在线设备开动率(%)</p>
+				<div class="progress">
+				  	<div class="progress-bar progress-bar-red" role="progressbar" data-val="4"></div>
+				</div>
+				<p>
+					<span class="left">同比</span>
+					<span class="right"><i class="fa fa-long-arrow-down"></i> <span class="chart-num">4</span>%</span>
+				</p>
+			</div>
+			<div class="chart-div" id="startRateDiv"></div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$(function() {
+		//模拟报表数据
+		var hash = window.location.hash;
+		if(hash=="#/lab/LAB02") {
+			var dataObj = {
+				efficiencyCoeff: [2.0, 3.1, 1.4, 2.3, 2.7, 3.1, 2.0, 1.6], //实验效能系数
+				intactRate: [93, 93, 92, 92, 92, 91, 91, 91], //重点设备完好率
+				utilizRate: [43, 45, 46, 48, 49, 51, 52, 54], //耐久型设备利用率
+				durautilizRate: [266, 263, 260, 257, 254, 250, 247, 244], //非耐久型设备利用率
+				startRate: [51, 48, 50, 51, 48, 50, 51, 48] //在线设备开动率
+			};
+			//初始化进度条
+			$(".progress-bar").each(function() {
+				var w = $(this).data("val") + "%";
+				$(this).animate({
+					width: w
+				}, 800);
+			});
+		}else {
+			var dataObj = {
+				efficiencyCoeff: [2.0, 3.1, 1.4, 2.3, 2.7, 3.1, 2.0, 1.6], //实验效能系数
+				intactRate: [93, 93, 92, 92, 92, 91, 91, 91], //重点设备完好率
+				utilizRate: [0, 0, 0, 0, 0, 0, 0, 0], //耐久型设备利用率
+				durautilizRate: [256, 214, 212, 256, 215, 257, 245, 233], //非耐久型设备利用率
+				startRate: [42, 53, 51, 42, 53, 51, 42, 53] //在线设备开动率
+			};
+			//初始化进度条
+			var numArr = [1.6, 91, 0, 233, 53];
+			$(".chart-meta h3").each(function(i) {
+				$(this).html(numArr[i]);
+			});
+			var perArr = [45.45, 3.19, 0, 15.58, 3.92];
+			$(".progress-bar").each(function(i) {
+				var w = perArr[i] + "%";
+				$(this).animate({
+					width: w
+				}, 800);
+			});
+			$(".chart-num").each(function(i) {
+				$(this).html(perArr[i]);
+			});
+		}
+		
+		//初始化报表
+		var efficiencyCoeffChart = echarts.init(document.getElementById("efficiencyCoeffDiv")); //实验效能系数
+		var intactRateChart = echarts.init(document.getElementById("intactRateDiv")); //重点设备完好率
+		var utilizRateChart = echarts.init(document.getElementById("utilizRateDiv")); //耐久型设备利用率
+		var durautilizRateChart = echarts.init(document.getElementById("durautilizRateDiv")); //非耐久型设备利用率
+		var startRateChart = echarts.init(document.getElementById("startRateDiv")); //在线设备开动率
+
+		//报表配置项
+		var optBar = {
+			title: {show:false},
+            grid: {
+            	top: 0,
+            	left: 0,
+            	right: 0,
+            	bottom: 0
+            },
+            tooltip: {
+	        	show: true,
+	        	formatter: "{b0}: {c0}%",
+	        	trigger: 'item',
+		        axisPointer : {
+		            type : 'shadow'
+		        }
+	        },
+            xAxis: [{
+            	show: false,
+            	type: "category",
+                data: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"],
+                axisLabel: {interval:0}
+            }],
+            yAxis: [{
+            	show: false,
+            	type: "value"
+            }],
+            series: [{
+            	name: "",
+                type: "bar",
+                markLine: {
+                	data: [{
+                		name: "平均值",
+                		type: "average"
+                	}],
+                	lineStyle: {
+                		normal: {color:"#5c9bd1"}
+                	}
+                }
+            }],
+            color: ["#2b475d"]
+		};
+		var optLine = {
+			title: {show:false},
+            grid: {
+            	top: 0,
+            	left: 0,
+            	right: 0,
+            	bottom: 0
+            },
+            tooltip: {
+	        	show: true,
+	        	formatter: "{b0}: {c0}",
+	        	trigger: 'axis',
+		        axisPointer : {
+		            type : 'shadow'
+		        }
+	        },
+            xAxis: [{
+            	show: false,
+            	type: "category",
+                data: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"],
+                axisLabel: {interval:0}
+            }],
+            yAxis: [{
+            	show: false,
+            	type: "value"
+            }],
+            series: [{
+            	name: "",
+                type: "line",
+                areaStyle: {normal: {}},
+                markLine: {
+                	data: [{
+                		name: "平均值",
+                		type: "average"
+                	}],
+                	lineStyle: {
+                		normal: {color:"#ffc000"}
+                	}
+                }
+            }],
+            color: ["#ffbb00"]
+		};
+		
+		//配置报表
+		optLine.series[0].data = dataObj.efficiencyCoeff;
+		efficiencyCoeffChart.setOption(optLine);
+		optBar.series[0].data = dataObj.intactRate;
+		intactRateChart.setOption(optBar);
+		optBar.series[0].data = dataObj.utilizRate;
+		utilizRateChart.setOption(optBar);
+		optBar.series[0].data = dataObj.durautilizRate;
+		durautilizRateChart.setOption(optBar);
+		optBar.series[0].data = dataObj.startRate;
+		startRateChart.setOption(optBar);
+
+		//点击切换
+//		$(".chart-wrapper").on("click", function() {
+//			if(!$(this).hasClass("chart-wrapper-m")) {
+//				var chartId = $(this).find(".chart-div").attr("id");
+//				console.log(chartId);
+//				switch(chartId) {
+//					case "efficiencyCoeff": 
+//						efficiencyCoeff.dispose();
+//						break;
+//					case "intactRate":
+//						intactRateChart.dispose();
+//						intactRateChart = echarts.init(document.getElementById("intactRate"));
+//						optLine.series[0].data = dataObj.intactRate;
+//						intactRateChart.setOption(optLine);
+//						break;
+//					case "utilizRate":
+//						utilizRate.dispose();
+//						break;
+//					case "durautilizRate":
+//						durautilizRate.dispose();
+//						break;
+//					case "startRate": 
+//						startRate.dispose();
+//						break;
+//					default: 
+//						break;
+//				};
+//				
+//				var html1 = $(this).html();
+//				$("#chartWrapper").empty().html(html1);
+//				$(this).empty();
+//			}
+//		});
+	});
+	
+	//浏览器窗口改变时，重置报表大小
+	$(window).resize(function() {
+		efficiencyCoeffChart.resize();
+		intactRateChart.resize();
+		utilizRateChart.resize();
+		durautilizRateChart.resize();
+		startRateChart.resize();
+	});
+</script>
