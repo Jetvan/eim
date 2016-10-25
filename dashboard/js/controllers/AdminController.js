@@ -859,7 +859,7 @@
             // return momentObj[momentFn].apply(momentObj, args);
         };
     })
-.config(function ($validatorProvider) {
+.config(['$validatorProvider',function ($validatorProvider) {
 
     $validatorProvider.setDefaults({
         errorElement: 'span',
@@ -901,5 +901,5 @@
         max: $validatorProvider.format("不大于 {0}."),
         min: $validatorProvider.format("不小于 {0}.")
     });
-});
+}]);
 

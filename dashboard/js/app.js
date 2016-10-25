@@ -52,7 +52,7 @@ SeanApp.factory('settings', ['$rootScope', function($rootScope) {
         layoutPath: '../assets/layouts/layout',
         apiPath:'',
         jsPath:'',
-        mode:'server',
+        mode:'local',
         version:'3.0',
         api:{
             dashboard:"http://10.203.97.123:7003/pataceim-rest",
