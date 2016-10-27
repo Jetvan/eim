@@ -61,10 +61,10 @@ SeanApp.factory('settings', ['$rootScope', function($rootScope) {
             //local:"http://10.203.97.123:7003/pataceim-rest",
         },
         debug: {
-        	request:false,
-        	requestError:false,
-        	response:false,
-        	responseError:false
+            request:false,
+            requestError:false,
+            response:false,
+            responseError:false
         }
     };
 
@@ -78,41 +78,41 @@ SeanApp.factory('settings', ['$rootScope', function($rootScope) {
 
 /*HttpInterceptor Factory*/
 SeanApp.factory("$httpInterceptor",["$q", "$rootScope", function($q, $rootScope) {
-	return {
-		request: function(json) {
-			if($rootScope.settings.debug.request){
-				console.log("[request]:"+json.url);
-			}
+    return {
+        request: function(json) {
+            if($rootScope.settings.debug.request){
+                console.log("[request]:"+json.url);
+            }
 
             json.headers['Content-Type'] = 'application/json;charset=utf-8';
             json.headers['Cache-Control'] = 'no-cache';
             json.headers['Pragma'] = 'no-cache';
 
-			return json || $q.when(json);
-		},
-	　　 requestError: function(json) {
-			if($rootScope.settings.debug.requestError){
-				console.log("[requestError]:" + json.status);
-			}
-			
-	　　　　 return $q.reject(json)
-	　　 },
-		response: function(json) {
-			// console.log(json);
-			if($rootScope.settings.debug.response){
-				console.log("[response]:"+json.status+","+json.config.url);
-			}
+            return json || $q.when(json);
+        },
+    　　 requestError: function(json) {
+            if($rootScope.settings.debug.requestError){
+                console.log("[requestError]:" + json.status);
+            }
             
-			return json || $q.when(json);
-		},
-		responseError : function(json) {
-			if($rootScope.settings.debug.responseError){
-				console.log("[responseError]:"+JSON.stringify(json));
-			}
+    　　　　 return $q.reject(json)
+    　　 },
+        response: function(json) {
+            // console.log(json);
+            if($rootScope.settings.debug.response){
+                console.log("[response]:"+json.status+","+json.config.url);
+            }
+            
+            return json || $q.when(json);
+        },
+        responseError : function(json) {
+            if($rootScope.settings.debug.responseError){
+                console.log("[responseError]:"+JSON.stringify(json));
+            }
 
-			return $q.reject(json);
-		}
-	};
+            return $q.reject(json);
+        }
+    };
 }]);
 
 SeanApp.directive('onRepeatFinished', ['$timeout',function($timeout) {
@@ -250,9 +250,10 @@ SeanApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider,
         // Dashboard
         .state('dashboard', {
             url: "/dashboard",
-            templateProvider: function($templateCache){ 
+            templateProvider: ['$templateCache',function($templateCache){ 
                 return $templateCache.get('views/dashboard.html');
-            },
+            }],
+
             data: {pageTitle: 'Admin Dashboard Template'},
             controller: "DashboardController",
             resolve: {
@@ -281,9 +282,10 @@ SeanApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider,
         // Lab
         .state('lab', {
             url: "/lab/:id",
-            templateProvider: function($templateCache){ 
+            templateProvider: ['$templateCache',function($templateCache){ 
                 return $templateCache.get('views/lab.html');
-            },
+            }],
+
             data: {pageTitle: 'Lab Template'},
             controller: "LabController",
             resolve: {
@@ -317,9 +319,9 @@ SeanApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider,
         // Dashboard
         .state('MTS', {
             url: "/MTS/:id",
-            templateProvider: function($templateCache){ 
+            templateProvider: ['$templateCache',function($templateCache){ 
                 return $templateCache.get('views/mts.html');
-            },
+            }],
             data: {pageTitle: 'Device Template'},
             controller: "MTSController",
             resolve: {
@@ -347,9 +349,9 @@ SeanApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider,
         // Dashboard
         .state('HPU', {
             url: "/HPU/:id",
-            templateProvider: function($templateCache){ 
+            templateProvider: ['$templateCache',function($templateCache){ 
                 return $templateCache.get('views/hpu.html');
-            },           
+            }],
             data: {pageTitle: 'Device1 Template'},
             controller: "HPUController",
             resolve: {
@@ -370,9 +372,9 @@ SeanApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider,
         // Dashboard
         .state('BEP', {
             url: "/BEP/:id",
-            templateProvider: function($templateCache){ 
+            templateProvider: ['$templateCache',function($templateCache){ 
                 return $templateCache.get('views/bep.html');
-            },
+            }],
             data: {pageTitle: 'Device Template'},
             controller: "BEPController",
             resolve: {
@@ -398,9 +400,9 @@ SeanApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider,
         // Dashboard
         .state('admin', {
             url: "/admin",
-            templateProvider: function($templateCache){ 
+            templateProvider: ['$templateCache',function($templateCache){ 
                 return $templateCache.get('views/admin.html');
-            },
+            }],
             data: {pageTitle: 'Lab Template'},
             resolve: {
                 deps: ['$ocLazyLoad', function($ocLazyLoad) {
@@ -425,27 +427,27 @@ SeanApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider,
         // Dashboard
         .state('admin.user', {
             url: "/user",
-            templateProvider: function($templateCache){ 
+            templateProvider: ['$templateCache',function($templateCache){ 
                 return $templateCache.get('views/admin-user.html');
-            },  
+            }], 
             controller: "UserController",          
             data: {pageTitle: 'User Template'},
         })
 
         // Dashboard
         .state('admin.user.edit', {
-            url: "/edit", 
-            templateProvider: function($templateCache){ 
+            url: "/edit",
+            templateProvider: ['$templateCache',function($templateCache){ 
                 return $templateCache.get('views/admin-edit.html');
-            },
+            }]
         })
 
         // Dashboard
         .state('admin.role', {
             url: "/role",
-            templateProvider: function($templateCache){ 
+            templateProvider: ['$templateCache',function($templateCache){ 
                 return $templateCache.get('views/admin-role.html');
-            },  
+            }],  
             controller: "RoleController",          
             data: {pageTitle: 'Role Template'},
         })
@@ -453,9 +455,9 @@ SeanApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider,
         // Dashboard
         .state('admin.resource', {
             url: "/resource",
-            templateProvider: function($templateCache){ 
+            templateProvider: ['$templateCache',function($templateCache){ 
                 return $templateCache.get('views/admin-resource.html');
-            },  
+            }], 
             controller: "ResourceController",           
             data: {pageTitle: 'Resource Template'},
         })
@@ -463,9 +465,9 @@ SeanApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider,
         // Dashboard
         .state('admin.alarm', {
             url: "/alarm",
-            templateProvider: function($templateCache){ 
+            templateProvider: ['$templateCache',function($templateCache){ 
                 return $templateCache.get('views/admin-warning.html');
-            },  
+            }],  
             controller: "WarningController",           
             data: {pageTitle: 'Alarm Template'},
         })
@@ -473,9 +475,9 @@ SeanApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider,
         // Dashboard
         .state('admin.log', {
             url: "/log",
-            templateProvider: function($templateCache){ 
+            templateProvider: ['$templateCache',function($templateCache){ 
                 return $templateCache.get('views/admin-log.html');
-            },  
+            }], 
             controller: "LogController",           
             data: {pageTitle: 'Log Template'},
         });;
