@@ -8,6 +8,7 @@ var SeanApp = angular.module("SeanApp", [
     "ui.bootstrap", 
     "oc.lazyLoad",  
     "ngSanitize",
+    'ngValidate'
 ]); 
 
 /* Configure ocLazyLoader(refer: https://github.com/ocombe/ocLazyLoad) */
@@ -60,10 +61,10 @@ SeanApp.factory('settings', ['$rootScope', function($rootScope) {
             //local:"http://10.203.97.123:7003/pataceim-rest",
         },
         debug: {
-        	request:false,
-        	requestError:false,
-        	response:false,
-        	responseError:false
+            request:false,
+            requestError:false,
+            response:false,
+            responseError:false
         }
     };
 
@@ -77,41 +78,41 @@ SeanApp.factory('settings', ['$rootScope', function($rootScope) {
 
 /*HttpInterceptor Factory*/
 SeanApp.factory("$httpInterceptor",["$q", "$rootScope", function($q, $rootScope) {
-	return {
-		request: function(json) {
-			if($rootScope.settings.debug.request){
-				console.log("[request]:"+json.url);
-			}
+    return {
+        request: function(json) {
+            if($rootScope.settings.debug.request){
+                console.log("[request]:"+json.url);
+            }
 
             json.headers['Content-Type'] = 'application/json;charset=utf-8';
             json.headers['Cache-Control'] = 'no-cache';
             json.headers['Pragma'] = 'no-cache';
 
-			return json || $q.when(json);
-		},
-	　　 requestError: function(json) {
-			if($rootScope.settings.debug.requestError){
-				console.log("[requestError]:" + json.status);
-			}
-			
-	　　　　 return $q.reject(json)
-	　　 },
-		response: function(json) {
-			// console.log(json);
-			if($rootScope.settings.debug.response){
-				console.log("[response]:"+json.status+","+json.config.url);
-			}
+            return json || $q.when(json);
+        },
+    　　 requestError: function(json) {
+            if($rootScope.settings.debug.requestError){
+                console.log("[requestError]:" + json.status);
+            }
             
-			return json || $q.when(json);
-		},
-		responseError : function(json) {
-			if($rootScope.settings.debug.responseError){
-				console.log("[responseError]:"+JSON.stringify(json));
-			}
+    　　　　 return $q.reject(json)
+    　　 },
+        response: function(json) {
+            // console.log(json);
+            if($rootScope.settings.debug.response){
+                console.log("[response]:"+json.status+","+json.config.url);
+            }
+            
+            return json || $q.when(json);
+        },
+        responseError : function(json) {
+            if($rootScope.settings.debug.responseError){
+                console.log("[responseError]:"+JSON.stringify(json));
+            }
 
-			return $q.reject(json);
-		}
-	};
+            return $q.reject(json);
+        }
+    };
 }]);
 
 SeanApp.directive('onRepeatFinished', ['$timeout',function($timeout) {
@@ -249,7 +250,10 @@ SeanApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider,
         // Dashboard
         .state('dashboard', {
             url: "/dashboard",
-            templateUrl: "views/dashboard.html",            
+            templateProvider: ['$templateCache',function($templateCache){ 
+                return $templateCache.get('views/dashboard.html');
+            }],
+
             data: {pageTitle: 'Admin Dashboard Template'},
             controller: "DashboardController",
             resolve: {
@@ -267,7 +271,7 @@ SeanApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider,
                             insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
                             files: [
                                 jsPath + '/eim.js',
-                                './js/controllers/DashboardController.js',
+                                // './js/controllers/DashboardController.js',
                             ] 
                         })
                     });
@@ -275,27 +279,13 @@ SeanApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider,
             }
         })
 
-        .state('login',{
-            url:"/login/:username",
-            templateUrl: "views/dashboard.html", 
-            controller: "LoginController",
-            resolve: {
-                deps: ['$ocLazyLoad', function($ocLazyLoad) {
-                    return $ocLazyLoad.load({
-                        name: 'MetronicApp',
-                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
-                        files: [
-                            './js/controllers/DashboardController.js',
-                        ] 
-                    })
-                }]
-            }
-        })
-
         // Lab
         .state('lab', {
             url: "/lab/:id",
-            templateUrl: "views/lab.html",            
+            templateProvider: ['$templateCache',function($templateCache){ 
+                return $templateCache.get('views/lab.html');
+            }],
+
             data: {pageTitle: 'Lab Template'},
             controller: "LabController",
             resolve: {
@@ -317,7 +307,7 @@ SeanApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider,
                             files: [
 
                                  jsPath + '/device.js',
-                                './js/controllers/LabController.js',
+                                // './js/controllers/LabController.js',
                             ] 
                         })
                     })
@@ -329,7 +319,9 @@ SeanApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider,
         // Dashboard
         .state('MTS', {
             url: "/MTS/:id",
-            templateUrl: "views/mts.html",            
+            templateProvider: ['$templateCache',function($templateCache){ 
+                return $templateCache.get('views/mts.html');
+            }],
             data: {pageTitle: 'Device Template'},
             controller: "MTSController",
             resolve: {
@@ -347,7 +339,7 @@ SeanApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider,
                             "../assets/global/plugins/echarts/echarts.js",
 
                             './js/scripts/macarons.js',
-                            './js/controllers/DeviceController.js',
+                            // './js/controllers/DeviceController.js',
                         ] 
                     });
                 }]
@@ -357,7 +349,9 @@ SeanApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider,
         // Dashboard
         .state('HPU', {
             url: "/HPU/:id",
-            templateUrl: "views/hpu.html",            
+            templateProvider: ['$templateCache',function($templateCache){ 
+                return $templateCache.get('views/hpu.html');
+            }],
             data: {pageTitle: 'Device1 Template'},
             controller: "HPUController",
             resolve: {
@@ -368,7 +362,7 @@ SeanApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider,
                         files: [
                             './js/scripts/macarons.js',
                             "../assets/global/plugins/echarts/echarts.js",
-                            './js/controllers/DeviceController.js',
+                            // './js/controllers/DeviceController.js',
                         ] 
                     });
                 }]
@@ -378,7 +372,9 @@ SeanApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider,
         // Dashboard
         .state('BEP', {
             url: "/BEP/:id",
-            templateUrl: "views/bep.html",            
+            templateProvider: ['$templateCache',function($templateCache){ 
+                return $templateCache.get('views/bep.html');
+            }],
             data: {pageTitle: 'Device Template'},
             controller: "BEPController",
             resolve: {
@@ -394,7 +390,7 @@ SeanApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider,
 
                             './js/scripts/macarons.js',
                             "../assets/global/plugins/echarts/echarts.js",
-                            './js/controllers/DeviceController.js',
+                            // './js/controllers/DeviceController.js',
                         ] 
                     });
                 }]
@@ -404,7 +400,9 @@ SeanApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider,
         // Dashboard
         .state('admin', {
             url: "/admin",
-            templateUrl: "views/admin.html",            
+            templateProvider: ['$templateCache',function($templateCache){ 
+                return $templateCache.get('views/admin.html');
+            }],
             data: {pageTitle: 'Lab Template'},
             resolve: {
                 deps: ['$ocLazyLoad', function($ocLazyLoad) {
@@ -414,16 +412,12 @@ SeanApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider,
                         files: [
                             '../assets/global/plugins/jstree/dist/themes/default/style.min.css',
 
-                            '../assets/global/plugins/jquery-validation/js/jquery.validate.min.js',
-                            '../assets/global/plugins/jquery-validation/js/additional-methods.min.js',
-                            '../assets/global/plugins/jpkleemans-angular-validate/dist/angular-validate.min.js',
-
                             '../assets/global/plugins/datatables/datatables.min.css',
                             '../assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css',
                             '../assets/global/plugins/datatables/datatables.all.min.js',
                             '../assets/global/plugins/jstree/dist/jstree.min.js',
                             '../assets/global/plugins/jquery-ui/jquery-ui.min.js',
-                            './js/controllers/AdminController.js',
+                            // './js/controllers/AdminController.js',
                         ] 
                     });
                 }]
@@ -433,38 +427,47 @@ SeanApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider,
         // Dashboard
         .state('admin.user', {
             url: "/user",
-            templateUrl: "views/admin-user.html",  
+            templateProvider: ['$templateCache',function($templateCache){ 
+                return $templateCache.get('views/admin-user.html');
+            }], 
             controller: "UserController",          
-            data: {pageTitle: 'Lab Template'},
+            data: {pageTitle: 'User Template'},
         })
 
         // Dashboard
         .state('admin.user.edit', {
             url: "/edit",
-            templateUrl: "views/admin-user-edit.html",  
-            
+            templateProvider: ['$templateCache',function($templateCache){ 
+                return $templateCache.get('views/admin-edit.html');
+            }]
         })
 
         // Dashboard
         .state('admin.role', {
             url: "/role",
-            templateUrl: "views/admin-role.html",  
+            templateProvider: ['$templateCache',function($templateCache){ 
+                return $templateCache.get('views/admin-role.html');
+            }],  
             controller: "RoleController",          
-            data: {pageTitle: 'Lab Template'},
+            data: {pageTitle: 'Role Template'},
         })
 
         // Dashboard
         .state('admin.resource', {
             url: "/resource",
-            templateUrl: "views/admin-resource.html", 
+            templateProvider: ['$templateCache',function($templateCache){ 
+                return $templateCache.get('views/admin-resource.html');
+            }], 
             controller: "ResourceController",           
-            data: {pageTitle: 'Lab Template'},
+            data: {pageTitle: 'Resource Template'},
         })
 
         // Dashboard
         .state('admin.alarm', {
             url: "/alarm",
-            templateUrl: "views/admin-warning.html", 
+            templateProvider: ['$templateCache',function($templateCache){ 
+                return $templateCache.get('views/admin-warning.html');
+            }],  
             controller: "WarningController",           
             data: {pageTitle: 'Alarm Template'},
         })
@@ -472,7 +475,9 @@ SeanApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider,
         // Dashboard
         .state('admin.log', {
             url: "/log",
-            templateUrl: "views/admin-log.html", 
+            templateProvider: ['$templateCache',function($templateCache){ 
+                return $templateCache.get('views/admin-log.html');
+            }], 
             controller: "LogController",           
             data: {pageTitle: 'Log Template'},
         });;
