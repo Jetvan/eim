@@ -794,7 +794,79 @@ angular.module('SeanApp').controller('UserController', [
       $scope.action = '\u7f16\u8f91\u62a5\u8b66\u65e5\u5fd7\u9600\u503c';
     };
   }
-]).controller('DashboardController', [
+]).filter('userStatus', function () {
+  return function (input, userStatus) {
+    var args = Array.prototype.slice.call(arguments, 2);
+    switch (input) {
+    case 0:
+      return '\u7981\u7528';
+      break;
+    case 1:
+      return '\u53ef\u7528';
+      break;
+    default:
+      return '\u672a\u77e5';
+      break;
+    }  // return momentObj[momentFn].apply(momentObj, args);
+  };
+}).filter('checkStatus', function () {
+  return function (input, userStatus) {
+    var args = Array.prototype.slice.call(arguments, 2);
+    switch (input) {
+    case 0:
+      return false;
+      break;
+    case 1:
+      return true;
+      break;
+    default:
+      return false;
+      break;
+    }  // return momentObj[momentFn].apply(momentObj, args);
+  };
+}).config([
+  '$validatorProvider',
+  function ($validatorProvider) {
+    $validatorProvider.setDefaults({
+      errorElement: 'span',
+      errorClass: 'help-block',
+      highlight: function (element) {
+        // hightlight error inputs
+        $(element).closest('.form-group').addClass('has-error');  // set error class to the control group
+      },
+      errorPlacement: function (error, element) {
+        error.insertAfter(element);
+        $(error).show();
+      },
+      success: function (error, element) {
+        $(error).parents('.form-group').removeClass('has-error');
+        $(error).remove();
+      }
+    });
+    $validatorProvider.setDefaultMessages({
+      required: '\u8bf7\u8f93\u5165\u5fc5\u586b\u9879.',
+      remote: '\u8bf7\u4fee\u6539.',
+      email: '\u9519\u8bef\u90ae\u7bb1\u683c\u5f0f.',
+      url: '\u9519\u8befurl\u683c\u5f0f.',
+      date: '\u9519\u8bef\u65f6\u95f4\u683c\u5f0f.',
+      dateISO: '\u9519\u8befISO\u65f6\u95f4\u683c\u5f0f.',
+      number: '\u975e\u6cd5\u6570\u5b57\u683c\u5f0f.',
+      digits: 'Please enter only digits.',
+      creditcard: '\u8bf7\u8f93\u5165\u6b63\u786e\u4fe1\u7528\u5361\u683c\u5f0f.',
+      equalTo: '2\u6b21\u8f93\u5165\u4e0d\u4e00\u81f4.',
+      accept: '\u8bf7\u8f93\u5165\u6b63\u786e\u9a8c\u8bc1\u4fe1\u606f.',
+      tnc: '\u8bf7\u5148\u9605\u8bfb\u653f\u7b56',
+      maxlength: $validatorProvider.format('\u6700\u5927\u4e0d\u8d85\u8fc7 {0} \u4f4d.'),
+      minlength: $validatorProvider.format('\u6700\u5c0f\u4e0d\u8d85\u8fc7 {0} \u4f4d.'),
+      rangelength: $validatorProvider.format('\u53ef\u4ee5\u8f93\u5165 {0} \u5230 {1} \u4f4d.'),
+      range: $validatorProvider.format('\u53ef\u8f93\u5165 {0} \u5230 {1}.'),
+      max: $validatorProvider.format('\u4e0d\u5927\u4e8e {0}.'),
+      min: $validatorProvider.format('\u4e0d\u5c0f\u4e8e {0}.')
+    });
+  }
+]);
+;
+angular.module('SeanApp').controller('DashboardController', [
   '$rootScope',
   '$scope',
   '$http',
@@ -802,7 +874,6 @@ angular.module('SeanApp').controller('UserController', [
   '$interval',
   function ($rootScope, $scope, $http, $timeout, $interval) {
     $scope.$on('$viewContentLoaded', function () {
-      $("#3d_view").height($(window).height()-46);
       var timer = $interval(function () {
           if ($rootScope.threeReady && $rootScope.license) {
             for (var i = 0; i < $rootScope.license.length; i++) {
@@ -876,7 +947,9 @@ angular.module('SeanApp').controller('UserController', [
                                                          //     console.log(json);
                                                          // });
   }
-]).controller('MTSController', [
+]);
+;
+angular.module('SeanApp').controller('MTSController', [
   'commService',
   '$rootScope',
   '$scope',
@@ -2570,7 +2643,19 @@ angular.module('SeanApp').controller('UserController', [
       $scope.renderEquipTimeStatus(json.equipState, json.equipTime);
     });
   }
-]).controller('LabController', [
+]).filter('moment', function () {
+  return function (input, momentFn) {
+    var args = Array.prototype.slice.call(arguments, 2), momentObj = moment(input);
+    return momentObj[momentFn].apply(momentObj, args);
+  };
+}).filter('waterPressureFilter', function () {
+  return function (waterPressure) {
+    console.log(waterPressure);
+    return waterPressure == 1 ? '\u8d85\u9650' : '\u6b63\u5e38';
+  };
+});
+;
+angular.module('SeanApp').controller('LabController', [
   '$rootScope',
   '$scope',
   '$http',
@@ -2666,370 +2751,548 @@ angular.module('SeanApp').controller('UserController', [
       '4': 0,
       '5': 0
     };
-    $scope.$on('$viewContentLoaded', function () {
-      $(window).resize(function () {
-        // 基于准备好的dom，初始化echarts实例
-        myChart1 = echarts.init(document.getElementById('startRate'), theme);
-        // 使用刚指定的配置项和数据显示图表。
-        myChart1.setOption($scope.startRate);
-        // 基于准备好的dom，初始化echarts实例
-        myChart2 = echarts.init(document.getElementById('intactRate'), theme);
-        myChart2.setOption($scope.intactRate);
-        // 基于准备好的dom，初始化echarts实例
-        myChart3 = echarts.init(document.getElementById('utilizRate'), theme);
-        myChart3.setOption($scope.utilizRate);
-        // 基于准备好的dom，初始化echarts实例
-        myChart4 = echarts.init(document.getElementById('durautilizRate'), theme);
-        myChart4.setOption($scope.durautilizRate);
-        // 基于准备好的dom，初始化echarts实例
-        myChart5 = echarts.init(document.getElementById('efficiencyCoeff'), theme);
-        myChart5.setOption($scope.efficiencyCoeff);
-      });
-    });
-    var labInfo = {
-        'LAB02': {
-          name: '\u7ed3\u6784\u8bd5\u9a8c\u5ba4',
-          area: [
-            {
-              name: '\u8f66\u8eab\u7ed3\u6784\u8bd5\u9a8c\u533a',
-              json: LAB02_HPU
+
+    //报表配置项
+      var optBar = {
+        title: {show:false},
+            grid: {
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0
             },
-            {
-              name: '\u5e95\u76d8\u7ed3\u6784\u8bd5\u9a8c\u533a',
-              json: LAB02_MTS
-            }
-          ]
-        },
-        'LAB03': {
-          name: 'PS\u6574\u8f66\u6392\u653e\u53ca\u6027\u80fd\u8bd5\u9a8c\u5ba4',
-          area: [{
-              name: 'PS\u6574\u8f66\u6392\u653e\u53ca\u6027\u80fd\u8bd5\u9a8c\u533a',
-              json: LAB03_BEP
-            }]
-        }
-      };
-    render3D();
-    if (typeof labInfo[$state.params.id] == 'undefined') {
-      $window.history.back();
-      return;
-    }
-    $rootScope.labName = labInfo[$state.params.id].name;
-    // set sidebar closed and body solid layout mode
-    $rootScope.settings.layout.pageContentWhite = true;
-    $rootScope.settings.layout.pageBodySolid = false;
-    $rootScope.settings.layout.pageSidebarClosed = false;
-    $rootScope.settings.layout.setSidebar = false;
-    $rootScope.settings.layout.setFullscreen = false;
-    $rootScope.settings.layout.setDeviceButton = false;
-    $rootScope.settings.layout.setLabButton = true;
-    // 指定图表的配置项和数据
-    var option = {
-        grid: {
-          x: 28,
-          y: 28,
-          x2: 28,
-          y2: 24,
-          borderWidth: 0
-        },
-        legend: {
-          data: [
-            {
-              name: '\u4eca\u5e74\u5e73\u5747',
-              textStyle: { color: '#fff' }
-            },
-            {
-              name: '\u53bb\u5e74\u5e73\u5747',
-              textStyle: { color: '#26a1ab' }
-            }
-          ]
-        },
-        tooltip: { show: true },
-        calculable: false,
-        xAxis: [{
-            type: 'category',
-            data: [
-              '\u5f53\u6708\u503c',
-              '\u4e0a\u6708\u503c',
-              '\u540c\u671f\u503c'
-            ],
-            splitLine: { show: false },
-            axisLabel: { textStyle: { color: '#fff' } }
-          }],
-        yAxis: [{
-            type: 'value',
-            splitLine: { show: false },
-            axisLabel: {
-              textStyle: {
-                formatter: function (val) {
-                  return val + '%';
-                },
-                color: '#fff'
+            tooltip: {
+              show: true,
+              formatter: "{b0}: {c0}%",
+              trigger: 'item',
+              axisPointer : {
+                  type : 'shadow'
               }
             },
-            splitNumber: 5
-          }],
-        series: [
-          {
-            type: 'bar',
-            itemStyle: {
-              emphasis: { barBorderRadius: 10 },
-              normal: {
-                label: {
-                  show: true,
-                  position: 'top'
-                }
-              }
-            },
-            barWidth: 20,
-            data: [
-              1.2,
-              2.1,
-              1.5
-            ]
-          },
-          {
-            type: 'line',
-            name: '\u4eca\u5e74\u5e73\u5747',
-            markLine: {
-              data: [{
-                  name: '\u4eca\u5e74\u5e73\u5747',
+            xAxis: [{
+              show: false,
+              type: "category",
+                data: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"],
+                axisLabel: {interval:0}
+            }],
+            yAxis: [{
+              show: false,
+              type: "value"
+            }],
+            series: [{
+              name: "",
+                type: "bar"
+            },{
+              type: "line",
+              name: "今年平均",
+              markLine: {
+                data: [{
+                  name: "今年平均",
                   yAxis: 3
                 }],
-              itemStyle: {
-                normal: {
-                  color: '#FFF',
-                  lineStyle: { type: 'solid' }
+                itemStyle: {
+                  normal: {
+                    color: "#5c9bd1"
+                  }
                 }
               }
-            }
+            }],
+            color: ["#2b475d"]
+      };
+      var optLine = {
+        title: {show:false},
+            grid: {
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0
+            },
+            tooltip: {
+              show: true,
+              formatter: "{b0}: {c0}",
+              trigger: 'axis',
+              axisPointer : {
+                  type : 'shadow'
+              }
+            },
+            xAxis: [{
+              show: false,
+              type: "category",
+                data: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"],
+                axisLabel: {interval:0}
+            }],
+            yAxis: [{
+              show: false,
+              type: "value"
+            }],
+            series: [{
+              name: "",
+                type: "line",
+                areaStyle: {normal: {}}
+                
+            },{
+              type: "line",
+              name: "今年平均",
+              markLine: {
+                data: [{
+                  name: "今年平均",
+                  yAxis: 3
+                }],
+                itemStyle: {
+                  normal: {
+                    color: "#ffc000"
+                  }
+                }
+              }
+            }],
+            color: ["#ffbb00"]
+      };
+
+      var dataObj={},numArr=[],perArr=[];
+      //初始化报表
+      var efficiencyCoeffChart = echarts.init(document.getElementById("efficiencyCoeffDiv")); //实验效能系数
+      var intactRateChart = echarts.init(document.getElementById("intactRateDiv")); //重点设备完好率
+      var utilizRateChart = echarts.init(document.getElementById("utilizRateDiv")); //耐久型设备利用率
+      var durautilizRateChart = echarts.init(document.getElementById("durautilizRateDiv")); //非耐久型设备利用率
+      var startRateChart = echarts.init(document.getElementById("startRateDiv")); //在线设备开动率
+
+      //根据Div的id获取EChart实例
+      function getChartInst(divId) {
+        switch(divId) {
+          case "efficiencyCoeffDiv": 
+            return efficiencyCoeffChart;
+            break;
+          case "intactRateDiv":
+            return intactRateChart;
+            break;
+          case "utilizRateDiv":
+            return utilizRateChart;
+            break;
+          case "durautilizRateDiv":
+            return durautilizRateChart;
+            break;
+          case "startRateDiv": 
+            return startRateChart;
+            break;
+          default: 
+            return null;
+            break;
+        };
+      }
+
+      //根据Div的id获取EChart实例Dom
+      function getChartDom(divId) {
+        switch(divId) {
+          case "efficiencyCoeffDiv": 
+            return efficiencyCoeffChart.getDom();
+            break;
+          case "intactRateDiv":
+            return intactRateChart.getDom();
+            break;
+          case "utilizRateDiv":
+            return utilizRateChart.getDom();
+            break;
+          case "durautilizRateDiv":
+            return durautilizRateChart.getDom();
+            break;
+          case "startRateDiv": 
+            return startRateChart.getDom();
+            break;
+          default: 
+            return null;
+            break;
+        };
+      }
+
+    $scope.$on('$viewContentLoaded', function () {
+
+        //点击切换
+        $(".chart-wrapper").on("click", function() {
+          if(!$(this).hasClass("chart-wrapper-m")) {
+            //交换信息位置
+            var barMeta = $(this).find(".chart-meta").html();
+            var lineMeta = $("#chartWrapper .chart-meta").html();
+            $(this).find(".chart-meta").html(lineMeta);
+            $("#chartWrapper .chart-meta").html(barMeta)
+            //交换报表位置
+            var barDivId = $(this).find(".chart-div").attr("id");
+            var lineDivId = $("#chartWrapper .chart-div").attr("id");
+            var barChart = getChartInst(barDivId);
+            var lineChart = getChartInst(lineDivId);
+            var barChartDom = getChartDom(barDivId);
+            var lineChartDom = getChartDom(lineDivId);
+            $("#chartWrapper").remove(".chart-div").append(barChartDom);
+            $(this).remove(".chart-div").append(lineChartDom);
+            //更改报表类型及大小
+            optBar.series[0].data = dataObj[lineDivId].indexValue;
+            optBar.series[1].markLine.data[0].yAxis = dataObj[lineDivId].indexCurrAvg;
+            optBar.xAxis[0].data =  dataObj[lineDivId].indexDimension;
+            lineChart.setOption(optBar);
+            lineChart.resize();
+
+            optLine.series[0].data = dataObj[barDivId].indexValue;
+            optLine.series[1].markLine.data[0].yAxis = dataObj[barDivId].indexCurrAvg;
+            optLine.xAxis[0].data =  dataObj[barDivId].indexDimension;
+            barChart.setOption(optLine);
+            barChart.resize();
+          }
+        });
+    
+      //浏览器窗口改变时，重置报表大小
+      window.setTimeout(function() {
+        window.onresize = function() {
+          efficiencyCoeffChart.resize();
+          intactRateChart.resize();
+          utilizRateChart.resize();
+          durautilizRateChart.resize();
+          startRateChart.resize();
+        };
+      }, 200);
+
+  });
+
+  var labInfo = {
+      'LAB02': {
+        name: '\u7ed3\u6784\u8bd5\u9a8c\u5ba4',
+        area: [
+          {
+            name: '\u8f66\u8eab\u7ed3\u6784\u8bd5\u9a8c\u533a',
+            json: LAB02_HPU
           },
           {
-            type: 'line',
-            name: '\u53bb\u5e74\u5e73\u5747',
-            markLine: {
-              data: [{
-                  name: '\u53bb\u5e74\u5e73\u5747',
-                  yAxis: 2,
-                  itemStyle: {
-                    normal: {
-                      color: '#26a1ab',
-                      lineStyle: { type: 'solid' },
-                      label: {
-                        show: true,
-                        formatter: '{b} {c} '
-                      }
-                    }
-                  }
-                }]
-            }
+            name: '\u5e95\u76d8\u7ed3\u6784\u8bd5\u9a8c\u533a',
+            json: LAB02_MTS
           }
         ]
+      },
+      'LAB03': {
+        name: 'PS\u6574\u8f66\u6392\u653e\u53ca\u6027\u80fd\u8bd5\u9a8c\u5ba4',
+        area: [{
+            name: 'PS\u6574\u8f66\u6392\u653e\u53ca\u6027\u80fd\u8bd5\u9a8c\u533a',
+            json: LAB03_BEP
+          }]
+      }
+  };
+
+  render3D();
+
+  if (typeof labInfo[$state.params.id] == 'undefined') {
+    $window.history.back();
+    return;
+  }
+  $rootScope.labName = labInfo[$state.params.id].name;
+  // set sidebar closed and body solid layout mode
+  $rootScope.settings.layout.pageContentWhite = true;
+  $rootScope.settings.layout.pageBodySolid = false;
+  $rootScope.settings.layout.pageSidebarClosed = false;
+  $rootScope.settings.layout.setSidebar = false;
+  $rootScope.settings.layout.setFullscreen = false;
+  $rootScope.settings.layout.setDeviceButton = false;
+  $rootScope.settings.layout.setLabButton = true;
+  
+  var url = '/experipage/getExperiIndex';
+  var data = {
+    experiNo: $state.params.id,
+    indexName: [
+      'startRate',
+      'intactRate',
+      'utilizRate',
+      'durautilizRate',
+      'efficiencyCoeff'
+    ]
+  };
+  
+
+  $http.post($rootScope.settings.apiPath + url, JSON.stringify(data)).success(function (json) {
+    $scope.getExperiIndex = json;
+
+    for (var i = 0; i < json.length; i++) {
+      //(function(i){
+      // var maxNum = Math.max(json[i].indexAvgValue, json[i].indexLastValue, Math.max.apply(null, json[i].indexValue));
+      // maxNum = Math.ceil(maxNum + maxNum * 0.2);
+      if (json[i].indexName === 'startRate') {
+        // var op = JSON.stringify(option);
+        // $scope.startRate = JSON.parse(op);
+        // $scope.startRate.tooltip.text = '\u8bbe\u5907\u5f00\u52a8\u7387';
+        // $scope.startRate.series[0].data = json[i].indexValue;
+        // $scope.startRate.series[1].markLine.data[0].yAxis = json[i].indexAvgValue;
+        // $scope.startRate.series[2].markLine.data[0].yAxis = json[i].indexLastValue;
+        // //maxNum=maxNum>100?100:maxNum;
+        // $scope.startRate.yAxis[0].max = 100;
+        // var myChart1 = echarts.init(document.getElementById('startRate'), theme);
+        // myChart1.setOption($scope.startRate);
+        $scope.startRate = json[i];
+      } else if (json[i].indexName === 'intactRate') {
+        // var op = JSON.stringify(option);
+        // $scope.intactRate = JSON.parse(op);
+        // $scope.intactRate.series[0].data = json[i].indexValue;
+        // $scope.intactRate.series[1].markLine.data[0].yAxis = json[i].indexAvgValue;
+        // $scope.intactRate.series[2].markLine.data[0].yAxis = json[i].indexLastValue;
+        // //maxNum=maxNum>100?100:maxNum;
+        // $scope.intactRate.yAxis[0].max = 110;
+        // $scope.intactRate.yAxis[0].min = 80;
+        // var myChart2 = echarts.init(document.getElementById('intactRate'), theme);
+        // myChart2.setOption($scope.intactRate);
+
+        $scope.intactRate = json[i];
+      } else if (json[i].indexName === 'utilizRate') {
+        // var op = JSON.stringify(option);
+        // $scope.utilizRate = JSON.parse(op);
+        // if (json[i].indexValue) {
+        //   json[i].indexValue = json[i].indexValue.map(function (item, index) {
+        //     return item < 20 ? '&nbps;' : item;
+        //   });
+        // }
+        // $scope.utilizRate.series[0].data = json[i].indexValue;
+        // $scope.utilizRate.series[1].markLine.data[0].yAxis = json[i].indexAvgValue;
+        // $scope.utilizRate.series[2].markLine.data[0].yAxis = json[i].indexLastValue;
+        // $scope.utilizRate.yAxis[0].max = 80;
+        // $scope.utilizRate.yAxis[0].min = 20;
+        // var myChart3 = echarts.init(document.getElementById('utilizRate'), theme);
+        // myChart3.setOption($scope.utilizRate);
+        $scope.utilizRate = json[i];
+      } else if (json[i].indexName === 'durautilizRate') {
+        // var op = JSON.stringify(option);
+        // $scope.durautilizRate = JSON.parse(op);
+        // $scope.durautilizRate.series[0].data = json[i].indexValue;
+        // $scope.durautilizRate.series[1].markLine.data[0].yAxis = json[i].indexAvgValue;
+        // $scope.durautilizRate.series[2].markLine.data[0].yAxis = json[i].indexLastValue;
+        // //maxNum=maxNum>100?100:maxNum;
+        // $scope.durautilizRate.yAxis[0].max = 300;
+        // var myChart4 = echarts.init(document.getElementById('durautilizRate'), theme);
+        // myChart4.setOption($scope.durautilizRate);
+        $scope.durautilizRate = json[i];
+      } else if (json[i].indexName === 'efficiencyCoeff') {
+        // var op = JSON.stringify(option);
+        // $scope.efficiencyCoeff = JSON.parse(op);
+        // $scope.efficiencyCoeff.series[0].data = json[i].indexValue;
+        // $scope.efficiencyCoeff.series[1].markLine.data[0].yAxis = json[i].indexAvgValue;
+        // $scope.efficiencyCoeff.series[2].markLine.data[0].yAxis = json[i].indexLastValue;
+        // $scope.efficiencyCoeff.yAxis[0].max = maxNum;
+        // var myChart5 = echarts.init(document.getElementById('efficiencyCoeff'), theme);
+        // myChart5.setOption($scope.efficiencyCoeff);
+        $scope.efficiencyCoeff = json[i];
+      }  //})(i);
+    }
+
+    var hash = window.location.hash;
+    if(hash=="#/lab/LAB02") {
+      dataObj = {
+        efficiencyCoeffDiv: {
+          indexValue:$scope.efficiencyCoeff.indexValue,
+          indexCurrAvg:$scope.efficiencyCoeff.indexCurrAvg,
+          indexDimension:$scope.efficiencyCoeff.indexDimension
+        },
+        intactRateDiv:{
+          indexValue:$scope.intactRate.indexValue,
+          indexCurrAvg:$scope.intactRate.indexCurrAvg,
+          indexDimension:$scope.intactRate.indexDimension
+        },
+        utilizRateDiv:{
+          indexValue:$scope.utilizRate.indexValue,
+          indexCurrAvg:$scope.utilizRate.indexCurrAvg,
+          indexDimension:$scope.utilizRate.indexDimension
+        },
+        durautilizRateDiv: {
+          indexValue:$scope.durautilizRate.indexValue,
+          indexCurrAvg:$scope.durautilizRate.indexCurrAvg,
+          indexDimension:$scope.durautilizRate.indexDimension
+        },
+        startRateDiv: {
+          indexValue:$scope.startRate.indexValue,
+          indexCurrAvg:$scope.startRate.indexCurrAvg,
+          indexDimension:$scope.startRate.indexDimension
+        }
       };
-    // var myChart = echarts.init(document.getElementById('startRate'),theme);
-    // myChart.setOption(option);
-    // var myChart = echarts.init(document.getElementById('intactRate'),theme);
-    // myChart.setOption(option);
-    // var myChart = echarts.init(document.getElementById('utilizRate'),theme);
-    // myChart.setOption(option);
-    // var myChart = echarts.init(document.getElementById('durautilizRate'),theme);
-    // myChart.setOption(option);
-    // var myChart = echarts.init(document.getElementById('efficiencyCoeff'),theme);
-    // myChart.setOption(option);
-    //实验室对应指标
-    var url = '/experipage/getExperiIndex';
-    var data = {
-        experiNo: $state.params.id,
-        indexName: [
-          'startRate',
-          'intactRate',
-          'utilizRate',
-          'durautilizRate',
-          'efficiencyCoeff'
-        ]
+
+      //初始化进度条
+      numArr = [$scope.efficiencyCoeff.indexCurrValue, 
+      $scope.intactRate.indexCurrValue, 
+      $scope.utilizRate.indexCurrValue, 
+      $scope.durautilizRate.indexCurrValue, 
+      $scope.startRate.indexCurrValue];
+
+      perArr = [$scope.efficiencyCoeff.indexYOYValue, 
+      $scope.intactRate.indexYOYValue, 
+      $scope.utilizRate.indexYOYValue, 
+      $scope.durautilizRate.indexYOYValue, 
+      $scope.startRate.indexYOYValue];
+
+      //初始化进度条
+      $(".chart-meta h3").each(function(i) {
+        $(this).html(numArr[i]);
+        console.log(perArr[i]);
+        if(perArr[i]<0){
+           $(this).addClass('h3-red');
+        }
+
+      });
+      
+      $(".progress-bar").each(function(i) {
+        var w = numArr[i] + "%";
+        $(this).animate({
+          width: w
+        }, 800);
+
+        if(perArr[i]<0){
+           $(this).addClass('progress-bar-red');
+        }
+
+      });
+
+      $(".chart-num").each(function(i) {
+        $(this).html(perArr[i]);
+
+        var arrow = $(this).prev('.fa');
+        if(perArr[i]>0){
+          arrow.addClass('fa-long-arrow-up');
+        }else if(perArr[i]<0){
+          arrow.addClass('fa-long-arrow-down');
+        }
+      });
+
+    }else {
+      dataObj = {
+        efficiencyCoeffDiv: {
+          indexValue:$scope.efficiencyCoeff.indexValue,
+          indexCurrAvg:$scope.efficiencyCoeff.indexCurrAvg,
+          indexDimension:$scope.efficiencyCoeff.indexDimension
+        },
+        intactRateDiv:{
+          indexValue:$scope.intactRate.indexValue,
+          indexCurrAvg:$scope.intactRate.indexCurrAvg,
+          indexDimension:$scope.intactRate.indexDimension
+        },
+        utilizRateDiv:{
+          indexValue:$scope.utilizRate.indexValue,
+          indexCurrAvg:$scope.utilizRate.indexCurrAvg,
+          indexDimension:$scope.utilizRate.indexDimension
+        },
+        durautilizRateDiv: {
+          indexValue:$scope.durautilizRate.indexValue,
+          indexCurrAvg:$scope.durautilizRate.indexCurrAvg,
+          indexDimension:$scope.durautilizRate.indexDimension
+        },
+        startRateDiv: {
+          indexValue:$scope.startRate.indexValue,
+          indexCurrAvg:$scope.startRate.indexCurrAvg,
+          indexDimension:$scope.startRate.indexDimension
+        }
       };
-    $http.post($rootScope.settings.apiPath + url, JSON.stringify(data)).success(function (json) {
-      $scope.getExperiIndex = json;
-      for (var i = 0; i < json.length; i++) {
-        //(function(i){
-        var maxNum = Math.max(json[i].indexAvgValue, json[i].indexLastValue, Math.max.apply(null, json[i].indexValue));
-        maxNum = Math.ceil(maxNum + maxNum * 0.2);
-        if (json[i].indexName === 'startRate') {
-          var op = JSON.stringify(option);
-          $scope.startRate = JSON.parse(op);
-          $scope.startRate.tooltip.text = '\u8bbe\u5907\u5f00\u52a8\u7387';
-          $scope.startRate.series[0].data = json[i].indexValue;
-          $scope.startRate.series[1].markLine.data[0].yAxis = json[i].indexAvgValue;
-          $scope.startRate.series[2].markLine.data[0].yAxis = json[i].indexLastValue;
-          //maxNum=maxNum>100?100:maxNum;
-          $scope.startRate.yAxis[0].max = 100;
-          var myChart1 = echarts.init(document.getElementById('startRate'), theme);
-          myChart1.setOption($scope.startRate);
-        } else if (json[i].indexName === 'intactRate') {
-          var op = JSON.stringify(option);
-          $scope.intactRate = JSON.parse(op);
-          $scope.intactRate.series[0].data = json[i].indexValue;
-          $scope.intactRate.series[1].markLine.data[0].yAxis = json[i].indexAvgValue;
-          $scope.intactRate.series[2].markLine.data[0].yAxis = json[i].indexLastValue;
-          //maxNum=maxNum>100?100:maxNum;
-          $scope.intactRate.yAxis[0].max = 110;
-          $scope.intactRate.yAxis[0].min = 80;
-          var myChart2 = echarts.init(document.getElementById('intactRate'), theme);
-          myChart2.setOption($scope.intactRate);
-        } else if (json[i].indexName === 'utilizRate') {
-          var op = JSON.stringify(option);
-          console.log(json[i]);
-          $scope.utilizRate = JSON.parse(op);
-          if (json[i].indexValue) {
-            json[i].indexValue = json[i].indexValue.map(function (item, index) {
-              return item < 20 ? '&nbps;' : item;
-            });
-          }
-          $scope.utilizRate.series[0].data = json[i].indexValue;
-          $scope.utilizRate.series[1].markLine.data[0].yAxis = json[i].indexAvgValue;
-          $scope.utilizRate.series[2].markLine.data[0].yAxis = json[i].indexLastValue;
-          $scope.utilizRate.yAxis[0].max = 80;
-          $scope.utilizRate.yAxis[0].min = 20;
-          var myChart3 = echarts.init(document.getElementById('utilizRate'), theme);
-          myChart3.setOption($scope.utilizRate);
-        } else if (json[i].indexName === 'durautilizRate') {
-          var op = JSON.stringify(option);
-          $scope.durautilizRate = JSON.parse(op);
-          $scope.durautilizRate.series[0].data = json[i].indexValue;
-          $scope.durautilizRate.series[1].markLine.data[0].yAxis = json[i].indexAvgValue;
-          $scope.durautilizRate.series[2].markLine.data[0].yAxis = json[i].indexLastValue;
-          //maxNum=maxNum>100?100:maxNum;
-          $scope.durautilizRate.yAxis[0].max = 300;
-          var myChart4 = echarts.init(document.getElementById('durautilizRate'), theme);
-          myChart4.setOption($scope.durautilizRate);
-        } else if (json[i].indexName === 'efficiencyCoeff') {
-          var op = JSON.stringify(option);
-          $scope.efficiencyCoeff = JSON.parse(op);
-          $scope.efficiencyCoeff.series[0].data = json[i].indexValue;
-          $scope.efficiencyCoeff.series[1].markLine.data[0].yAxis = json[i].indexAvgValue;
-          $scope.efficiencyCoeff.series[2].markLine.data[0].yAxis = json[i].indexLastValue;
-          $scope.efficiencyCoeff.yAxis[0].max = maxNum;
-          var myChart5 = echarts.init(document.getElementById('efficiencyCoeff'), theme);
-          myChart5.setOption($scope.efficiencyCoeff);
-        }  //})(i);
-      }
-    });
-    //实验室对应设备
-    var url = '/experipage/getMainExperiMenu';
-    var data = { experiNo: $state.params.id };
-    $http.post($rootScope.settings.apiPath + url, JSON.stringify(data)).success(function (json) {
-      var json3D = null;
-      if (labInfo[$state.params.id].area.length == 2) {
-        json3D = labInfo[$state.params.id].area[1]['json'].objects;
-      } else if (labInfo[$state.params.id].area.length == 1) {
-        json3D = labInfo[$state.params.id].area[0]['json'].objects;
-      }
-      $rootScope.getMainExperiMenu = json;
-      //change state
-      for (var i = 0; i < json.length; i++) {
-        $scope.status[json[i].status - 0]++;
-      }
-      for (var i = 0; i < json.length; i++) {
-        for (var j = 0; j < json3D.length; j++) {
-          if (json3D[j].client && json[i].equipNo == json3D[j].client.id) {
-            //$scope.status[1]++;
-            var status = parseInt(json[i].status) || '0';
-            //??
-            status = status.toString();
-            json3D[j].client.status = $scope.statusInfo[status].name;
-            json3D[j].client.cycle = json[i].cycle;
-            json3D[j].client.progress = json[i].progress;
-            json3D[j].client.faultMsg = json[i].faultMsg;
-            json3D[j].sideColor = $scope.statusInfo[status].sideColor;
-            json3D[j].topColor = $scope.statusInfo[status].topColor;
-          }
+
+      //初始化进度条
+      numArr = [$scope.efficiencyCoeff.indexCurrValue, 
+      $scope.intactRate.indexCurrValue, 
+      $scope.utilizRate.indexCurrValue, 
+      $scope.durautilizRate.indexCurrValue, 
+      $scope.startRate.indexCurrValue];
+
+      perArr = [$scope.efficiencyCoeff.indexYOYValue, 
+      $scope.intactRate.indexYOYValue, 
+      $scope.utilizRate.indexYOYValue, 
+      $scope.durautilizRate.indexYOYValue, 
+      $scope.startRate.indexYOYValue];
+
+      $(".chart-meta h3").each(function(i) {
+        $(this).html(numArr[i]);
+        console.log(perArr[i]);
+        if(perArr[i]<0){
+           $(this).addClass('h3-red');
+        }
+
+      });
+      
+      $(".progress-bar").each(function(i) {
+        var w = numArr[i] + "%";
+        $(this).animate({
+          width: w
+        }, 800);
+
+        if(perArr[i]<0){
+           $(this).addClass('progress-bar-red');
+        }
+
+      });
+
+      $(".chart-num").each(function(i) {
+        $(this).html(perArr[i]);
+
+        var arrow = $(this).prev('.fa');
+        if(perArr[i]>0){
+          arrow.addClass('fa-long-arrow-up');
+        }else if(perArr[i]<0){
+          arrow.addClass('fa-long-arrow-down');
+        }
+      });
+    }
+
+    console.log(dataObj['efficiencyCoeffDiv']);
+
+    //配置报表
+    var opLineCopy = angular.copy(optLine);
+    opLineCopy.series[0].data = dataObj['efficiencyCoeffDiv'].indexValue;
+    opLineCopy.series[1].markLine.data[0].yAxis = dataObj['efficiencyCoeffDiv'].indexCurrAvg;
+    opLineCopy.xAxis[0].data =  dataObj['efficiencyCoeffDiv'].indexDimension;
+    efficiencyCoeffChart.setOption(opLineCopy);
+
+    var optBarCopy = angular.copy(optBar);
+    optBarCopy.series[0].data = dataObj['intactRateDiv'].indexValue;
+    optBarCopy.series[1].markLine.data[0].yAxis = dataObj['intactRateDiv'].indexCurrAvg;
+    optBarCopy.xAxis[0].data =  dataObj['intactRateDiv'].indexDimension;
+    intactRateChart.setOption(optBarCopy);
+
+    var optBarCopy = angular.copy(optBar);
+    optBarCopy.series[0].data = dataObj['utilizRateDiv'].indexValue;
+    optBarCopy.series[1].markLine.data[0].yAxis = dataObj['utilizRateDiv'].indexCurrAvg;
+    optBarCopy.xAxis[0].data =  dataObj['utilizRateDiv'].indexDimension;
+    utilizRateChart.setOption(optBarCopy);
+
+    var optBarCopy = angular.copy(optBar);
+    optBarCopy.series[0].data = dataObj['durautilizRateDiv'].indexValue;
+    optBarCopy.series[1].markLine.data[0].yAxis = dataObj['durautilizRateDiv'].indexCurrAvg;
+    optBarCopy.xAxis[0].data =  dataObj['durautilizRateDiv'].indexDimension;
+    durautilizRateChart.setOption(optBarCopy);
+
+    var optBarCopy = angular.copy(optBar);
+    optBarCopy.series[0].data = dataObj['startRateDiv'].indexValue;
+    optBarCopy.series[1].markLine.data[0].yAxis = dataObj['startRateDiv'].indexCurrAvg;
+    optBarCopy.xAxis[0].data =  dataObj['startRateDiv'].indexDimension;
+    startRateChart.setOption(optBarCopy);
+
+  });
+  //实验室对应设备
+  var url = '/experipage/getMainExperiMenu';
+  var data = { experiNo: $state.params.id };
+  $http.post($rootScope.settings.apiPath + url, JSON.stringify(data)).success(function (json) {
+    var json3D = null;
+    if (labInfo[$state.params.id].area.length == 2) {
+      json3D = labInfo[$state.params.id].area[1]['json'].objects;
+    } else if (labInfo[$state.params.id].area.length == 1) {
+      json3D = labInfo[$state.params.id].area[0]['json'].objects;
+    }
+    $rootScope.getMainExperiMenu = json;
+    //change state
+    for (var i = 0; i < json.length; i++) {
+      $scope.status[json[i].status - 0]++;
+    }
+    for (var i = 0; i < json.length; i++) {
+      for (var j = 0; j < json3D.length; j++) {
+        if (json3D[j].client && json[i].equipNo == json3D[j].client.id) {
+          //$scope.status[1]++;
+          var status = parseInt(json[i].status) || '0';
+          //??
+          status = status.toString();
+          json3D[j].client.status = $scope.statusInfo[status].name;
+          json3D[j].client.cycle = json[i].cycle;
+          json3D[j].client.progress = json[i].progress;
+          json3D[j].client.faultMsg = json[i].faultMsg;
+          json3D[j].sideColor = $scope.statusInfo[status].sideColor;
+          json3D[j].topColor = $scope.statusInfo[status].topColor;
         }
       }
-      //render
-      render3D();
-    });
-    var url = '/experipage/getEquipState';
-    if ($state.params.id == 'LAB02') {
-    } else if ($state.params.id == 'LAB03') {
     }
-  }
-]).filter('userStatus', function () {
-  return function (input, userStatus) {
-    var args = Array.prototype.slice.call(arguments, 2);
-    switch (input) {
-    case 0:
-      return '\u7981\u7528';
-      break;
-    case 1:
-      return '\u53ef\u7528';
-      break;
-    default:
-      return '\u672a\u77e5';
-      break;
-    }  // return momentObj[momentFn].apply(momentObj, args);
-  };
-}).filter('checkStatus', function () {
-  return function (input, userStatus) {
-    var args = Array.prototype.slice.call(arguments, 2);
-    switch (input) {
-    case 0:
-      return false;
-      break;
-    case 1:
-      return true;
-      break;
-    default:
-      return false;
-      break;
-    }  // return momentObj[momentFn].apply(momentObj, args);
-  };
-}).filter('moment', function () {
-  return function (input, momentFn) {
-    var args = Array.prototype.slice.call(arguments, 2), momentObj = moment(input);
-    return momentObj[momentFn].apply(momentObj, args);
-  };
-}).filter('waterPressureFilter', function () {
-  return function (waterPressure) {
-    console.log(waterPressure);
-    return waterPressure == 1 ? '\u8d85\u9650' : '\u6b63\u5e38';
-  };
-}).config([
-  '$validatorProvider',
-  function ($validatorProvider) {
-    $validatorProvider.setDefaults({
-      errorElement: 'span',
-      errorClass: 'help-block',
-      highlight: function (element) {
-        // hightlight error inputs
-        $(element).closest('.form-group').addClass('has-error');  // set error class to the control group
-      },
-      errorPlacement: function (error, element) {
-        error.insertAfter(element);
-        $(error).show();
-      },
-      success: function (error, element) {
-        $(error).parents('.form-group').removeClass('has-error');
-        $(error).remove();
-      }
-    });
-    $validatorProvider.setDefaultMessages({
-      required: '\u8bf7\u8f93\u5165\u5fc5\u586b\u9879.',
-      remote: '\u8bf7\u4fee\u6539.',
-      email: '\u9519\u8bef\u90ae\u7bb1\u683c\u5f0f.',
-      url: '\u9519\u8befurl\u683c\u5f0f.',
-      date: '\u9519\u8bef\u65f6\u95f4\u683c\u5f0f.',
-      dateISO: '\u9519\u8befISO\u65f6\u95f4\u683c\u5f0f.',
-      number: '\u975e\u6cd5\u6570\u5b57\u683c\u5f0f.',
-      digits: 'Please enter only digits.',
-      creditcard: '\u8bf7\u8f93\u5165\u6b63\u786e\u4fe1\u7528\u5361\u683c\u5f0f.',
-      equalTo: '2\u6b21\u8f93\u5165\u4e0d\u4e00\u81f4.',
-      accept: '\u8bf7\u8f93\u5165\u6b63\u786e\u9a8c\u8bc1\u4fe1\u606f.',
-      tnc: '\u8bf7\u5148\u9605\u8bfb\u653f\u7b56',
-      maxlength: $validatorProvider.format('\u6700\u5927\u4e0d\u8d85\u8fc7 {0} \u4f4d.'),
-      minlength: $validatorProvider.format('\u6700\u5c0f\u4e0d\u8d85\u8fc7 {0} \u4f4d.'),
-      rangelength: $validatorProvider.format('\u53ef\u4ee5\u8f93\u5165 {0} \u5230 {1} \u4f4d.'),
-      range: $validatorProvider.format('\u53ef\u8f93\u5165 {0} \u5230 {1}.'),
-      max: $validatorProvider.format('\u4e0d\u5927\u4e8e {0}.'),
-      min: $validatorProvider.format('\u4e0d\u5c0f\u4e8e {0}.')
-    });
-  }
+    //render
+    render3D();
+  });
+}
 ]);

@@ -1,3 +1,2256 @@
-function setupLights(e){var t=new mono.PointLight(16777215,.3);t.setPosition(-100,100,500),e.add(t),e.add(new mono.AmbientLight("white"))}function handleClick(e,network){var camera=network.getCamera(),interaction=network.getDefaultInteraction(),firstClickObject=demo.Default.findFirstObjectByMouse(network,e);if(firstClickObject){var element=firstClickObject.element,newTarget=firstClickObject.point,oldTarget=camera.getTarget();if(element.getClient("lazy.function")&&element.getClient("validateLicense")){var loader=element.getClient("lazy.function"),time1=(new Date).getTime();eval(loader+"()");var time2=(new Date).getTime()}}}function handleDoubleClick(e,network){var camera=network.getCamera(),interaction=network.getDefaultInteraction(),firstClickObject=demo.Default.findFirstObjectByMouse(network,e);if(firstClickObject){var element=firstClickObject.element,newTarget=firstClickObject.point,oldTarget=camera.getTarget();if(element.getClient("lazy.function")){var loader=element.getClient("lazy.function"),time1=(new Date).getTime();eval(loader+"()");var time2=(new Date).getTime()}else demo.Default.animateCamera(camera,interaction,oldTarget,newTarget)}else{var oldTarget=camera.getTarget(),newTarget=new mono.Vec3(0,0,0);demo.Default.animateCamera(camera,interaction,oldTarget,newTarget)}}function loadBuilding1(){window.open("#lab/LAB02")}function loadBuilding2(){window.open("#lab/LAB03")}if(!demo)var demo={};demo.Default={LAZY_MIN:10,LAZY_MAX:500,CLEAR_COLOR:"#000000",_envmaps:{},_creators:{},_filters:{},_templates:{},registerCreator:function(e,t){this._creators[e]=t},getCreator:function(e){return this._creators[e]},registerFilter:function(e,t){this._filters[e]=t},getFilter:function(e){return this._filters[e]},registerTemplates:function(e,t){this._templates[e]=t},getTemplates:function(e){return this._templates[e]},setup:function(e){demo.Default.loadImages(["images/outside_lightmap.png","images/table_shadow.png","images/conf_table_shadow.png"]);var t=new mono.Network3D,a=new mono.PerspectiveCamera(30,1.5,30,5e4);a.setPosition(1500,3200,4e3),t.setCamera(a);var m=t.getDefaultInteraction();m.yLowerLimitAngle=Math.PI/180*2,m.yUpLimitAngle=Math.PI/2,m.maxDistance=3e4,m.minDistance=50,m.zoomSpeed=3,m.panSpeed=.2,t.isSelectable=function(e){return!1},document.getElementById(e).appendChild(t.getRootView()),mono.Utils.autoAdjustNetworkBounds(t,document.documentElement,"clientWidth","clientHeight"),t.getRootView().addEventListener("dblclick",function(e){demo.Default.handleDoubleClick(e,t)}),demo.Default.setupLights(t.getDataBox()),demo.Default.loadTempJson();var o=((new Date).getTime(),demo.Default.filterJson(t.getDataBox(),scenceJson.objects));demo.Default.loadJson(t,o,scenceJson.clearColor);(new Date).getTime()},setupLights:function(e){var t=new mono.PointLight(16777215,.3);t.setPosition(0,1e3,-1e3),e.add(t);var t=new mono.PointLight(16777215,.3);t.setPosition(0,1e3,1e3),e.add(t);var t=new mono.PointLight(16777215,.3);t.setPosition(1e3,-1e3,-1e3),e.add(t),e.add(new mono.AmbientLight("white"))},handleDoubleClick:function(e,t){var a=t.getCamera(),m=t.getDefaultInteraction(),o=demo.Default.findFirstObjectByMouse(t,e);if(o){var i=o.element,n=o.point,r=a.getTarget();if(demo.Default.animateCamera(a,m,r,n,function(){i.getClient("animation")&&demo.Default.playAnimation(i,i.getClient("animation"))}),i.getStyle("lazy.function")){var s=i.getStyle("lazy.function");(new Date).getTime();s();(new Date).getTime()}}else{var r=a.getTarget(),n=new mono.Vec3(0,0,0);demo.Default.animateCamera(a,m,r,n)}},getEnvmap:function(e){return this._envmaps[e]},setEnvmap:function(e,t){this._envmaps[e]=t},copyProperties:function(e,t,a){if(e&&t)for(var m in e)a&&a.indexOf(m)>=0||(t[m]=e[m])},createAnnotationObject:function(e){var t=e.translate||[0,0,0],a=e.label,m=e.text,o=new mono.Annotation(a,m);return o.setPosition(t[0],t[1],t[2]),o},createCubeObject:function(e){var t=e.translate||[0,0,0],a=e.width,m=e.height,o=e.depth,i=e.sideColor,n=e.topColor,r=new mono.Cube(a,m,o);return r.setPosition(t[0],t[1]+m/2,t[2]),r.s({"m.color":i,"m.ambient":i,"left.m.lightmap.image":"./js/3d/eim/room/images/inside_lightmap.png","right.m.lightmap.image":"./js/3d/eim/room/images/outside_lightmap.png","front.m.lightmap.image":"./js/3d/eim/room/images/outside_lightmap.png","back.m.lightmap.image":"./js/3d/eim/room/images/inside_lightmap.png","top.m.color":n,"top.m.ambient":n,"bottom.m.color":n,"bottom.m.ambient":n}),r},createCylinderObject:function(e){var t=e.translate||[0,0,0],a=e.radius||10,m=e.topRadius||a,o=e.bottomRadius||a,i=e.height,n=e.sideColor||"#A5BDDD",r=new mono.Cylinder(m,o,i);return r.setPosition(t[0],t[1]+i/2,t[2]),r.s({"m.normalType":mono.NormalTypeSmooth,"m.type":"phong","m.color":n,"m.ambient":n,"side.m.lightmap.image":"./js/3d/eim/room/images/inside_lightmap.png"}),r},createPathObject:function(e){for(var t=e.translate||[0,0,0],a=e.width,m=e.height,o=e.data,i=void 0,n=e.insideColor,r=e.outsideColor,s=e.asideColor||r,g=e.zsideColor||r,p=e.topColor,l=e.bottomColor||p,d=e.insideImage,h=e.outsideImage,c=e.topImage,u=e.repeat||e.height,f=0;f<o.length;f++){var F=o[f];i?i.lineTo(F[0],F[1],0):(i=new mono.Path,i.moveTo(F[0],F[1],0))}var y=this.createWall(i,a,m,n,r,s,g,p,l,d,h,c,u);return y.setPosition(t[0],t[1],-t[2]),y},createPathNodeObject:function(e){for(var t=e.translate||[0,0,0],a=e.scale||[1,1,1],m=e.radius||5,o=void 0,i=e.data,n=e.pathImage,r=e.repeat,s=0;s<i.length;s++){var g=i[s];o?"c"===g[0]?o.quadraticCurveTo(g[1],10,g[2],g[3],10,g[4]):o.lineTo(g[0],10,g[1]):(o=new mono.Path,o.moveTo(g[0],10,g[1]))}var p=this.createPathNode(o,m,n,r,t,a);return p},filterJson:function(e,t){for(var a=[],m=0;m<t.length;m++){var o=t[m],i=o.type,n=this.getFilter(i);if(n){var r=n(e,o);r&&(r instanceof Array?a=a.concat(r):(this.copyProperties(o,r,["type"]),a.push(r)))}else a.push(o)}return a},createCombo:function(e){for(var t=[],a=[],m=[],o=0;o<e.length;o++){var i=e[o],n=i.op||"+",r=i.style,s=i.client,g=(i.translate||[0,0,0],i.rotate||[0,0,0]),p=null;if("path"===i.type&&(p=this.createPathObject(i)),"cube"===i.type&&(p=this.createCubeObject(i)),"cylinder"===i.type&&(p=this.createCylinderObject(i)),"pathNode"===i.type&&(p=this.createPathNodeObject(i)),p){if(p.setRotation(g[0],g[1],g[2]),r&&p.s(r),s)for(var o in s)p.setClient(o,s[o]);t.push(p),t.length>1&&a.push(n),m.push(p.getId())}}if(t.length>0){var l=new mono.ComboNode(t,a);return l.setNames(m),l}return null},loadJson:function(e,t,a){var m=e.getDataBox(),a=a||demo.Default.CLEAR_COLOR;e.setClearColor(a),e.setClearColor(0,0,0),e.setClearAlpha(0);for(var o,i,n=[],r=[],s=[],g=0;g<t.length;g++){var p=t[g];if(!p.shadowGhost){var l=p.op,d=p.style,h=p.client,c=(p.translate||[0,0,0],p.rotate||[0,0,0]),u=null;"path"===p.type&&(u=this.createPathObject(p)),"cube"===p.type&&(u=this.createCubeObject(p)),"annotation"===p.type&&(u=this.createAnnotationObject(p)),"pathNode"===p.type&&(u=this.createPathNodeObject(p)),"cylinder"===p.type&&(u=this.createCylinderObject(p)),p.shadowHost&&(o=u,i=u.getId());var f=demo.Default.getCreator(p.type);f?f(m,p):u&&(u.setRotation(c[0],c[1],c[2]),d&&u.s(d),h&&u.c(h),l?(n.push(u),n.length>1&&r.push(l),s.push(u.getId())):m.add(u))}}if(n.length>0){var F=new mono.ComboNode(n,r);if(F.setNames(s),m.add(F),o&&i){var y=function(e,a,m){return function(){var o=((new Date).getTime(),demo.Default.createShadowImage(t,a.getWidth(),a.getDepth())),i=m+"-top.m.lightmap.image";e.setStyle(i,o);(new Date).getTime()}};setTimeout(y(F,o,i),demo.Default.LAZY_MAX)}}},loadRackContent:function(e,t,a,m,o,i,n,r,s,g,p){for(var l=10,d=9,h=2,c=!1;l<200;){var u="server"+(parseInt(3*Math.random())+1)+".png",f=l>100&&!c&&r?r.color:null,F=this.createServer(e,s,g,u,f);if(f&&(c=!0),F.setPositionY(l),F.setPositionZ(F.getPositionZ()+5),"server3.png"===u?(F.setScaleY(6),l+=6*d):l+=d,l+=h,l>200){e.remove(F);break}}},createServer:function(e,t,a,m,o){var i=t.getPositionX(),n=t.getPositionZ(),r=a.getWidth(),s=8,g=a.getDepth(),p=new mono.Cube(r,s,g);o=o?o:"#5B6976",p.s({"m.color":o,"m.ambient":o,"m.type":"phong","m.texture.image":"./js/3d/eim/room/images/rack_inside.png"}),p.setPosition(i+.5,s/2,n+(t.getDepth()-p.getDepth())/2);var l=new mono.Cube(r+2,s+1,.5);o=o?o:"#5BA1AF",l.s({"m.type":"phong","m.texture.image":"./js/3d/eim/room/images/rack_inside.png","front.m.texture.image":"./js/3d/eim/room/images/"+m,"front.m.texture.repeat":new mono.Vec2(1,1),"m.specularStrength":100,"m.color":o,"m.ambient":o}),l.setPosition(i+.5,(s+1)/2,n+p.getDepth()/2+(t.getDepth()-p.getDepth())/2);var d=new mono.ComboNode([p,l],["+"]);return d.setClient("animation","pullOut.z"),d.setPositionZ(d.getPositionZ()-5),e.add(d),d},createWall:function(e,t,a,m,o,i,n,r,s,g,p,l,d){var h=new mono.PathCube(e,t,a);return h.s({"outside.m.color":o,"inside.m.type":"basic","inside.m.color":m,"aside.m.color":i,"zside.m.color":n,"top.m.color":r,"bottom.m.color":s,"top.m.texture.image":l,"bottom.m.texture.image":l,"aside.m.texture.image":l,"zside.m.texture.image":l,"inside.m.texture.image":g,"outside.m.texture.image":p,"inside.m.lightmap.image":"./js/3d/eim/room/images/inside_lightmap.png","outside.m.lightmap.image":"./js/3d/eim/room/images/outside_lightmap.png","aside.m.lightmap.image":"./js/3d/eim/room/images/outside_lightmap.png","zside.m.lightmap.image":"./js/3d/eim/room/images/outside_lightmap.png","m.transparent":!0,"m.side":mono.DoubleSide}),h.setRepeat(d),h},createShadowImage:function(e,t,a){var m=document.createElement("canvas");m.width=t,m.height=a;var o=m.getContext("2d");o.beginPath(),o.rect(0,0,t,a),o.fillStyle="white",o.fill();var i=!1;i&&(o.lineWidth=1,o.strokeStyle="black",o.stroke());for(var n=0;n<e.length;n++){var r=e[n];if(r.floorShadow){var s=r.translate||[0,0,0],g=r.rotate||[0,0,0],g=-g[1];if("path"===r.type){var p=t/2+s[0],l=a-(a/2+s[2]),d=r.data;o.save(),o.translate(p,l),o.rotate(g),o.beginPath();for(var h=!0,c=0;c<d.length;c++){var u=d[c];h?(o.moveTo(u[0],-u[1]),h=!1):o.lineTo(u[0],-u[1])}o.lineWidth=r.width,o.strokeStyle="#C8C8C8",o.shadowColor="#222222",o.shadowBlur=60,o.shadowOffsetX=0,o.shadowOffsetY=0,o.stroke(),o.restore()}if("cube"===r.type){var p=t/2+s[0],l=a/2+s[2],f=r.width,F=r.depth;o.save(),o.translate(p,l),o.rotate(g),o.beginPath(),o.moveTo(-f/2,0),o.lineTo(f/2,0),o.lineWidth=F,o.strokeStyle="white",o.shadowColor="#222222",o.shadowBlur=60,o.shadowOffsetX=0,o.shadowOffsetY=0,o.stroke(),o.restore()}if("rack"===r.type||"electric"===r.type){var p=t/2+s[0],l=a/2+s[2],f=e.width||60,y=e.height||200,b=e.depth||80,f=.99*f,F=.99*b;o.beginPath(),o.moveTo(p-f/2,l),o.lineTo(p+f/2,l),o.lineWidth=F,o.strokeStyle="black",o.shadowColor="black",o.shadowBlur=100,o.shadowOffsetX=0,o.shadowOffsetY=0,o.stroke(),o.restore()}if("plant"===r.type){var p=t/2+s[0],l=a/2+s[2],w=r.scale||[1,1,1],j=11*Math.min(w[0],w[2]);o.beginPath(),o.arc(p,l,j,0,2*Math.PI,!1),o.lineWidth=F,o.fillStyle="black",o.shadowColor="black",o.shadowBlur=25,o.shadowOffsetX=0,o.shadowOffsetY=0,o.fill(),o.restore()}}else if(r.shadowImage&&demo.Default.loaded){var s=r.translate||[0,0,0],p=t/2+s[0],l=a/2+s[2],g=r.rotate||[0,0,0];g=-g[1];var v=r.shadowImage,x=v.src,f=v.width||100,y=v.height||100,D=v.xOffset||0,C=v.yOffset||0;o.save(),o.translate(p,l),o.rotate(g),o.globalAlpha=.5,o.shadowColor="black",o.shadowBlur=50,o.shadowOffsetX=0,o.shadowOffsetY=0;var _=demo.Default.images[x];o.drawImage(_,-f/2+D,-y/2+C,f,y),o.translate(-p,-l),o.restore()}}return m},createTree:function(e,t,a,m,o,i){var n;if(demo.Default._treeInstance)n=demo.Default._treeInstance.clone();else{var r=80,s=150,g="./js/3d/eim/images/tree-1.png",p=[],l=new mono.Cylinder(1,5,s,10,1,(!1),(!1));l.s({"m.type":"phong","m.color":"#411212","m.ambient":"#411212","m.texture.repeat":new mono.Vec2(10,4),"m.specularmap.image":"./js/3d/eim/room/images/metal_normalmap.jpg","m.normalmap.image":"./js/3d/eim/room/images/metal_normalmap.jpg"}),p.push(l);for(var d=5,h=0;h<d;h++){var c=new mono.Cube(r,s+20,.01);c.s({"m.transparent":!0,"front.m.visible":!0,"front.m.texture.image":g,"back.m.visible":!0,"back.m.texture.image":g}),c.setSelectable(!1),c.setEditable(!1),c.setParent(l),c.setPositionY(20),c.setRotationY(Math.PI*h/d),p.push(c)}demo.Default._treeInstance=new mono.ComboNode(p),demo.Default._treeInstance.setClient("tree.original.y",l.getHeight()/2*o),n=demo.Default._treeInstance}return n.setPosition(e,n.getClient("tree.original.y")+t,a),n.setScale(m,o,i),n},createPlant:function(e,t,a,m,o,i){var n;if(demo.Default._plantInstance)n=demo.Default._plantInstance.clone();else{var r=30,s=30,g="./js/3d/eim/room/images/plant.png",p=[],l=new mono.Cylinder(.5*r,.4*r,2*s,20,1,(!1),(!1));l.s({"m.type":"phong","m.color":"#ADADAD","m.ambient":"#ADADAD","m.texture.repeat":new mono.Vec2(10,4),"m.specularmap.image":"./js/3d/eim/room/images/metal_normalmap.jpg","m.normalmap.image":"./js/3d/eim/room/images/metal_normalmap.jpg"});var d=l.clone();d.setScale(.9,1,.9);var h=d.clone();h.setScale(.9,.9,.9),h.s({"m.type":"phong","m.color":"#163511","m.ambient":"#163511","m.texture.repeat":new mono.Vec2(10,4)});var c=new mono.ComboNode([l,d,h],["-","+"]);p.push(c);for(var u=5,f=0;f<u;f++){var n=new mono.Cube(2*r,s+20,.01);n.s({"m.transparent":!0,"front.m.visible":!0,"front.m.texture.image":g,"back.m.visible":!0,"back.m.texture.image":g}),n.setSelectable(!1),n.setEditable(!1),n.setParent(c),n.setPositionY(l.getHeight()/2+n.getHeight()/2-20),n.setRotationY(Math.PI*f/u),p.push(n)}demo.Default._plantInstance=new mono.ComboNode(p),demo.Default._plantInstance.setClient("plant.original.y",l.getHeight()/2+l.getHeight()/4*Math.min(m,i)),n=demo.Default._plantInstance}return n.setPosition(e,n.getClient("plant.original.y")+t,a),n.setScale(m,o,i),n},createPathNode:function(e,t,a,m,o,i){var o=o||[0,0,0],i=i||[1,1,1],m=m||new mono.Vec2(1,1),n=new mono.PathNode(e);return n.s({"m.texture.image":a,"m.texture.repeat":m}),n.setRadius(t),n.setScale(i[0],i[1],i[2]),n.setPosition(o[0],o[1],o[2]),n},createShapeNode:function(e,t,a,m,o){var i=new mono.ShapeNode(e);return i.s({"m.type":"phong","m.color":"#2D2F31","m.ambient":"#2D2F31","m.specular":"#e5e5e5","m.normalmap.image":"./js/3d/eim/room/images/metal_normalmap.jpg","m.texture.repeat":new mono.Vec2(10,6),"m.specularStrength":3}),i.setVertical(!0),i.setAmount(t),i.setPosition(a,m,o),i},createPathCube:function(e,t,a,m,o,i){var n=new mono.PathCube(e,t,a);return n.s({"m.type":"phong","m.color":"#2D2F31","m.ambient":"#2D2F31","m.specular":"#e5e5e5","m.normalmap.image":"./js/3d/eim/room/images/metal_normalmap.jpg","m.texture.repeat":new mono.Vec2(10,6),"m.specularStrength":3}),n.setPosition(m,o,i),n},findFirstObjectByMouse:function(e,t){var a=e.getElementsByMouseEvent(t);if(a.length)for(var m=0;m<a.length;m++){var o=a[m],i=o.element;if(!(i instanceof mono.Billboard))return o}return null},animateCamera:function(e,t,a,m,o){twaver.Util.stopAllAnimates(!0);var i=e.getPosition().sub(e.getTarget()),n=new twaver.Animate({from:0,to:1,dur:500,easing:"easeBoth",onUpdate:function(o){var n=a.x+(m.x-a.x)*o,r=a.y+(m.y-a.y)*o,s=a.z+(m.z-a.z)*o,g=new mono.Vec3(n,r,s);e.lookAt(g),t.target=g;var p=(new mono.Vec3).addVectors(i,g);e.setPosition(p)}});n.onDone=o,n.play()},playAnimation:function(e,t){var a=t.split(".");if("pullOut"===a[0]){var m=a[1];demo.Default.animatePullOut(e,m)}if("rotate"===a[0]){var o=a[1],i=a[2];demo.Default.animateRotate(e,o,i)}},animatePullOut:function(e,t){twaver.Util.stopAllAnimates(!0);var a=e.getBoundingBox().size().multiply(e.getScale()),m=.8,o=new mono.Vec3(0,0,1),i=0;"x"===t&&(o=new mono.Vec3(1,0,0),i=a.x),"-x"===t&&(o=new mono.Vec3((-1),0,0),i=a.x),"y"===t&&(o=new mono.Vec3(0,1,0),i=a.y),"-y"===t&&(o=new mono.Vec3(0,(-1),0),i=a.y),"z"===t&&(o=new mono.Vec3(0,0,1),i=a.z),"-z"===t&&(o=new mono.Vec3(0,0,(-1)),i=a.z),i*=m,e.getClient("animated")&&(o=o.negate());var n=e.getPosition().clone();e.setClient("animated",!e.getClient("animated")),new twaver.Animate({from:0,to:1,dur:2e3,easing:"bounceOut",onUpdate:function(t){e.setPosition(n.clone().add(o.clone().multiplyScalar(i*t)))}}).play()},animateRotate:function(e,t,a){twaver.Util.stopAllAnimates(!0);var m=e.getBoundingBox().size().multiply(e.getScale()),o=0,i=1;e.getClient("animated")&&(i=-1),e.setClient("animated",!e.getClient("animated"));var n,r;if("left"===t){n=new mono.Vec3(-m.x/2,0,0);var r=new mono.Vec3(0,1,0)}if("right"===t){n=new mono.Vec3(m.x/2,0,0);var r=new mono.Vec3(0,1,0)}var s=new twaver.Animate({from:o,to:i,dur:1800,easing:"bounceOut",onUpdate:function(t){void 0===this.lastValue&&(this.lastValue=0),e.rotateFromAxis(r.clone(),n.clone(),Math.PI/180*a*(t-this.lastValue)),this.lastValue=t},onDone:function(){delete this.lastValue}});s.play()},getRandomInt:function(e){return parseInt(Math.random()*e)},getRandomLazyTime:function(){var e=demo.Default.LAZY_MAX-demo.Default.LAZY_MIN;return demo.Default.getRandomInt(e)+demo.Default.LAZY_MIN},parseSVG:function(e){return e.loadXml(e)},loadImages:function(e){function t(t){a++,a>=e.length&&(demo.Default.loaded=!0)}demo.Default.images={};for(var a=0,m=0;m<e.length;m++){var o=new Image;o.onload=t,o.src=e[m],demo.Default.images[e[m]]=o}}},demo.Default.setEnvmap("envmap1",["../room/images/room.jpg","../room/images/room.jpg","../room/images/room.jpg","../room/images/room.jpg","../room/images/room.jpg","../room/images/room.jpg"]),demo.Default.registerCreator("rack",function(e,t){var a=t.lazy||!0,m=t.translate||[0,0,0],o=m[0],i=m[1],n=m[2],r=t.width||60,s=t.height||200,g=t.depth||80,p=t.severity,l=new mono.Cube(r,s,g);l.s({"m.color":"#557E7A","left.m.lightmap.image":"../room/images/outside_lightmap.png","right.m.lightmap.image":"../room/images/outside_lightmap.png","front.m.lightmap.image":"../room/images/outside_lightmap.png","back.m.lightmap.image":"../room/images/outside_lightmap.png","top.m.normalmap.image":"../room/images/metal_normalmap.jpg","left.m.normalmap.image":"../room/images/metal_normalmap.jpg","right.m.normalmap.image":"../room/images/metal_normalmap.jpg","back.m.normalmap.image":"../room/images/metal_normalmap.jpg","top.m.specularmap.image":"../room/images/outside_lightmap.png","left.m.specularmap.image":"../room/images/outside_lightmap.png","right.m.specularmap.image":"../room/images/outside_lightmap.png","back.m.specularmap.image":"../room/images/outside_lightmap.png","top.m.envmap.image":demo.Default.getEnvmap("envmap1"),"left.m.envmap.image":demo.Default.getEnvmap("envmap1"),"right.m.envmap.image":demo.Default.getEnvmap("envmap1"),"back.m.envmap.image":demo.Default.getEnvmap("envmap1"),"m.ambient":"#557E7A","m.type":"phong","m.specularStrength":50,"front.m.texture.image":"../room/images/rack.png","front.m.texture.repeat":new mono.Vec2(1,1),"front.m.specularmap.image":"../room/images/white.png","front.m.color":"white","front.m.ambient":"white","front.m.specularStrength":200,"front.m.envmap.image":demo.Default.getEnvmap("envmap1")}),l.setPosition(o,s/2+1+i,n);var d=function(e,t,a,m,o,i,n,r,s,g){var p=s,l=new mono.Cube(.75*o,i-10,.7*n);l.s({"m.color":"#333333","m.ambient":"#333333","m.lightmap.image":"../room/images/inside_lightmap.png","bottom.m.texture.repeat":new mono.Vec2(2,2),"left.m.texture.image":"../room/images/rack_panel.png","right.m.texture.image":"../room/images/rack_panel.png","back.m.texture.image":"../room/images/rack_panel.png","back.m.texture.repeat":new mono.Vec2(1,1),"top.m.lightmap.image":"../room/images/floor.png"}),l.setPosition(t+.5,l.getHeight()/2+2+a,m+p.getDepth()/2-l.getDepth()/2+1),e.remove(s);var d=new mono.ComboNode([s,l],["-"]);if(e.add(d),r){var h=new mono.Alarm(d.getId(),d.getId(),r);d.setStyle("alarm.billboard.vertical",!0),e.getAlarmBox().add(h)}demo.Default.loadRackContent(e,t,a,m,o,i,n,r,s,l,g)};if(a){if(p){var h=new mono.Alarm(l.getId(),l.getId(),p);l.setStyle("alarm.billboard.vertical",!0),e.getAlarmBox().add(h)}e.add(l);var c=function(){d(e,o,i,n,r,s,g,p,l,t)};l.setStyle("lazy.function",c)}else d(e,o,i,n,r,s,g,p,l,t)}),demo.Default.registerCreator("electric",function(e,t){var a=t.translate||[0,0,0],m=a[0],o=a[1],i=a[2],n=t.width||60,r=t.height||200,s=t.depth||80,g=new mono.Cube(n,r,s);g.s({"left.m.lightmap.image":"../room/images/outside_lightmap.png","right.m.lightmap.image":"../room/images/outside_lightmap.png","front.m.lightmap.image":"../room/images/outside_lightmap.png","back.m.lightmap.image":"../room/images/outside_lightmap.png","top.m.normalmap.image":"../room/images/metal_normalmap.jpg","left.m.normalmap.image":"../room/images/metal_normalmap.jpg","right.m.normalmap.image":"../room/images/metal_normalmap.jpg","back.m.normalmap.image":"../room/images/metal_normalmap.jpg","m.specularmap.image":"../room/images/outside_lightmap.png","top.m.envmap.image":demo.Default.getEnvmap("envmap1"),"left.m.envmap.image":demo.Default.getEnvmap("envmap1"),"right.m.envmap.image":demo.Default.getEnvmap("envmap1"),"back.m.envmap.image":demo.Default.getEnvmap("envmap1"),"m.color":"#F0F0F0","m.ambient":"#F0F0F0","m.type":"phong","m.specularStrength":50,"front.m.texture.image":"../room/images/electric.jpg","front.m.texture.repeat":new mono.Vec2(1,1),"front.m.specularmap.image":"../room/images/white.png","front.m.color":"white","front.m.ambient":"white","front.m.specularStrength":200}),g.setPosition(m,r/2+1+o,i),e.add(g)}),demo.Default.registerCreator("plant",function(e,t){var a=t.scale||[2,2,2],m=(a[0],a[1],a[2],t.delay||!0),o=t.translate||[0,0,0],i=(o[0],o[1],o[2],function(t,a,m,o,i,n){var r=((new Date).getTime(),demo.Default.createPlant(t,a,m,o,i,n));e.add(r);(new Date).getTime()});if(m){var n=function(e,t,a,m,o,n){return function(){i(e,t,a,m,o,n)}};setTimeout(n(o[0],o[1],o[2],a[0],a[1],a[2]),demo.Default.getRandomLazyTime())}else i(o[0],o[1],o[2],a[0],a[1],a[2])}),demo.Default.registerCreator("tree",function(e,t){var a=t.scale||[2,2,2],m=(a[0],a[1],a[2],t.delay||!0),o=t.translate||[0,0,0],i=(o[0],o[1],o[2],function(t,a,m,o,i,n){var r=((new Date).getTime(),demo.Default.createTree(t,a,m,o,i,n));e.add(r);(new Date).getTime()});if(m){var n=function(e,t,a,m,o,n){return function(){i(e,t,a,m,o,n)}};setTimeout(n(o[0],o[1],o[2],a[0],a[1],a[2]),demo.Default.getRandomLazyTime())}else i(o[0],o[1],o[2],a[0],a[1],a[2])}),demo.Default.registerFilter("floor",function(e,t){var a=t.width||1e3,m=t.depth||1e3;return{type:"cube",width:a,height:10,depth:m,translate:[0,-10,0],shadowHost:!0,op:"+",style:{"m.type":"phong","m.color":"#BEC9BE","m.ambient":"#BEC9BE","top.m.type":"basic","top.m.texture.image":"../room/images/floor.png","top.m.texture.repeat":new mono.Vec2(a/100,m/100),"top.m.color":"#DAF0F5","top.m.polygonOffset":!0,"top.m.polygonOffsetFactor":3,"top.m.polygonOffsetUnits":3}}}),demo.Default.registerFilter("floor_cut",function(e,t){return{type:"cube",width:100,height:100,depth:100,op:"-",style:{"m.texture.image":"../room/images/floor.png","m.texture.repeat":new mono.Vec2(4,4),"m.color":"#DAF0F5","m.lightmap.image":"../room/images/outside_lightmap.png","m.polygonOffset":!0,"m.polygonOffsetFactor":3,"m.polygonOffsetUnits":3}}}),demo.Default.registerFilter("floor_box",function(e,t){return{type:"cube",width:100,height:100,depth:100,floorShadow:!0,sideColor:"#C3D5EE",topColor:"#D6E4EC"}}),demo.Default.registerFilter("plants",function(e,t){var a=[],m=t.translates;if(m)for(var o=0;o<m.length;o++){var i=m[o],n={type:"plant",floorShadow:!1,scale:[2,2,2],translate:i};demo.Default.copyProperties(t,n,["type","translates","translate"]),a.push(n)}return a}),demo.Default.registerFilter("trees",function(e,t){var a=[],m=t.translates;if(m)for(var o=0;o<m.length;o++){var i=m[o],n={type:"tree",floorShadow:!0,scale:[2,2,2],translate:i};demo.Default.copyProperties(t,n,["type","translates","translate"]),a.push(n)}return a}),demo.Default.registerFilter("electrics",function(e,t){var a=[],m=t.translates;if(m)for(var o=0;o<m.length;o++){var i=m[o],n={type:"electric",floorShadow:!0,translate:i};demo.Default.copyProperties(t,n,["type","translates","translate"]),a.push(n)}return a}),demo.Default.registerFilter("racks",function(e,t){var a=[],m=t.translates,o=t.severities||[];if(m)for(var i=0;i<m.length;i++){var n=m[i],r=o[i],s={type:"rack",floorShadow:!0,translate:n,severity:r};demo.Default.copyProperties(t,s,["type","translates","translate","severities"]),a.push(s)}return a}),demo.Default.registerFilter("wall",function(e,t){var a=[],m={type:"path",op:"+",width:t.width||20,height:t.height||200,floorShadow:!0,insideColor:t.insideColor||"#B8CAD5",outsideColor:t.outsideColor||"#A5BDDD",asideColor:t.asideColor||"#D6E4EC",zsideColor:t.zsideColor||"#D6E4EC",topColor:"#D6E4EC",bottomColor:t.bottomColor||"red",insideImage:t.insideImage,outsideImage:t.outsideImage,topImage:t.topImage,bottomImage:t.bottomImage,repeat:t.repeat,translate:t.translate,data:t.data};if(a.push(m),t.children){var o=demo.Default.filterJson(e,t.children);a=a.concat(o)}for(var i=[],n=[],r=0;r<a.length;r++){var s=a[r];s.op?i.push(s):n.push(s)}var g=demo.Default.createCombo(i);return t.style&&g.s(t.style),e.add(g),m.shadowGhost=!0,n.push(m),n}),demo.Default.registerFilter("window",function(e,t){var a=t.translate||[0,0,0],m=a[0],o=a[1],i=a[2],n=t.width||100,r=t.height||100,s=t.depth||50,g=t.glassDepth||4,p=5,l=45,d=10,h=t.platform,c={type:"cube",width:n,height:r,depth:s,translate:[m,o,i],op:"-",sideColor:"#B8CAD5",topColor:"#D6E4EC"},u={type:"cube",width:n-.5,height:r-.5,depth:g,translate:[m,o,i],op:"+",style:{"m.color":"#F0F0F0","m.ambient":"#F0F0F0","m.type":"phong","m.specularStrength":.1,"m.envmap.image":demo.Default.getEnvmap("envmap1"),"m.specularmap.image":"../room/images/rack_inside_normal.jpg","m.texture.repeat":new mono.Vec2(10,5),"front.m.transparent":!0,"front.m.opacity":.4,"back.m.transparent":!0,"back.m.opacity":.4}};t.picture&&(u.style["m.texture.image"]=t.picture,u.style["m.texture.repeat"]=new mono.Vec2(1,1),u.style["m.specularmap.image"]=null,u.style["front.m.opacity"]=1,u.style["back.m.opacity"]=1);var f=[c,u];return h&&f.push({type:"cube",width:n,height:p,depth:l,translate:[m,o,i+d],op:"+",sideColor:"#A5BDDD",topColor:"#D6E4EC"}),f}),demo.Default.registerCreator("tv",function(e,t){var a=t.translate||[0,0,0],m=a[0],o=a[1],i=a[2],n=4,r=2,s=t.picture||"../room/images/screen.jpg",g=t.rotate||[0,0,0],p=[{type:"cube",width:150,height:80,depth:5,translate:[m,o,i],rotate:g,op:"+",style:{"m.type":"phong","m.color":"#2D2F31","m.ambient":"#2D2F31","m.normalmap.image":"../room/images/metal_normalmap.jpg","m.texture.repeat":new mono.Vec2(10,6),"m.specularStrength":100}},{type:"cube",width:130,height:75,depth:5,translate:[m,o+r,i+n],rotate:g,op:"-",style:{"m.type":"phong","m.color":"#2D2F31","m.ambient":"#2D2F31","m.normalmap.image":"../room/images/metal_normalmap.jpg","m.texture.repeat":new mono.Vec2(10,6),"m.specularStrength":100}},{type:"cube",width:130,height:75,depth:1,translate:[m,o+r,i+1.6],rotate:g,op:"+",style:{"m.type":"phong","m.specularStrength":200,"front.m.texture.image":s}}],l=demo.Default.createCombo(p);e.add(l)}),demo.Default.registerFilter("door",function(e,t){var a=t.translate||[0,0,0],m=a[0],o=a[1],i=a[2],n=t.width||205,r=t.height||180,s=t.depth||26,g=10,p=2;return[{type:"cube",width:n,height:r,depth:s,translate:[m,o,i],op:"+",sideColor:"#C3D5EE",topColor:"#D6E4EC"},{type:"cube",width:n-g,height:r-g/2-p,depth:s+2,op:"-",translate:[m,o+p,i],sideColor:"#B8CAD5",topColor:"#D6E4EC"},{type:"cube",width:(n-g)/2-2,height:r-g/2-p-2,depth:2,translate:[m-(n-g)/4,p+1,i],sideColor:"orange",topColor:"orange",style:{"m.type":"phong","m.transparent":!0,"front.m.texture.image":"../room/images/door_left.png","back.m.texture.image":"../room/images/door_right.png","m.specularStrength":100,"m.envmap.image":demo.Default.getEnvmap("envmap1"),"m.specularmap.image":"../room/images/white.png"},client:{animation:"rotate.left.-90"}},{type:"cube",width:(n-g)/2-2,height:r-g/2-p-2,depth:2,translate:[m+(n-g)/4,p+1,i],sideColor:"orange",topColor:"orange",style:{"m.type":"phong","m.transparent":!0,"front.m.texture.image":"../room/images/door_right.png","back.m.texture.image":"../room/images/door_left.png","m.specularStrength":100,"m.envmap.image":demo.Default.getEnvmap("envmap1"),"m.specularmap.image":"../room/images/white.png"},client:{animation:"rotate.right.90"}}]}),demo.Default.registerFilter("glass_wall",function(e,t){var a=t.translate||[0,0,0],m=a[0],o=a[1],i=a[2],n=t.width||100,r=t.height||200,s=t.depth||20,g=.6*r,p=t.rotate||[0,0,0],l=[{type:"cube",width:n,height:r,depth:s,floorShadow:!0,translate:[m,o,i],rotate:p,op:"+",sideColor:"#A5BDDD",topColor:"#D6E4EC"},{type:"cube",width:n+2,height:g,depth:s+2,translate:[m,(r-g)/3*2,i],rotate:p,op:"-",sideColor:"#A5BDDD",topColor:"#D6E4EC"},{type:"cube",width:n,height:g,depth:4,translate:[m,(r-g)/3*2,i],rotate:p,op:"+",sideColor:"#58ACFA",topColor:"#D6E4EC",style:{"m.transparent":!0,"m.opacity":.6,"m.color":"#01A9DB","m.ambient":"#01A9DB","m.type":"phong","m.specularStrength":100,"m.envmap.image":demo.Default.getEnvmap("envmap1"),"m.specularmap.image":"../room/images/rack_inside_normal.jpg","m.texture.repeat":new mono.Vec2(30,5)}}],d=demo.Default.createCombo(l);e.add(d);var h=l[0];return h.shadowGhost=!0,[h]}),demo.Default.registerCreator("room_field",function(e,t){for(var a,m=t.translate||[0,0,0],o=m[0],i=m[1],n=m[2],r=t.height||200,s=t.rotate||[0,0,0],g=t.data,p=0;p<g.length;p++){var l=g[p];a?a.lineTo(l[0],l[1],0):(a=new mono.Path,a.moveTo(l[0],l[1],0))}var d=demo.Default.createShapeNode(a,r,o,i,n);d.s({"m.color":"#7D7D7D","m.ambient":"#7D7D7D","m.texture.repeat":new mono.Vec2(2,2),"m.texture.image":"../room/images/bg-wall.jpg"}),d.setRotation(s[0],s[1],s[2]),e.add(d)}),demo.Default.registerCreator("mono-tv",function(e,t){var a=t.translate||[0,0,0],m=a[0],o=a[1],i=a[2],n=4,r=2,s=t.picture||"../room/images/screen.jpg",g=t.rotate||[0,0,0],p=[{type:"cube",width:150,height:80,depth:5,translate:[0,o,0],op:"+",style:{"m.type":"phong","m.color":"#2D2F31","m.ambient":"#2D2F31","m.normalmap.image":"../room/images/metal_normalmap.jpg","m.texture.repeat":new mono.Vec2(10,6),"m.specularStrength":100}},{type:"cube",width:130,height:75,depth:5,translate:[0,o+r,n],op:"-",style:{"m.type":"phong","m.color":"#2D2F31","m.ambient":"#2D2F31","m.normalmap.image":"../room/images/metal_normalmap.jpg","m.texture.repeat":new mono.Vec2(10,6),"m.specularStrength":100}},{type:"cube",width:130,height:75,depth:1,translate:[0,o+r,1.6],op:"+",style:{"m.type":"phong","m.specularStrength":200,"front.m.texture.image":s}}];p.push({type:"cube",width:70,height:o+40,depth:5,op:"+",translate:[0,0,-4],style:{"m.type":"phong","m.color":"#2D2F31","m.ambient":"#2D2F31","m.normalmap.image":"../room/images/metal_normalmap.jpg","m.texture.repeat":new mono.Vec2(5,5),"m.specularStrength":10}}),p.push({type:"cube",width:120,height:5,depth:50,floorShadow:!0,op:"+",style:{"m.type":"phong","m.color":"#2D2F31","m.ambient":"#2D2F31","m.normalmap.image":"../room/images/metal_normalmap.jpg","m.texture.repeat":new mono.Vec2(5,5),"m.specularStrength":10}});var l=demo.Default.createCombo(p);return l.setRotation(g[0],g[1],g[2]),l.setPosition(m,0,i),e.add(l),p}),demo.Default.registerCreator("mono-island",function(e,t){var a=t.translate||[0,0,0],m=a[0],o=a[1],i=a[2],n=t.rotate||[0,0,0],r="M367.718,0.573c6.593,0,10.814,5.148,16.3,14.649l8.954,15.451c5.51,9.546,9.173,17.408,2.216,24.417c-2.187,1.669-63.375,48.579-80.999,79.106c-1.697,2.94-53.291,92.303-54.988,95.242c-17.624,30.527-27.657,106.972-28.01,109.7c-2.589,9.53-11.229,10.288-22.252,10.288h-17.876c-11.023,0-19.664-0.758-22.254-10.287c-0.352-2.728-10.383-79.174-28.009-109.698c-1.888-3.276-54.562-94.507-54.987-95.245C68.186,103.668,6.999,56.759,4.813,55.09c-6.959-7.01-3.296-14.872,2.215-24.417l8.922-15.452c5.485-9.5,9.707-14.648,16.298-14.648c1.176,0,2.433,0.175,3.739,0.52c2.539,1.059,73.757,30.593,109.007,30.593h109.976c35.25,0,106.47-29.534,109.008-30.593Z",s=demo.Default.createShapeNode(drawPath(r),10,m,o+75,i);s.s({"m.color":"#464646","m.ambient":"#464646"}),s.setRotation(n[0],n[1],n[2]),e.add(s);var g=demo.Default.createPathCube(drawPath(r),2,10,m,o+75,i+3);g.s({"m.color":"#c0c0c0","m.ambient":"#c0c0c0"}),g.setRotation(n[0],n[1],n[2]),g.setScale(1.008,1.008,1.008),e.add(g);var p="M204.904,328.822c-1.811-57.041,11.75-115.271,42.383-168.331c30.645-53.076,74.311-93.943,124.634-120.897l-4.964-8.502c-48.495,30.087-105.704,47.459-166.971,47.459c-61.286,0-118.512-17.383-167.017-47.487l-4.891,8.555c50.304,26.954,93.953,67.813,124.586,120.871c30.644,53.076,44.202,111.326,42.384,168.385L204.904,328.822",l=demo.Default.createShapeNode(drawPath(p),120,m,o,i);
-l.s({"m.color":"#7D7D7D","m.ambient":"#7D7D7D"}),l.setRotation(n[0],n[1],n[2]),e.add(l);var d="M198.131,325.858c1.289-58.379-13.506-116.011-42.868-166.868C125.904,108.14,83.4,66.516,32.206,38.444l1.832-3.204C83.95,65.546,141.261,81.551,199.986,81.551c58.718,0,116.02-15.999,165.927-46.298l1.856,3.179c-51.201,28.072-93.716,69.702-123.079,120.56c-29.36,50.853-44.155,108.478-42.867,166.848L198.131,325.858z",h=demo.Default.createPathCube(drawPath(d),6,6,m,o+120,i);h.s({"m.color":"#c0c0c0","m.ambient":"#c0c0c0"}),h.setRotation(n[0],n[1],n[2]),e.add(h);var c="M200,179.97L160.172,110.988L239.827,110.988",u=demo.Default.createShapeNode(drawPath(c),50,m,o+120,i);u.s({"m.color":"#555555","m.ambient":"#555555"}),u.setRotation(n[0],n[1],n[2]),e.add(u);for(var f=[{translate:[80,40,0],rotate:[0,Math.PI/9*5,0]},{translate:[170,40,-10],rotate:[0,Math.PI/2,0]},{translate:[280,40,0],rotate:[0,Math.PI/9*4,0]},{translate:[340,40,-100],rotate:[0,Math.PI/9*11,0]},{translate:[290,40,-180],rotate:[0,Math.PI/18*21,0]},{translate:[250,40,-260],rotate:[0,Math.PI/18*19,0]},{translate:[50,40,-100],rotate:[0,Math.PI/18*33,0]},{translate:[100,40,-180],rotate:[0,Math.PI/18*34,0]},{translate:[150,40,-260],rotate:[0,Math.PI/18*35,0]}],F=0;F<f.length;F++){var y=f[F],b=demo.Default.getCreator("mono-staff-chair");if(b){b(e,y,l)}}for(var w=[{translate:[200,25,-109],rotate:[0,0,0]},{translate:[222,25,-147],rotate:[0,Math.PI/3*2,0]},{translate:[178,25,-147],rotate:[0,Math.PI/3*4,0]}],F=0;F<w.length;F++){var j=w[F],v=demo.Default.getCreator("mono_table_tv");if(v){var x=v(e,j);x.setParent(u)}}for(var D=[{translate:[80,98,-50],rotate:[0,Math.PI/9,0]},{translate:[125,98,-62],rotate:[0,Math.PI/18,0]},{translate:[170,98,-67],rotate:[0,0,0]},{translate:[215,98,-67],rotate:[0,0,0]},{translate:[260,98,-62],rotate:[0,-Math.PI/18,0]},{translate:[305,98,-50],rotate:[0,-Math.PI/9,0]},{translate:[325,98,-80],rotate:[0,Math.PI/9*7,0]},{translate:[295,98,-110],rotate:[0,Math.PI/18*13,0]},{translate:[265,98,-145],rotate:[0,Math.PI/18*12.5,0]},{translate:[245,98,-185],rotate:[0,Math.PI/18*11.5,0]},{translate:[225,98,-230],rotate:[0,Math.PI/9*5.5,0]},{translate:[215,98,-270],rotate:[0,Math.PI/9*5,0]},{translate:[65,98,-75],rotate:[0,-Math.PI/9*7,0]},{translate:[100,98,-110],rotate:[0,-Math.PI/18*13,0]},{translate:[130,98,-145],rotate:[0,-Math.PI/18*12.5,0]},{translate:[150,98,-185],rotate:[0,-Math.PI/18*11.5,0]},{translate:[170,98,-230],rotate:[0,-Math.PI/9*5.5,0]},{translate:[180,98,-270],rotate:[0,-Math.PI/9*5,0]}],F=0;F<D.length;F++){var C=D[F],v=demo.Default.getCreator("mono_table_screen");if(v){var x=v(e,C);x.setParent(l)}}}),demo.Default.registerCreator("mono_table_screen",function(e,t){var a=t.rotate||[0,0,0],m=t.scale||[1,1,1],o=(m[0],m[1],m[2],t.translate||[0,0,0]),i=o[0],n=o[1],r=o[2],s=[{type:"cube",width:35,height:22,depth:1.5,rotate:[-Math.PI/12,0,0],translate:[0,-12,0],op:"+",style:{"m.type":"phong","m.color":"#888888","m.ambient":"#888888","m.specular":"#e0e0e0","front.m.texture.image":"../room/images/dc.png","m.specularStrength":2}},{type:"cube",width:10,height:10,depth:1.5,rotate:[Math.PI/12,0,0],translate:[0,-10,-3],op:"+",style:{"m.type":"phong","m.color":"#888888","m.ambient":"#888888","m.specularStrength":50}}],g=demo.Default.createCombo(s);return g.setRotation(a[0],a[1],a[2]),g.setPosition(i,n,r),e.add(g),g}),demo.Default.registerCreator("mono_table_tv",function(e,t){var a=t.rotate||[0,0,0],m=t.scale||[1,1,1],o=(m[0],m[1],m[2],t.translate||[0,0,0]),i=o[0],n=o[1],r=o[2],s=new mono.Cube(76,50,3);return s.setPosition(i,n,r),s.setRotation(a[0],a[1],a[2]),s.s({"m.type":"phong","m.color":"#888888","m.ambient":"#888888","front.m.texture.image":"../room/images/tv.jpg","m.specularStrength":50}),e.add(s),s}),demo.Default.registerFilter("mono_gb_wall",function(e,t){var a=t.translate||[0,0,0],m=a[0],o=a[1],i=a[2],n=t.picture||"../room/images/bg-wall.jpg";return{type:"cube",width:t.width,height:t.height,depth:1,translate:[m,o,i],rotate:t.rotate,op:"+",style:{"m.type":"phong","m.color":"#BEC9BE","m.ambient":"#BEC9BE","front.m.texture.image":n}}}),demo.Default.registerCreator("mono-staff-chair",function(e,t,a){var m=t.translate||[0,0,0],o=m[0],i=m[1],n=m[2],r=t.rotate||[0,0,0],s=t.delay||!0,g=function(t,m,o,i,n,s){var g=(new Date).getTime(),p=demo.Default.getTemplates("mono-staff-chair"),l=p.clone();l.setPosition(t,m,o),l.setRotation(r[0],r[1],r[2]),e.addByDescendant(l),l.setParent(a);var d=(new Date).getTime();console.log("chair loaded. time used: "+(d-g))};if(s){var p=function(e,t,a,m,o,i){return function(){g(e,t,a,m,o,i)}};setTimeout(p(o,i,n,r[0],r[1],r[2]),demo.Default.getRandomLazyTime())}else g(o,i,n,r[0],r[1],r[2])}),demo.Default.registerCreator("mono-conf-table",function(e,t){for(var a=t.translate||[0,0,0],m=a[0],o=(a[1],a[2]),i=t.picture||"../room/images/wood01.png",n=t.rotate||[0,0,0],r=[{x:-192,z:-42},{x:-192,z:42},{x:0,z:-42},{x:0,z:42},{x:192,z:-42},{x:192,z:42}],s=[{type:"cube",width:400,height:3,depth:120,translate:[0,75,0],op:"+",style:{"m.type":"phong","m.color":"#FFFFFF","m.ambient":"#FFFFFF","m.texture.image":i,"m.normalmap.image":"../room/images/rack_inside.png","m.texture.repeat":new mono.Vec2(1,1),"m.specularStrength":10}}],g=0;g<r.length;g++){var p=r[g];s.push({type:"cylinder",topRadius:3,bottomRadius:3,height:75,translate:[p.x,0,p.z],op:"+",style:{"m.type":"phong","m.color":"#838383","m.ambient":"#838383","m.normalmap.image":"../room/images/rack_inside.png","m.specularStrength":10}})}var l=demo.Default.createCombo(s);l.setRotation(n[0],n[1],n[2]),l.setPosition(m,0,o),e.add(l)}),demo.Default.registerFilter("mono-conf-chairs",function(e,t){var a=[],m=t.translates,o=t.rotates||[];if(m)for(var i=0;i<m.length;i++){var n=m[i],r=o[i],s={type:"mono-conf-chair",floorShadow:!0,translate:n,rotate:r};demo.Default.copyProperties(t,s,["type","translates","translate","rotates"]),a.push(s)}return a}),demo.Default.registerCreator("mono-conf-chair",function(e,t){var a=t.translate||[0,0,0],m=t.delay||!0,o=a[0],i=a[1],n=a[2],r=t.rotate||[0,0,0],s=function(t,a,m,o,i,n){var r=((new Date).getTime(),demo.Default.getTemplates("mono-conf-chair")),s=r.clone();s.setPosition(t,a,m),s.setRotation(o,i,n),e.addByDescendant(s)};if(m){var g=function(e,t,a,m,o,i){return function(){s(e,t,a,m,o,i)}};setTimeout(g(o,i,n,r[0],r[1],r[2]),demo.Default.getRandomLazyTime())}else s(o,i,n,r[0],r[1],r[2])}),demo.Default.registerFilter("building",function(e,t){var a=t.translate||[0,0,0],m=(a[0],a[1],a[2],t.rotate||[0,0,0],[]);return m}),demo.Default.registerFilter("lawn",function(e,t){var a=t.width||50,m=t.depth||50,o=t.translate||[0,0,0];return{type:"cube",width:a,height:10,depth:m,translate:o,op:"+",style:{"m.type":"phong","m.color":"green","m.ambient":"green","top.m.color":"#ffffff","top.m.ambient":"#ffffff","top.m.type":"basic","top.m.texture.image":"./js/3d/eim/images/caodi.jpg"}}}),demo.Default.registerFilter("building-floor",function(e,t){var a=t.width||842,m=t.depth||780;return[{type:"cube",width:290,height:5,depth:190,translate:[190,-.5,310],op:"+",style:{"m.type":"phong","m.texture.image":"./js/3d/eim/images/grass.png","top.m.texture.repeat":new mono.Vec2(10,10)}},{type:"cube",width:300,height:5,depth:190,translate:[-195,-.5,310],op:"+",style:{"m.type":"phong","m.texture.image":"./js/3d/eim/images/grass.png","top.m.texture.repeat":new mono.Vec2(10,10)}},{type:"cube",width:700,height:5,depth:65,translate:[0,-.5,420],rotate:[0,-.08,0],op:"-",style:{"m.type":"phong","m.texture.image":"./js/3d/eim/images/grass.png","top.m.texture.repeat":new mono.Vec2(10,10)}},{type:"cube",width:114,height:5,depth:23,translate:[100,0,350],rotate:[0,.01,0],op:"-",style:{"m.type":"phong","m.texture.image":"./js/3d/eim/images/grass.png"}},{type:"cube",width:70,height:5,depth:700,translate:[405,-.5,70],op:"+",style:{"m.type":"phong","m.texture.image":"./js/3d/eim/images/grass.png","top.m.texture.repeat":new mono.Vec2(4,16)}},{type:"cube",width:40,height:15,depth:84,translate:[390,-.5,282],op:"-",style:{"m.type":"phong","m.texture.image":"./js/3d/eim/images/grass.png","top.m.texture.repeat":new mono.Vec2(4,16)}},{type:"cube",width:56,height:15,depth:130,translate:[394,-.5,-200],op:"-",style:{"m.type":"phong","m.texture.image":"./js/3d/eim/images/grass.png","top.m.texture.repeat":new mono.Vec2(4,16)}},{type:"cube",width:60,height:5,depth:660,translate:[-400,-.5,-80],op:"+",style:{"m.type":"phong","m.texture.image":"./js/3d/eim/images/grass.png","top.m.texture.repeat":new mono.Vec2(4,16)}},{type:"cube",width:40,height:5,depth:400,translate:[-390,-.5,-80],op:"-",style:{"m.type":"phong","m.texture.image":"./js/3d/eim/images/grass.png","top.m.texture.repeat":new mono.Vec2(4,16)}},{type:"cube",width:340,height:5,depth:180,translate:[160,-.5,-190],op:"+",style:{"m.type":"phong","m.texture.image":"./js/3d/eim/images/grass.png","top.m.texture.repeat":new mono.Vec2(10,10)}},{type:"cube",width:a,height:5,depth:m,translate:[0,-1,0],shadowHost:!0,op:"+",style:{"m.color":"#ffffff","m.ambient":"#ffffff","m.specular":"#FFFFFF","m.type":"phong","m.texture.image":"./js/3d/eim/images/floor.jpg","top.m.texture.repeat":new mono.Vec2(40,40),"m.normalmap.image":"./js/3d/eim/images/floor_normalmap.jpg"}},{type:"cube",width:330,height:5,depth:400,translate:[-285,-1,-700],shadowHost:!0,op:"+",style:{"m.color":"#ffffff","m.ambient":"#ffffff","m.specular":"#FFFFFF","m.type":"phong","m.texture.image":"./js/3d/eim/images/floor.jpg","top.m.texture.repeat":new mono.Vec2(30,30),"m.normalmap.image":"./js/3d/eim/images/floor_normalmap.jpg"}},{type:"cube",width:a+50,height:5,depth:120,translate:[0,-1,500],rotate:[0,-.08,0],op:"-",shadowHost:!0,style:{"m.color":"#ffffff","m.ambient":"#ffffff","m.specular":"#FFFFFF","m.type":"phong","m.texture.image":"./js/3d/eim/images/floor.jpg","top.m.texture.repeat":new mono.Vec2(30,30),"m.normalmap.image":"./js/3d/eim/images/floor_normalmap.jpg"}},{type:"cube",width:a,height:5,depth:40,translate:[0,1,-480],op:"+",shadowHost:!0,style:{"m.color":"#ffffff","m.ambient":"#ffffff","m.specular":"#FFFFFF","m.type":"phong","m.transparent":!0,"m.texture.image":"./js/3d/eim/images/water.jpg","top.m.texture.repeat":new mono.Vec2(30,1),"m.normalmap.image":"./js/3d/eim/images/floor_normalmap.jpg"}}]});var fieldJson={clearColor:"#ddd",objects:[{type:"cube",width:150,height:46,depth:60,sideColor:"#759bc2",topColor:"#759bc2",translate:[-248,0,-240],style:{"m.type":"phong","m.normalScale":new mono.Vec2(.2,.2)},client:{type:"lab",id:"LAB03","lazy.function":"loadBuilding2"}},{type:"cube",width:70,height:46,depth:100,sideColor:"#759bc2",topColor:"#759bc2",translate:[-287,0,-170],style:{type:"lab",id:"LAB03","m.type":"phong","m.normalScale":new mono.Vec2(.2,.2)},client:{type:"lab",id:"LAB03","lazy.function":"loadBuilding2"}},{type:"cube",width:180,height:40,depth:50,sideColor:"#759bc2",topColor:"#759bc2",translate:[103,0,-91],style:{"m.type":"phong","m.normalScale":new mono.Vec2(.2,.2)},client:{type:"lab",id:"LAB02","lazy.function":"loadBuilding1"}},{type:"cube",width:654,height:40,depth:430,translate:[0,0,-60],op:"+",style:{"m.type":"phong","m.color":"#56779e","m.ambient":"#56779e","m.specular":"#56779e","front.m.color":"#aebcc7"}},{type:"cube",width:16,height:20,depth:100,translate:[331,0,60],op:"+",style:{"m.type":"phong","m.color":"#56779e","m.ambient":"#56779e","m.specular":"#56779e","front.m.color":"#243040"}},{type:"cube",width:405,height:20,depth:40,translate:[124,0,-10],style:{"m.type":"phong","m.color":"#56779e","m.ambient":"#56779e","m.specular":"#56779e"}},{type:"cube",width:400,height:40,depth:320,op:"-",translate:[130,0,-150],style:{"m.type":"phong","m.color":"#56779e","m.ambient":"#56779e","m.specular":"#56779e","front.m.color":"#5a6f84","left.m.color":"#5a6f84"}},{type:"cube",width:1,height:5,depth:270,translate:[-70,18,-130],op:"-",style:{"m.type":"phong","m.texture.image":"./js/3d/eim/images/door-grass.png","m.transparent":!0,"m.opacity":.8,"m.envmap.image":["./js/3d/eim/images/sky.png","./js/3d/eim/images/sky.png","./js/3d/eim/images/sky.png","./js/3d/eim/images/sky.png","./js/3d/eim/images/sky.png","./js/3d/eim/images/sky.png"]}},{type:"cube",width:652,height:5,depth:145,op:"-",translate:[0,40,82.5],rotate:[.05,0,0],sideColor:"#FFFFFF",style:{"bottom.m.texture.image":"./js/3d/eim/images/building_top.png","bottom.m.texture.repeat":new mono.Vec2(14,2),"left.m.color":"#6186a8","front.m.color":"#6186a8"}},{type:"cube",width:652,height:5,depth:145,op:"-",translate:[0,40,82.5],rotate:[-.05,0,0],sideColor:"#FFFFFF",style:{"bottom.m.texture.image":"./js/3d/eim/images/building_top2.png","bottom.m.texture.repeat":new mono.Vec2(14,2),"left.m.color":"#6186a8","front.m.color":"#6186a8"}},{type:"cube",width:652,height:5,depth:145,op:"-",translate:[0,40,-63.5],rotate:[.05,0,0],sideColor:"#FFFFFF",style:{"bottom.m.texture.image":"./js/3d/eim/images/building_top.png","bottom.m.texture.repeat":new mono.Vec2(14,2),"left.m.color":"#6186a8","front.m.color":"#6186a8"}},{type:"cube",width:652,height:5,depth:145,op:"-",translate:[0,40,-63.5],rotate:[-.05,0,0],sideColor:"#FFFFFF",style:{"bottom.m.texture.image":"./js/3d/eim/images/building_top2.png","bottom.m.texture.repeat":new mono.Vec2(14,2),"left.m.color":"#6186a8","front.m.color":"#6186a8","front.m.color":"#6186a8"}},{type:"cube",width:652,height:5,depth:145,op:"-",translate:[0,40,-208],rotate:[.05,0,0],sideColor:"#FFFFFF",style:{"bottom.m.texture.image":"./js/3d/eim/images/building_top.png","bottom.m.texture.repeat":new mono.Vec2(14,2),"left.m.color":"#6186a8","front.m.color":"#6186a8"}},{type:"cube",width:652,height:5,depth:145,op:"-",translate:[0,40,-208],rotate:[-.05,0,0],sideColor:"#FFFFFF",style:{"bottom.m.texture.image":"./js/3d/eim/images/building_top2.png","bottom.m.texture.repeat":new mono.Vec2(14,2),"left.m.color":"#6186a8","front.m.color":"#6186a8"}},{type:"cube",width:329,height:50,depth:146,translate:[158,0,-191],op:"+",style:{"m.type":"phong","m.color":"#bdc9c3","m.ambient":"#bdc9c3","m.specular":"#bdc9c3","right.m.texture.image":"./js/3d/eim/images/building.png","back.m.texture.image":"./js/3d/eim/images/building.png","back.m.texture.repeat":new mono.Vec2(4,1),"right.m.texture.repeat":new mono.Vec2(3,1)}},{type:"cube",width:68,height:50,depth:1,translate:[288.5,0,-117.5],style:{"m.type":"phong","m.color":"#bdc9c3","m.ambient":"#bdc9c3","m.specular":"#bdc9c3","front.m.texture.image":"./js/3d/eim/images/building.png","front.m.texture.repeat":new mono.Vec2(2,1),"right.m.texture.image":"./js/3d/eim/images/building.png","right.m.texture.repeat":new mono.Vec2(.01,1)}},{type:"cube",width:309,height:50,depth:100,translate:[100,0,-160],op:"-",style:{"m.texture.image":"./js/3d/eim/images/building.png","m.texture.repeat":new mono.Vec2(6,1)}},{type:"cube",width:325,height:4,depth:51,translate:[158,46,-237],op:"-",style:{"bottom.m.texture.image":"./js/3d/eim/images/building_side.png","bottom.m.texture.repeat":new mono.Vec2(40,6)}},{type:"cube",width:67,height:4,depth:160,translate:[288.5,46,-182.5],op:"-",style:{"bottom.m.texture.image":"./js/3d/eim/images/building_side.png","bottom.m.texture.repeat":new mono.Vec2(8,14)}},{type:"cube",width:20,height:10,depth:20,translate:[270,46,-250],op:"+",style:{"m.type":"phong","m.color":"#bdc9c3","m.ambient":"#bdc9c3","m.specular":"#bdc9c3","bottom.m.texture.image":"./js/3d/eim/images/building_side.png","bottom.m.texture.repeat":new mono.Vec2(8,14)}},{type:"cube",width:19,height:3,depth:19,translate:[270,55,-250],op:"-",style:{"m.type":"phong","bottom.m.texture.image":"./js/3d/eim/images/building_side.png","bottom.m.texture.repeat":new mono.Vec2(8,14)}},{type:"cube",width:320,height:33,depth:160,translate:[160,0,-140],op:"+",style:{"m.type":"phong","m.texture.image":"./js/3d/eim/images/building.png","m.texture.repeat":new mono.Vec2(8,1),"top.m.texture.repeat":new mono.Vec2(19,10),"top.m.texture.image":"./js/3d/eim/images/building_side.png","m.normalScale":new mono.Vec2(.2,.2),"m.reflectRatio":.8}},{type:"cube",width:120,height:33,depth:100,translate:[265,0,-68],op:"-",style:{"m.type":"phong","m.texture.image":"./js/3d/eim/images/building.png","m.texture.repeat":new mono.Vec2(4,1),"top.m.texture.repeat":new mono.Vec2(4,1),"m.normalmap.image":"./js/3d/eim/images/building_normalmap.png","m.normalScale":new mono.Vec2(.2,.2)}},{type:"cube",width:320,height:2,depth:160,translate:[160,34,-140],op:"+",style:{"m.texture.image":"./js/3d/eim/images/metal.png","m.transparent":!0,"left.m.lightmap.image":"./js/3d/eim/room/images/inside_lightmap.png","right.m.lightmap.image":"./js/3d/eim/room/images/outside_lightmap.png","front.m.lightmap.image":"./js/3d/eim/room/images/outside_lightmap.png","back.m.lightmap.image":"./js/3d/eim/room/images/inside_lightmap.png"}},{type:"cube",width:120,height:2,depth:100,translate:[265,34,-68],op:"-",style:{"m.texture.image":"./js/3d/eim/images/door-grass.png","m.transparent":!0,"m.opacity":1,"m.envmap.image":["./js/3d/eim/images/sky.png","./js/3d/eim/images/sky.png","./js/3d/eim/images/sky.png","./js/3d/eim/images/sky.png","./js/3d/eim/images/sky.png","./js/3d/eim/images/sky.png"]}},{type:"annotation",label:"结构试验室",text:"【点击下方进入】结构试验室",translate:[100,60,-80],client:{type:"lab",id:"LAB03","lazy.function":"loadBuilding2"}},{type:"annotation",label:"PS整车排放及性能试验室",text:"【点击下方进入】PS整车排放及性能试验室",translate:[-310,70,-130],client:{type:"lab",id:"LAB03","lazy.function":"loadBuilding1"}},{type:"cube",width:110,height:48,depth:30,op:"+",translate:[150,0,170],style:{"m.type":"phong","m.texture.image":"./js/3d/eim/images/bdoor.png","m.texture.repeat":new mono.Vec2(.2,1),"front.m.texture.image":"./js/3d/eim/images/bdoor.png","front.m.texture.repeat":new mono.Vec2(1,1),"top.m.texture.image":"./js/3d/eim/images/building_side.png","top.m.texture.repeat":new mono.Vec2(1,1),"left.m.lightmap.image":"./js/3d/eim/room/images/inside_lightmap.png","right.m.lightmap.image":"./js/3d/eim/room/images/outside_lightmap.png","front.m.lightmap.image":"./js/3d/eim/room/images/outside_lightmap.png","back.m.lightmap.image":"./js/3d/eim/room/images/inside_lightmap.png"}},{type:"cube",width:108,height:1,depth:28,op:"-",translate:[150.5,47,170.5],style:{"m.color":"#FFFFFF","m.ambient":"#FFFFFF","m.specular":"#FFFFFF","m.type":"phong","m.texture.image":"./js/3d/eim/images/building_side.png","m.texture.repeat":new mono.Vec2(20,4),"front.m.texture.image":"./js/3d/eim/images/building_side.png","front.m.texture.repeat":new mono.Vec2(1,1),"front.m.normalmap.image":"./js/3d/eim/images/bdoor_normalmap.png","front.m.normalScale":new mono.Vec2(.3,.3),"left.m.lightmap.image":"./js/3d/eim/room/images/inside_lightmap.png","right.m.lightmap.image":"./js/3d/eim/room/images/outside_lightmap.png","front.m.lightmap.image":"./js/3d/eim/room/images/outside_lightmap.png","back.m.lightmap.image":"./js/3d/eim/room/images/inside_lightmap.png"}},{type:"cube",width:108,height:48,depth:30,op:"+",translate:[-150,0,170],style:{"m.color":"#FFFFFF","m.ambient":"#FFFFFF","m.specular":"#FFFFFF","m.type":"phong","m.texture.image":"./js/3d/eim/images/bdoor.png","m.texture.repeat":new mono.Vec2(.2,1),"front.m.texture.image":"./js/3d/eim/images/bdoor.png","front.m.texture.repeat":new mono.Vec2(1,1),"top.m.texture.image":"./js/3d/eim/images/building_side.png","left.m.lightmap.image":"./js/3d/eim/room/images/inside_lightmap.png","right.m.lightmap.image":"./js/3d/eim/room/images/outside_lightmap.png","front.m.lightmap.image":"./js/3d/eim/room/images/outside_lightmap.png","back.m.lightmap.image":"./js/3d/eim/room/images/inside_lightmap.png"}},{type:"cube",width:108,height:1,depth:28,op:"-",translate:[-150.5,47,170.5],style:{"m.color":"#FFFFFF","m.ambient":"#FFFFFF","m.specular":"#FFFFFF","m.type":"phong","m.texture.image":"./js/3d/eim/images/building_side.png","m.texture.repeat":new mono.Vec2(20,4),"front.m.texture.image":"./js/3d/eim/images/building_side.png","front.m.texture.repeat":new mono.Vec2(1,1),"front.m.normalmap.image":"./js/3d/eim/images/bdoor_normalmap.png","front.m.normalScale":new mono.Vec2(.3,.3),"left.m.lightmap.image":"./js/3d/eim/room/images/inside_lightmap.png","right.m.lightmap.image":"./js/3d/eim/room/images/outside_lightmap.png","front.m.lightmap.image":"./js/3d/eim/room/images/outside_lightmap.png","back.m.lightmap.image":"./js/3d/eim/room/images/inside_lightmap.png"}},{type:"cube",width:650,height:38,depth:26,translate:[0,0,168],op:"+",style:{"m.type":"phong","m.color":"#FFFFFF","m.ambient":"#FFFFFF","m.specular":"#FFFFFF","m.texture.image":"./js/3d/eim/images/building_side.png","m.texture.repeat":new mono.Vec2(120,12),"front.m.texture.image":"./js/3d/eim/images/building.png","front.m.texture.repeat":new mono.Vec2(20,1),"right.m.texture.image":"./js/3d/eim/images/building.png","right.m.texture.repeat":new mono.Vec2(2,1),"left.m.texture.image":"./js/3d/eim/images/building.png","left.m.texture.repeat":new mono.Vec2(2,1),"left.m.lightmap.image":"./js/3d/eim/room/images/inside_lightmap.png","right.m.lightmap.image":"./js/3d/eim/room/images/outside_lightmap.png","front.m.lightmap.image":"./js/3d/eim/room/images/outside_lightmap.png","back.m.lightmap.image":"./js/3d/eim/room/images/inside_lightmap.png"}},{type:"cube",width:648,height:3,depth:24,translate:[0,35,167.5],op:"-",style:{"m.type":"phong","m.color":"#FFFFFF","m.ambient":"#FFFFFF","m.specular":"#FFFFFF","m.texture.image":"./js/3d/eim/images/building_side.png","m.texture.repeat":new mono.Vec2(120,6),"front.m.texture.image":"./js/3d/eim/images/building_side.png","front.m.texture.repeat":new mono.Vec2(20,1),"right.m.texture.image":"./js/3d/eim/images/building_side.png","right.m.texture.repeat":new mono.Vec2(1,1),"left.m.lightmap.image":"./js/3d/eim/room/images/inside_lightmap.png","right.m.lightmap.image":"./js/3d/eim/room/images/outside_lightmap.png","front.m.lightmap.image":"./js/3d/eim/room/images/outside_lightmap.png","back.m.lightmap.image":"./js/3d/eim/room/images/inside_lightmap.png"}},{type:"cube",width:130,height:54,depth:80,op:"+",translate:[-90,0,-370],style:{"m.type":"phong","m.color":"#FFFFFF","m.ambient":"#FFFFFF","m.specular":"#FFFFFF","m.texture.image":"./js/3d/eim/images/building_side.png","m.texture.repeat":new mono.Vec2(30,10)}},{type:"cube",width:30,height:44,depth:80,op:"+",translate:[-18,0,-370],style:{"m.type":"phong","m.color":"#FFFFFF","m.ambient":"#FFFFFF","m.specular":"#FFFFFF","m.texture.image":"./js/3d/eim/images/building_side.png","m.texture.repeat":new mono.Vec2(30,10)}},{type:"cube",width:30,height:66,depth:20,op:"+",translate:[-78,0,-339],style:{"m.type":"phong","m.color":"#ccdfe8","m.ambient":"#ccdfe8","m.specular":"#ccdfe8","m.texture.image":"./js/3d/eim/images/building_side.png","m.texture.repeat":new mono.Vec2(30,10)}},{type:"cube",width:129,height:3,depth:79,op:"-",translate:[-90,51,-370],style:{"m.type":"phong","m.color":"#FFFFFF","m.ambient":"#FFFFFF","m.specular":"#FFFFFF","m.texture.image":"./js/3d/eim/images/building_side.png","m.texture.repeat":new mono.Vec2(30,10)}},{type:"cube",width:29,height:3,depth:79,op:"-",translate:[-18,41,-370],style:{"m.type":"phong","m.color":"#FFFFFF","m.ambient":"#FFFFFF","m.specular":"#FFFFFF","m.texture.image":"./js/3d/eim/images/building_side.png","m.texture.repeat":new mono.Vec2(30,10)}},{type:"cube",width:29,height:1,depth:19,op:"-",translate:[-78,65,-339],style:{"m.type":"phong","m.color":"#ccdfe8","m.ambient":"#ccdfe8","m.specular":"#ccdfe8","m.texture.image":"./js/3d/eim/images/building_side.png","m.texture.repeat":new mono.Vec2(30,10)}},{type:"cube",width:130,height:30,depth:50,translate:[-273,0,-380],style:{"m.type":"phong","m.color":"#FFFFFF","m.ambient":"#FFFFFF","m.specular":"#FFFFFF","m.texture.image":"./js/3d/eim/images/building_side.png","m.texture.repeat":new mono.Vec2(30,10),"left.m.lightmap.image":"./js/3d/eim/room/images/inside_lightmap.png","right.m.lightmap.image":"./js/3d/eim/room/images/outside_lightmap.png","front.m.lightmap.image":"./js/3d/eim/room/images/outside_lightmap.png","back.m.lightmap.image":"./js/3d/eim/room/images/inside_lightmap.png"}},{type:"cube",width:90,height:34,depth:70,op:"+",translate:[250,0,-380],style:{"m.type":"phong","m.color":"#FFFFFF","m.ambient":"#FFFFFF","m.specular":"#FFFFFF","m.texture.image":"./js/3d/eim/images/building_side.png","m.texture.repeat":new mono.Vec2(30,8)}},{type:"cube",width:89,height:10,depth:69,op:"-",translate:[250,24,-380],style:{"m.type":"phong","m.color":"#FFFFFF","m.ambient":"#FFFFFF","m.specular":"#FFFFFF","m.texture.image":"./js/3d/eim/images/building_side.png","m.texture.repeat":new mono.Vec2(30,8)}},{type:"cube",width:40,height:34,depth:70,translate:[380,0,-380],op:"+",style:{"m.type":"phong","m.color":"#FFFFFF","m.ambient":"#FFFFFF","m.specular":"#FFFFFF","m.texture.image":"./js/3d/eim/images/building_side.png","m.texture.repeat":new mono.Vec2(30,8)}},{type:"cube",width:39,height:10,depth:69,translate:[380,24,-380],op:"-",style:{"m.type":"phong","m.color":"#FFFFFF","m.ambient":"#FFFFFF","m.specular":"#FFFFFF","m.texture.image":"./js/3d/eim/images/building_side.png","m.texture.repeat":new mono.Vec2(30,8)}},{type:"cube",width:64,height:24,depth:50,translate:[328,0,-386],style:{"m.type":"phong","m.color":"#FFFFFF","m.ambient":"#FFFFFF","m.specular":"#FFFFFF","m.texture.image":"./js/3d/eim/images/building_side.png","m.texture.repeat":new mono.Vec2(4,4),"front.m.texture.image":"./js/3d/eim/images/bdoor.png","front.m.texture.repeat":new mono.Vec2(.2,.5)}},{type:"cube",width:67,height:14,depth:60,op:"+",translate:[328,24,-385],style:{"m.type":"phong","m.color":"#becdd4","m.ambient":"#becdd4","m.specular":"#becdd4","m.texture.image":"./js/3d/eim/images/building_side.png","m.texture.repeat":new mono.Vec2(30,8)}},{type:"cube",width:67,height:14,depth:59,op:"-",translate:[328,36,-385],rotate:[0,0,.1],style:{"m.type":"phong","m.color":"#a1c9ed","back.m.color":"#ffffff","m.ambient":"#a1c9ed","m.specular":"#a1c9ed","m.texture.repeat":new mono.Vec2(30,8)}},{type:"cube",width:67,height:14,depth:59,op:"-",translate:[328,36,-385],rotate:[0,0,-.1],style:{"m.type":"phong","m.color":"#6483a2","back.m.color":"#ffffff","m.ambient":"#6483a2","m.specular":"#6483a2","m.texture.repeat":new mono.Vec2(30,8)}},{type:"cube",width:50,height:50,depth:150,op:"+",translate:[-400,0,-330],style:{"m.type":"phong","m.color":"#FFFFFF","m.ambient":"#FFFFFF","m.specular":"#FFFFFF","m.texture.image":"./js/3d/eim/images/building_side.png","m.texture.repeat":new mono.Vec2(10,30)}},{type:"cube",width:49,height:4,depth:149,op:"-",translate:[-400,46,-330],style:{"m.type":"phong","m.color":"#FFFFFF","m.ambient":"#FFFFFF","m.specular":"#FFFFFF","m.texture.image":"./js/3d/eim/images/building_side.png","m.texture.repeat":new mono.Vec2(10,30)}},{type:"cube",width:40,height:30,depth:100,op:"+",translate:[400,0,70],style:{"m.type":"phong","m.color":"#FFFFFF","m.ambient":"#FFFFFF","m.specular":"#FFFFFF","m.texture.image":"./js/3d/eim/images/building_side.png","m.texture.repeat":new mono.Vec2(10,30),"left.m.lightmap.image":"./js/3d/eim/room/images/inside_lightmap.png","right.m.lightmap.image":"./js/3d/eim/room/images/outside_lightmap.png","front.m.lightmap.image":"./js/3d/eim/room/images/outside_lightmap.png","back.m.lightmap.image":"./js/3d/eim/room/images/inside_lightmap.png"}},{type:"cube",width:40,height:24,depth:70,op:"+",translate:[400,0,190],style:{"m.type":"phong","m.color":"#FFFFFF","m.ambient":"#FFFFFF","m.specular":"#FFFFFF","m.texture.image":"./js/3d/eim/images/building_side.png","m.texture.repeat":new mono.Vec2(10,30),"left.m.lightmap.image":"./js/3d/eim/room/images/inside_lightmap.png","right.m.lightmap.image":"./js/3d/eim/room/images/outside_lightmap.png","front.m.lightmap.image":"./js/3d/eim/room/images/outside_lightmap.png","back.m.lightmap.image":"./js/3d/eim/room/images/inside_lightmap.png"}},{type:"cube",width:39,height:3,depth:99,op:"-",translate:[400,27,70],style:{"m.type":"phong","m.texture.image":"./js/3d/eim/images/building_side.png","m.texture.repeat":new mono.Vec2(10,30)}},{type:"cube",width:39,height:3,depth:69,op:"-",translate:[400,21,190],style:{"m.type":"phong","m.texture.image":"./js/3d/eim/images/building_side.png","m.texture.repeat":new mono.Vec2(10,30)}},{type:"cube",width:50,height:66,depth:190,op:"+",translate:[-168,0,-668],style:{"m.type":"phong","m.color":"#a8b9c9","m.ambient":"#a8b9c9","m.specular":"#a8b9c9","front.m.color":"#a8b9c9"}},{type:"cube",width:100,height:40,depth:300,op:"+",translate:[-268,0,-688],style:{"m.type":"phong","m.color":"#FFFFFF","m.ambient":"#FFFFFF","m.specular":"#FFFFFF","m.texture.image":"./js/3d/eim/images/building_side.png","m.texture.repeat":new mono.Vec2(8,20)}},{type:"cube",width:100,height:80,depth:100,op:"+",translate:[-268,0,-788],style:{"m.type":"phong","m.color":"#FFFFFF","m.ambient":"#FFFFFF","m.specular":"#FFFFFF","m.texture.image":"./js/3d/eim/images/building_side.png","m.texture.repeat":new mono.Vec2(8,20)}},{type:"cube",width:49,height:10,depth:189,op:"-",translate:[-168,64,-668],rotate:[0,0,.15],style:{"m.type":"phong","m.color":"#88afd8","m.ambient":"#88afd8","m.specular":"#88afd8","back.m.color":"#ffffff","left.m.color":"#ffffff"}},{type:"cube",width:49,height:10,depth:189,op:"-",translate:[-168,64,-668],rotate:[0,0,-.15],style:{"m.type":"phong","m.color":"#6f92b8","m.ambient":"#6f92b8","m.specular":"#6f92b8","back.m.color":"#ffffff","left.m.color":"#ffffff"}},{type:"cube",width:99,height:4,depth:299,op:"-",translate:[-268,36,-688],style:{"m.type":"phong","m.color":"#FFFFFF","m.ambient":"#FFFFFF","m.specular":"#FFFFFF","m.texture.image":"./js/3d/eim/images/building_side.png","m.texture.repeat":new mono.Vec2(8,20)}},{type:"cube",width:99,height:4,depth:99,op:"-",translate:[-268,76,-788],style:{"m.type":"phong","m.color":"#FFFFFF","m.ambient":"#FFFFFF","m.specular":"#FFFFFF","m.texture.image":"./js/3d/eim/images/building_side.png","m.texture.repeat":new mono.Vec2(8,20),"left.m.lightmap.image":"./js/3d/eim/room/images/inside_lightmap.png","right.m.lightmap.image":"./js/3d/eim/room/images/outside_lightmap.png","front.m.lightmap.image":"./js/3d/eim/room/images/outside_lightmap.png","back.m.lightmap.image":"./js/3d/eim/room/images/inside_lightmap.png"}},{type:"cube",width:20,height:15,depth:20,translate:[0,0,309],op:"+",style:{"m.type":"phong","m.texture.image":"./js/3d/eim/images/door-grass.png","m.opacity":.9,"m.envmap.image":["./js/3d/eim/images/sky.png","./js/3d/eim/images/sky.png","./js/3d/eim/images/sky.png","./js/3d/eim/images/sky.png","./js/3d/eim/images/sky.png","./js/3d/eim/images/sky.png"]}},{type:"cylinder",height:15,radius:10,translate:[0,0,319],op:"+",style:{"m.type":"phong","m.texture.image":"./js/3d/eim/images/door-grass.png","m.opacity":.9,"m.envmap.image":["./js/3d/eim/images/sky.png","./js/3d/eim/images/sky.png","./js/3d/eim/images/sky.png","./js/3d/eim/images/sky.png","./js/3d/eim/images/sky.png","./js/3d/eim/images/sky.png"]}},{type:"cube",width:22,height:15,depth:4,translate:[0,0,300],op:"+",style:{"m.type":"phong","m.color":"#dbdcd6","m.ambient":"#dbdcd6","m.specular":"#dbdcd6","m.texture.image":"./js/3d/eim/images/building_side.png","m.texture.repeat":new mono.Vec2(4,6)}},{type:"cube",width:22,height:3,depth:22,translate:[0,12,310],op:"+",style:{"m.type":"phong","m.color":"#dbdcd6","m.ambient":"#dbdcd6","m.specular":"#dbdcd6","m.texture.image":"./js/3d/eim/images/building_side.png","m.texture.repeat":new mono.Vec2(4,6)}},{type:"cylinder",height:3,radius:11,translate:[0,12,320],op:"+",style:{"m.type":"phong","m.color":"#dbdcd6","m.ambient":"#dbdcd6","m.specular":"#dbdcd6","m.texture.image":"./js/3d/eim/images/building_side.png","m.texture.repeat":new mono.Vec2(4,6)}},{type:"cube",width:20,height:3.5,depth:22,translate:[0,14,309.5],op:"-",style:{"m.type":"phong","m.color":"#fff","m.ambient":"#fff","m.specular":"#fff","m.texture.image":"./js/3d/eim/images/building_side.png","m.texture.repeat":new mono.Vec2(4,6)}},{type:"cylinder",height:3.5,radius:10,translate:[0,14,320],op:"-",style:{"m.type":"phong","m.color":"#fff","m.ambient":"#fff","m.specular":"#fff","m.texture.image":"./js/3d/eim/images/building_side.png","m.texture.repeat":new mono.Vec2(4,6)}},{type:"cube",width:22,height:4,depth:22,translate:[0,3,310],
-op:"+",style:{"m.type":"phong","m.color":"#dbdcd6","m.ambient":"#dbdcd6","m.specular":"#dbdcd6","m.texture.image":"./js/3d/eim/images/building_side.png","m.texture.repeat":new mono.Vec2(4,6)}},{type:"cylinder",height:4,radius:11,translate:[0,3,320],op:"+",style:{"m.type":"phong","m.color":"#dbdcd6","m.ambient":"#dbdcd6","m.specular":"#dbdcd6","m.texture.image":"./js/3d/eim/images/building_side.png","m.texture.repeat":new mono.Vec2(4,6)}},{type:"cylinder",height:4,radius:50,translate:[0,.2,306],op:"+",style:{"m.type":"phong","m.color":"#FFFFFF","m.ambient":"#FFFFFF","m.specular":"#FFFFFF","m.texture.image":"./js/3d/eim/images/floor-3.jpg","m.texture.repeat":new mono.Vec2(4,6)}},{type:"cylinder",height:4,radius:60,translate:[150,.2,226],op:"+",style:{"m.type":"phong","m.color":"#FFFFFF","m.ambient":"#FFFFFF","m.specular":"#FFFFFF","m.texture.image":"./js/3d/eim/images/floor-3.jpg","m.texture.repeat":new mono.Vec2(4,6)}},{type:"cylinder",height:4,radius:60,translate:[-150,.2,226],op:"+",style:{"m.type":"phong","m.color":"#FFFFFF","m.ambient":"#FFFFFF","m.specular":"#FFFFFF","m.texture.image":"./js/3d/eim/images/floor-3.jpg","m.texture.repeat":new mono.Vec2(4,6)}},{type:"cylinder",height:4,radius:40,translate:[-150,1.2,206],op:"+",style:{"m.type":"phong","m.color":"#FFFFFF","m.ambient":"#FFFFFF","m.specular":"#FFFFFF","m.texture.image":"./js/3d/eim/images/floor-3.jpg","m.texture.repeat":new mono.Vec2(4,6)}},{type:"cylinder",height:1,radius:20,translate:[-150,4.7,206],op:"-",style:{"m.type":"phong","m.color":"#FFFFFF","m.ambient":"#FFFFFF","m.specular":"#FFFFFF","m.texture.image":"./js/3d/eim/images/grass.png","m.texture.repeat":new mono.Vec2(4,6)}},{type:"cube",width:80,height:2,depth:28.5,translate:[-150,4.5,200],op:"-",style:{"m.type":"phong","m.color":"#FFFFFF","m.ambient":"#FFFFFF","m.specular":"#FFFFFF","m.texture.image":"./js/3d/eim/images/floor-3.jpg","m.texture.repeat":new mono.Vec2(2,2)}},{type:"cube",width:28,height:5,depth:30,translate:[0,0,245],sideColor:"#599cbf",topColor:"#599cbf",scale:[1,1,1],style:{"m.type":"phong","m.normalScale":new mono.Vec2(.2,.2),"m.envmap.image":["./js/3d/eim/images/sky.png","./js/3d/eim/images/sky.png","./js/3d/eim/images/sky.png","./js/3d/eim/images/sky.png","./js/3d/eim/images/sky.png","./js/3d/eim/images/sky.png"]}},{type:"cylinder",height:5,radius:14,translate:[0,0,260],sideColor:"#599cbf",topColor:"#599cbf",scale:[1,1,1],style:{"m.type":"phong","m.normalScale":new mono.Vec2(.4,.4),"m.envmap.image":["./js/3d/eim/images/sky.png","./js/3d/eim/images/sky.png","./js/3d/eim/images/sky.png","./js/3d/eim/images/sky.png","./js/3d/eim/images/sky.png","./js/3d/eim/images/sky.png"]}},{type:"cylinder",height:5,radius:14,translate:[0,0,230],sideColor:"#599cbf",topColor:"#599cbf",scale:[1,1,1],style:{"m.type":"phong","m.normalScale":new mono.Vec2(.4,.4),"m.envmap.image":["./js/3d/eim/images/sky.png","./js/3d/eim/images/sky.png","./js/3d/eim/images/sky.png","./js/3d/eim/images/sky.png","./js/3d/eim/images/sky.png","./js/3d/eim/images/sky.png"]}},{type:"building-floor",width:900,depth:1e3},{type:"wall",width:.1,height:10,translate:[0,4,0],outsideColor:"#fff",insideColor:"#fff",topColor:"#fff",op:"+",scale:[1,1,1],data:[[440,-380],[430,450],[-440,450],[-440,-300],[-360,-300],[-360,-320],[-70,-332],[-70,-322],[70,-326],[70,-330],[170,-330],[170,-346],[370,-350],[440,-380]],insideImage:"./js/3d/eim/images/blank.png",outsideImage:"./js/3d/eim/images/fence2.png",topImage:"./js/3d/eim/images/blank.png",bottomImage:"./js/3d/eim/images/blank.png"},{type:"path",width:20,height:4.6,translate:[0,0,0],outsideColor:"#808387",insideColor:"#808387",topColor:"#ffffff",op:"+",scale:[1,1,1],data:[[45,-280],[140,-280],[200,-310],[335.1,-310]],topImage:"./js/3d/eim/images/floor.jpg",repeat:new mono.Vec2(1,1)},{type:"path",width:20,height:4.6,translate:[0,0,0],outsideColor:"#808387",insideColor:"#808387",topColor:"#ffffff",op:"+",scale:[1,1,1],data:[[-45,-280],[-140,-280],[-200,-310],[-345,-310]],topImage:"./js/3d/eim/images/floor.jpg",repeat:new mono.Vec2(1,1)},{type:"trees",floorShadow:!0,scale:[.2,.1,.2],translates:[[325,5,294],[310,5,294],[285,5,294],[265,5,294],[235,5,294],[215,5,294],[195,5,294],[155,5,272],[135,5,264],[105,5,264],[325,5,330],[310,5,330],[285,5,330],[265,5,330],[235,5,330],[215,5,330],[195,5,330],[175,5,320],[155,5,336],[135,5,336],[115,5,336],[95,5,336],[80,5,336],[-245,5,320],[-225,5,320],[-205,5,320],[-185,5,320],[-155,5,320],[-135,5,320],[-115,5,320],[-80,5,320],[-50,5,218],[-70,5,218],[-90,5,218],[-110,5,218],[50,5,218],[70,5,218],[90,5,218],[110,5,218]]}]};demo.Default.setupRoomFiled=function(e,t){var t=t||new mono.Network3D,a=new mono.PerspectiveCamera(30,1.5,30,5e4);a.setPosition(632.7,468,908.2),t.setCamera(a),a.lookAt(new mono.Vec3(0,0,0));var m=t.getDefaultInteraction();m.yLowerLimitAngle=.4,m.yUpLimitAngle=.4,m.maxDistance=1500,m.minDistance=500,m.zoomSpeed=3,m.panSpeed=.2,t.isSelectable=function(e){return!1};var o=document.getElementById(e);o.appendChild(t.getRootView()),setTimeout(function(){$("#"+e).parent();t.adjustBounds($("#"+e).parent().width(),$("#"+e).parent().parent().height())},100),$(window).resize(function(){t.adjustBounds($("#"+e).parent().width(),$("#"+e).parent().parent().height())}),t.getRootView().addEventListener("click",function(e){handleClick(e,t)}),t.getRootView().addEventListener("dbclick",function(e){handleDoubleClick(e,t)}),setupLights(t.getDataBox());var i=demo.Default.filterJson(t.getDataBox(),fieldJson.objects);demo.Default.loadJson(t,i,fieldJson.clearColor)};
+var p = (new Date).getTime();
+function setupLights(e) {
+	var t = new mono.PointLight(16777215, .3);
+	t.setPosition(-100, 100, 500), e.add(t), e.add(new mono.AmbientLight("white"))
+}
+
+function handleClick(e, network) {
+	var camera = network.getCamera(),
+		interaction = network.getDefaultInteraction(),
+		firstClickObject = demo.Default.findFirstObjectByMouse(network, e);
+	if (firstClickObject) {
+		var element = firstClickObject.element,
+			newTarget = firstClickObject.point,
+			oldTarget = camera.getTarget();
+		if (element.getClient("lazy.function") && element.getClient("validateLicense")) {
+			var loader = element.getClient("lazy.function"),
+				time1 = (new Date).getTime();
+			eval(loader + "()");
+			var time2 = (new Date).getTime()
+		}
+	}
+}
+
+function handleDoubleClick(e, network) {
+	var camera = network.getCamera(),
+		interaction = network.getDefaultInteraction(),
+		firstClickObject = demo.Default.findFirstObjectByMouse(network, e);
+	if (firstClickObject) {
+		var element = firstClickObject.element,
+			newTarget = firstClickObject.point,
+			oldTarget = camera.getTarget();
+		if (element.getClient("lazy.function")) {
+			var loader = element.getClient("lazy.function"),
+				time1 = (new Date).getTime();
+			eval(loader + "()");
+			var time2 = (new Date).getTime()
+		} else demo.Default.animateCamera(camera, interaction, oldTarget, newTarget)
+	} else {
+		var oldTarget = camera.getTarget(),
+			newTarget = new mono.Vec3(0, 0, 0);
+		demo.Default.animateCamera(camera, interaction, oldTarget, newTarget)
+	}
+}
+
+function loadBuilding1() {
+	window.open("#lab/LAB02")
+}
+
+function loadBuilding2() {
+	window.open("#lab/LAB03")
+}
+if (!demo) var demo = {};
+demo.Default = {
+	LAZY_MIN: 10,
+	LAZY_MAX: 500,
+	CLEAR_COLOR: "#000000",
+	_envmaps: {},
+	_creators: {},
+	_filters: {},
+	_templates: {},
+	registerCreator: function(e, t) {
+		this._creators[e] = t
+	},
+	getCreator: function(e) {
+		return this._creators[e]
+	},
+	registerFilter: function(e, t) {
+		this._filters[e] = t
+	},
+	getFilter: function(e) {
+		return this._filters[e]
+	},
+	registerTemplates: function(e, t) {
+		this._templates[e] = t
+	},
+	getTemplates: function(e) {
+		return this._templates[e]
+	},
+	setup: function(e) {
+		demo.Default.loadImages(["images/outside_lightmap.png", "images/table_shadow.png", "images/conf_table_shadow.png"]);
+		var t = new mono.Network3D,
+			a = new mono.PerspectiveCamera(30, 1.5, 30, 5e4);
+		a.setPosition(1500, 3200, 4e3), t.setCamera(a);
+		var m = t.getDefaultInteraction();
+		m.yLowerLimitAngle = Math.PI / 180 * 2, m.yUpLimitAngle = Math.PI / 2, m.maxDistance = 3e4, m.minDistance = 50, m.zoomSpeed = 3, m.panSpeed = .2, t.isSelectable = function(e) {
+			return !1
+		}, document.getElementById(e).appendChild(t.getRootView()), mono.Utils.autoAdjustNetworkBounds(t, document.documentElement, "clientWidth", "clientHeight"), t.getRootView().addEventListener("dblclick", function(e) {
+			demo.Default.handleDoubleClick(e, t)
+		}), demo.Default.setupLights(t.getDataBox()), demo.Default.loadTempJson();
+		var o = ((new Date).getTime(), demo.Default.filterJson(t.getDataBox(), scenceJson.objects));
+		demo.Default.loadJson(t, o, scenceJson.clearColor);
+		(new Date).getTime()
+	},
+	setupLights: function(e) {
+		var t = new mono.PointLight(16777215, .3);
+		t.setPosition(0, 1e3, -1e3), e.add(t);
+		var t = new mono.PointLight(16777215, .3);
+		t.setPosition(0, 1e3, 1e3), e.add(t);
+		var t = new mono.PointLight(16777215, .3);
+		t.setPosition(1e3, -1e3, -1e3), e.add(t), e.add(new mono.AmbientLight("white"))
+	},
+	handleDoubleClick: function(e, t) {
+		var a = t.getCamera(),
+			m = t.getDefaultInteraction(),
+			o = demo.Default.findFirstObjectByMouse(t, e);
+		if (o) {
+			var i = o.element,
+				n = o.point,
+				r = a.getTarget();
+			if (demo.Default.animateCamera(a, m, r, n, function() {
+					i.getClient("animation") && demo.Default.playAnimation(i, i.getClient("animation"))
+				}), i.getStyle("lazy.function")) {
+				var s = i.getStyle("lazy.function");
+				(new Date).getTime();
+				s();
+				(new Date).getTime()
+			}
+		} else {
+			var r = a.getTarget(),
+				n = new mono.Vec3(0, 0, 0);
+			demo.Default.animateCamera(a, m, r, n)
+		}
+	},
+	getEnvmap: function(e) {
+		return this._envmaps[e]
+	},
+	setEnvmap: function(e, t) {
+		this._envmaps[e] = t
+	},
+	copyProperties: function(e, t, a) {
+		if (e && t)
+			for (var m in e) a && a.indexOf(m) >= 0 || (t[m] = e[m])
+	},
+	createAnnotationObject: function(e) {
+		var t = e.translate || [0, 0, 0],
+			a = e.label,
+			m = e.text,
+			o = new mono.Annotation(a, m);
+		return o.setPosition(t[0], t[1], t[2]), o
+	},
+	createCubeObject: function(e) {
+		var t = e.translate || [0, 0, 0],
+			a = e.width,
+			m = e.height,
+			o = e.depth,
+			i = e.sideColor,
+			n = e.topColor,
+			r = new mono.Cube(a, m, o);
+		return r.setPosition(t[0], t[1] + m / 2, t[2]), r.s({
+			"m.color": i,
+			"m.ambient": i,
+			"left.m.lightmap.image": "./js/3d/eim/room/images/inside_lightmap.png",
+			"right.m.lightmap.image": "./js/3d/eim/room/images/outside_lightmap.png",
+			"front.m.lightmap.image": "./js/3d/eim/room/images/outside_lightmap.png",
+			"back.m.lightmap.image": "./js/3d/eim/room/images/inside_lightmap.png",
+			"top.m.color": n,
+			"top.m.ambient": n,
+			"bottom.m.color": n,
+			"bottom.m.ambient": n
+		}), r
+	},
+	createCylinderObject: function(e) {
+		var t = e.translate || [0, 0, 0],
+			a = e.radius || 10,
+			m = e.topRadius || a,
+			o = e.bottomRadius || a,
+			i = e.height,
+			n = e.sideColor || "#A5BDDD",
+			r = new mono.Cylinder(m, o, i);
+		return r.setPosition(t[0], t[1] + i / 2, t[2]), r.s({
+			"m.normalType": mono.NormalTypeSmooth,
+			"m.type": "phong",
+			"m.color": n,
+			"m.ambient": n,
+			"side.m.lightmap.image": "./js/3d/eim/room/images/inside_lightmap.png"
+		}), r
+	},
+	createPathObject: function(e) {
+		for (var t = e.translate || [0, 0, 0], a = e.width, m = e.height, o = e.data, i = void 0, n = e.insideColor, r = e.outsideColor, s = e.asideColor || r, g = e.zsideColor || r, p = e.topColor, l = e.bottomColor || p, d = e.insideImage, h = e.outsideImage, c = e.topImage, u = e.repeat || e.height, f = 0; f < o.length; f++) {
+			var F = o[f];
+			i ? i.lineTo(F[0], F[1], 0) : (i = new mono.Path, i.moveTo(F[0], F[1], 0))
+		}
+		var y = this.createWall(i, a, m, n, r, s, g, p, l, d, h, c, u);
+		return y.setPosition(t[0], t[1], -t[2]), y
+	},
+	createPathNodeObject: function(e) {
+		for (var t = e.translate || [0, 0, 0], a = e.scale || [1, 1, 1], m = e.radius || 5, o = void 0, i = e.data, n = e.pathImage, r = e.repeat, s = 0; s < i.length; s++) {
+			var g = i[s];
+			o ? "c" === g[0] ? o.quadraticCurveTo(g[1], 10, g[2], g[3], 10, g[4]) : o.lineTo(g[0], 10, g[1]) : (o = new mono.Path, o.moveTo(g[0], 10, g[1]))
+		}
+		var p = this.createPathNode(o, m, n, r, t, a);
+		return p
+	},
+	filterJson: function(e, t) {
+		for (var a = [], m = 0; m < t.length; m++) {
+			var o = t[m],
+				i = o.type,
+				n = this.getFilter(i);
+			if (n) {
+				var r = n(e, o);
+				r && (r instanceof Array ? a = a.concat(r) : (this.copyProperties(o, r, ["type"]), a.push(r)))
+			} else a.push(o)
+		}
+		return a
+	},
+	createCombo: function(e) {
+		for (var t = [], a = [], m = [], o = 0; o < e.length; o++) {
+			var i = e[o],
+				n = i.op || "+",
+				r = i.style,
+				s = i.client,
+				g = (i.translate || [0, 0, 0], i.rotate || [0, 0, 0]),
+				p = null;
+			if ("path" === i.type && (p = this.createPathObject(i)), "cube" === i.type && (p = this.createCubeObject(i)), "cylinder" === i.type && (p = this.createCylinderObject(i)), "pathNode" === i.type && (p = this.createPathNodeObject(i)), p) {
+				if (p.setRotation(g[0], g[1], g[2]), r && p.s(r), s)
+					for (var o in s) p.setClient(o, s[o]);
+				t.push(p), t.length > 1 && a.push(n), m.push(p.getId())
+			}
+		}
+		if (t.length > 0) {
+			var l = new mono.ComboNode(t, a);
+			return l.setNames(m), l
+		}
+		return null
+	},
+	loadJson: function(e, t, a) {
+		var m = e.getDataBox(),
+			a = a || demo.Default.CLEAR_COLOR;
+		e.setClearColor(a), e.setClearColor(0, 0, 0), e.setClearAlpha(0);
+		for (var o, i, n = [], r = [], s = [], g = 0; g < t.length; g++) {
+			var p = t[g];
+			if (!p.shadowGhost) {
+				var l = p.op,
+					d = p.style,
+					h = p.client,
+					c = (p.translate || [0, 0, 0], p.rotate || [0, 0, 0]),
+					u = null;
+				"path" === p.type && (u = this.createPathObject(p)), "cube" === p.type && (u = this.createCubeObject(p)), "annotation" === p.type && (u = this.createAnnotationObject(p)), "pathNode" === p.type && (u = this.createPathNodeObject(p)), "cylinder" === p.type && (u = this.createCylinderObject(p)), p.shadowHost && (o = u, i = u.getId());
+				var f = demo.Default.getCreator(p.type);
+				f ? f(m, p) : u && (u.setRotation(c[0], c[1], c[2]), d && u.s(d), h && u.c(h), l ? (n.push(u), n.length > 1 && r.push(l), s.push(u.getId())) : m.add(u))
+			}
+		}
+		if (n.length > 0) {
+			var F = new mono.ComboNode(n, r);
+			if (F.setNames(s), m.add(F), o && i) {
+				var y = function(e, a, m) {
+					return function() {
+						var o = ((new Date).getTime(), demo.Default.createShadowImage(t, a.getWidth(), a.getDepth())),
+							i = m + "-top.m.lightmap.image";
+						e.setStyle(i, o);
+						(new Date).getTime()
+					}
+				};
+				setTimeout(y(F, o, i), demo.Default.LAZY_MAX)
+			}
+		}
+	},
+	loadRackContent: function(e, t, a, m, o, i, n, r, s, g, p) {
+		for (var l = 10, d = 9, h = 2, c = !1; l < 200;) {
+			var u = "server" + (parseInt(3 * Math.random()) + 1) + ".png",
+				f = l > 100 && !c && r ? r.color : null,
+				F = this.createServer(e, s, g, u, f);
+			if (f && (c = !0), F.setPositionY(l), F.setPositionZ(F.getPositionZ() + 5), "server3.png" === u ? (F.setScaleY(6), l += 6 * d) : l += d, l += h, l > 200) {
+				e.remove(F);
+				break
+			}
+		}
+	},
+	createServer: function(e, t, a, m, o) {
+		var i = t.getPositionX(),
+			n = t.getPositionZ(),
+			r = a.getWidth(),
+			s = 8,
+			g = a.getDepth(),
+			p = new mono.Cube(r, s, g);
+		o = o ? o : "#5B6976", p.s({
+			"m.color": o,
+			"m.ambient": o,
+			"m.type": "phong",
+			"m.texture.image": "./js/3d/eim/room/images/rack_inside.png"
+		}), p.setPosition(i + .5, s / 2, n + (t.getDepth() - p.getDepth()) / 2);
+		var l = new mono.Cube(r + 2, s + 1, .5);
+		o = o ? o : "#5BA1AF", l.s({
+			"m.type": "phong",
+			"m.texture.image": "./js/3d/eim/room/images/rack_inside.png",
+			"front.m.texture.image": "./js/3d/eim/room/images/" + m,
+			"front.m.texture.repeat": new mono.Vec2(1, 1),
+			"m.specularStrength": 100,
+			"m.color": o,
+			"m.ambient": o
+		}), l.setPosition(i + .5, (s + 1) / 2, n + p.getDepth() / 2 + (t.getDepth() - p.getDepth()) / 2);
+		var d = new mono.ComboNode([p, l], ["+"]);
+		return d.setClient("animation", "pullOut.z"), d.setPositionZ(d.getPositionZ() - 5), e.add(d), d
+	},
+	createWall: function(e, t, a, m, o, i, n, r, s, g, p, l, d) {
+		var h = new mono.PathCube(e, t, a);
+		return h.s({
+			"outside.m.color": o,
+			"inside.m.type": "basic",
+			"inside.m.color": m,
+			"aside.m.color": i,
+			"zside.m.color": n,
+			"top.m.color": r,
+			"bottom.m.color": s,
+			"top.m.texture.image": l,
+			"bottom.m.texture.image": l,
+			"aside.m.texture.image": l,
+			"zside.m.texture.image": l,
+			"inside.m.texture.image": g,
+			"outside.m.texture.image": p,
+			"inside.m.lightmap.image": "./js/3d/eim/room/images/inside_lightmap.png",
+			"outside.m.lightmap.image": "./js/3d/eim/room/images/outside_lightmap.png",
+			"aside.m.lightmap.image": "./js/3d/eim/room/images/outside_lightmap.png",
+			"zside.m.lightmap.image": "./js/3d/eim/room/images/outside_lightmap.png",
+			"m.transparent": !0,
+			"m.side": mono.DoubleSide
+		}), h.setRepeat(d), h
+	},
+	createShadowImage: function(e, t, a) {
+		var m = document.createElement("canvas");
+		m.width = t, m.height = a;
+		var o = m.getContext("2d");
+		o.beginPath(), o.rect(0, 0, t, a), o.fillStyle = "white", o.fill();
+		var i = !1;
+		i && (o.lineWidth = 1, o.strokeStyle = "black", o.stroke());
+		for (var n = 0; n < e.length; n++) {
+			var r = e[n];
+			if (r.floorShadow) {
+				var s = r.translate || [0, 0, 0],
+					g = r.rotate || [0, 0, 0],
+					g = -g[1];
+				if ("path" === r.type) {
+					var p = t / 2 + s[0],
+						l = a - (a / 2 + s[2]),
+						d = r.data;
+					o.save(), o.translate(p, l), o.rotate(g), o.beginPath();
+					for (var h = !0, c = 0; c < d.length; c++) {
+						var u = d[c];
+						h ? (o.moveTo(u[0], -u[1]), h = !1) : o.lineTo(u[0], -u[1])
+					}
+					o.lineWidth = r.width, o.strokeStyle = "#C8C8C8", o.shadowColor = "#222222", o.shadowBlur = 60, o.shadowOffsetX = 0, o.shadowOffsetY = 0, o.stroke(), o.restore()
+				}
+				if ("cube" === r.type) {
+					var p = t / 2 + s[0],
+						l = a / 2 + s[2],
+						f = r.width,
+						F = r.depth;
+					o.save(), o.translate(p, l), o.rotate(g), o.beginPath(), o.moveTo(-f / 2, 0), o.lineTo(f / 2, 0), o.lineWidth = F, o.strokeStyle = "white", o.shadowColor = "#222222", o.shadowBlur = 60, o.shadowOffsetX = 0, o.shadowOffsetY = 0, o.stroke(), o.restore()
+				}
+				if ("rack" === r.type || "electric" === r.type) {
+					var p = t / 2 + s[0],
+						l = a / 2 + s[2],
+						f = e.width || 60,
+						y = e.height || 200,
+						b = e.depth || 80,
+						f = .99 * f,
+						F = .99 * b;
+					o.beginPath(), o.moveTo(p - f / 2, l), o.lineTo(p + f / 2, l), o.lineWidth = F, o.strokeStyle = "black", o.shadowColor = "black", o.shadowBlur = 100, o.shadowOffsetX = 0, o.shadowOffsetY = 0, o.stroke(), o.restore()
+				}
+				if ("plant" === r.type) {
+					var p = t / 2 + s[0],
+						l = a / 2 + s[2],
+						w = r.scale || [1, 1, 1],
+						j = 11 * Math.min(w[0], w[2]);
+					o.beginPath(), o.arc(p, l, j, 0, 2 * Math.PI, !1), o.lineWidth = F, o.fillStyle = "black", o.shadowColor = "black", o.shadowBlur = 25, o.shadowOffsetX = 0, o.shadowOffsetY = 0, o.fill(), o.restore()
+				}
+			} else if (r.shadowImage && demo.Default.loaded) {
+				var s = r.translate || [0, 0, 0],
+					p = t / 2 + s[0],
+					l = a / 2 + s[2],
+					g = r.rotate || [0, 0, 0];
+				g = -g[1];
+				var v = r.shadowImage,
+					x = v.src,
+					f = v.width || 100,
+					y = v.height || 100,
+					D = v.xOffset || 0,
+					C = v.yOffset || 0;
+				o.save(), o.translate(p, l), o.rotate(g), o.globalAlpha = .5, o.shadowColor = "black", o.shadowBlur = 50, o.shadowOffsetX = 0, o.shadowOffsetY = 0;
+				var _ = demo.Default.images[x];
+				o.drawImage(_, -f / 2 + D, -y / 2 + C, f, y), o.translate(-p, -l), o.restore()
+			}
+		}
+		return m
+	},
+	createTree: function(e, t, a, m, o, i) {
+		var n;
+		if (demo.Default._treeInstance) n = demo.Default._treeInstance.clone();
+		else {
+			var r = 80,
+				s = 150,
+				g = "./js/3d/eim/images/tree-1.png",
+				p = [],
+				l = new mono.Cylinder(1, 5, s, 10, 1, (!1), (!1));
+			l.s({
+				"m.type": "phong",
+				"m.color": "#411212",
+				"m.ambient": "#411212",
+				"m.texture.repeat": new mono.Vec2(10, 4),
+				"m.specularmap.image": "./js/3d/eim/room/images/metal_normalmap.jpg",
+				"m.normalmap.image": "./js/3d/eim/room/images/metal_normalmap.jpg"
+			}), p.push(l);
+			for (var d = 5, h = 0; h < d; h++) {
+				var c = new mono.Cube(r, s + 20, .01);
+				c.s({
+					"m.transparent": !0,
+					"front.m.visible": !0,
+					"front.m.texture.image": g,
+					"back.m.visible": !0,
+					"back.m.texture.image": g
+				}), c.setSelectable(!1), c.setEditable(!1), c.setParent(l), c.setPositionY(20), c.setRotationY(Math.PI * h / d), p.push(c)
+			}
+			demo.Default._treeInstance = new mono.ComboNode(p), demo.Default._treeInstance.setClient("tree.original.y", l.getHeight() / 2 * o), n = demo.Default._treeInstance
+		}
+		return n.setPosition(e, n.getClient("tree.original.y") + t, a), n.setScale(m, o, i), n
+	},
+	createPlant: function(e, t, a, m, o, i) {
+		var n;
+		if (demo.Default._plantInstance) n = demo.Default._plantInstance.clone();
+		else {
+			var r = 30,
+				s = 30,
+				g = "./js/3d/eim/room/images/plant.png",
+				p = [],
+				l = new mono.Cylinder(.5 * r, .4 * r, 2 * s, 20, 1, (!1), (!1));
+			l.s({
+				"m.type": "phong",
+				"m.color": "#ADADAD",
+				"m.ambient": "#ADADAD",
+				"m.texture.repeat": new mono.Vec2(10, 4),
+				"m.specularmap.image": "./js/3d/eim/room/images/metal_normalmap.jpg",
+				"m.normalmap.image": "./js/3d/eim/room/images/metal_normalmap.jpg"
+			});
+			var d = l.clone();
+			d.setScale(.9, 1, .9);
+			var h = d.clone();
+			h.setScale(.9, .9, .9), h.s({
+				"m.type": "phong",
+				"m.color": "#163511",
+				"m.ambient": "#163511",
+				"m.texture.repeat": new mono.Vec2(10, 4)
+			});
+			var c = new mono.ComboNode([l, d, h], ["-", "+"]);
+			p.push(c);
+			for (var u = 5, f = 0; f < u; f++) {
+				var n = new mono.Cube(2 * r, s + 20, .01);
+				n.s({
+					"m.transparent": !0,
+					"front.m.visible": !0,
+					"front.m.texture.image": g,
+					"back.m.visible": !0,
+					"back.m.texture.image": g
+				}), n.setSelectable(!1), n.setEditable(!1), n.setParent(c), n.setPositionY(l.getHeight() / 2 + n.getHeight() / 2 - 20), n.setRotationY(Math.PI * f / u), p.push(n)
+			}
+			demo.Default._plantInstance = new mono.ComboNode(p), demo.Default._plantInstance.setClient("plant.original.y", l.getHeight() / 2 + l.getHeight() / 4 * Math.min(m, i)), n = demo.Default._plantInstance
+		}
+		return n.setPosition(e, n.getClient("plant.original.y") + t, a), n.setScale(m, o, i), n
+	},
+	createPathNode: function(e, t, a, m, o, i) {
+		var o = o || [0, 0, 0],
+			i = i || [1, 1, 1],
+			m = m || new mono.Vec2(1, 1),
+			n = new mono.PathNode(e);
+		return n.s({
+			"m.texture.image": a,
+			"m.texture.repeat": m
+		}), n.setRadius(t), n.setScale(i[0], i[1], i[2]), n.setPosition(o[0], o[1], o[2]), n
+	},
+	createShapeNode: function(e, t, a, m, o) {
+		var i = new mono.ShapeNode(e);
+		return i.s({
+			"m.type": "phong",
+			"m.color": "#2D2F31",
+			"m.ambient": "#2D2F31",
+			"m.specular": "#e5e5e5",
+			"m.normalmap.image": "./js/3d/eim/room/images/metal_normalmap.jpg",
+			"m.texture.repeat": new mono.Vec2(10, 6),
+			"m.specularStrength": 3
+		}), i.setVertical(!0), i.setAmount(t), i.setPosition(a, m, o), i
+	},
+	createPathCube: function(e, t, a, m, o, i) {
+		var n = new mono.PathCube(e, t, a);
+		return n.s({
+			"m.type": "phong",
+			"m.color": "#2D2F31",
+			"m.ambient": "#2D2F31",
+			"m.specular": "#e5e5e5",
+			"m.normalmap.image": "./js/3d/eim/room/images/metal_normalmap.jpg",
+			"m.texture.repeat": new mono.Vec2(10, 6),
+			"m.specularStrength": 3
+		}), n.setPosition(m, o, i), n
+	},
+	findFirstObjectByMouse: function(e, t) {
+		var a = e.getElementsByMouseEvent(t);
+		if (a.length)
+			for (var m = 0; m < a.length; m++) {
+				var o = a[m],
+					i = o.element;
+				if (!(i instanceof mono.Billboard)) return o
+			}
+		return null
+	},
+	animateCamera: function(e, t, a, m, o) {
+		twaver.Util.stopAllAnimates(!0);
+		var i = e.getPosition().sub(e.getTarget()),
+			n = new twaver.Animate({
+				from: 0,
+				to: 1,
+				dur: 500,
+				easing: "easeBoth",
+				onUpdate: function(o) {
+					var n = a.x + (m.x - a.x) * o,
+						r = a.y + (m.y - a.y) * o,
+						s = a.z + (m.z - a.z) * o,
+						g = new mono.Vec3(n, r, s);
+					e.lookAt(g), t.target = g;
+					var p = (new mono.Vec3).addVectors(i, g);
+					e.setPosition(p)
+				}
+			});
+		n.onDone = o, n.play()
+	},
+	playAnimation: function(e, t) {
+		var a = t.split(".");
+		if ("pullOut" === a[0]) {
+			var m = a[1];
+			demo.Default.animatePullOut(e, m)
+		}
+		if ("rotate" === a[0]) {
+			var o = a[1],
+				i = a[2];
+			demo.Default.animateRotate(e, o, i)
+		}
+	},
+	animatePullOut: function(e, t) {
+		twaver.Util.stopAllAnimates(!0);
+		var a = e.getBoundingBox().size().multiply(e.getScale()),
+			m = .8,
+			o = new mono.Vec3(0, 0, 1),
+			i = 0;
+		"x" === t && (o = new mono.Vec3(1, 0, 0), i = a.x), "-x" === t && (o = new mono.Vec3((-1), 0, 0), i = a.x), "y" === t && (o = new mono.Vec3(0, 1, 0), i = a.y), "-y" === t && (o = new mono.Vec3(0, (-1), 0), i = a.y), "z" === t && (o = new mono.Vec3(0, 0, 1), i = a.z), "-z" === t && (o = new mono.Vec3(0, 0, (-1)), i = a.z), i *= m, e.getClient("animated") && (o = o.negate());
+		var n = e.getPosition().clone();
+		e.setClient("animated", !e.getClient("animated")), new twaver.Animate({
+			from: 0,
+			to: 1,
+			dur: 2e3,
+			easing: "bounceOut",
+			onUpdate: function(t) {
+				e.setPosition(n.clone().add(o.clone().multiplyScalar(i * t)))
+			}
+		}).play()
+	},
+	animateRotate: function(e, t, a) {
+		twaver.Util.stopAllAnimates(!0);
+		var m = e.getBoundingBox().size().multiply(e.getScale()),
+			o = 0,
+			i = 1;
+		e.getClient("animated") && (i = -1), e.setClient("animated", !e.getClient("animated"));
+		var n, r;
+		if ("left" === t) {
+			n = new mono.Vec3(-m.x / 2, 0, 0);
+			var r = new mono.Vec3(0, 1, 0)
+		}
+		if ("right" === t) {
+			n = new mono.Vec3(m.x / 2, 0, 0);
+			var r = new mono.Vec3(0, 1, 0)
+		}
+		var s = new twaver.Animate({
+			from: o,
+			to: i,
+			dur: 1800,
+			easing: "bounceOut",
+			onUpdate: function(t) {
+				void 0 === this.lastValue && (this.lastValue = 0), e.rotateFromAxis(r.clone(), n.clone(), Math.PI / 180 * a * (t - this.lastValue)), this.lastValue = t
+			},
+			onDone: function() {
+				delete this.lastValue
+			}
+		});
+		s.play()
+	},
+	getRandomInt: function(e) {
+		return parseInt(Math.random() * e)
+	},
+	getRandomLazyTime: function() {
+		var e = demo.Default.LAZY_MAX - demo.Default.LAZY_MIN;
+		return demo.Default.getRandomInt(e) + demo.Default.LAZY_MIN
+	},
+	parseSVG: function(e) {
+		return e.loadXml(e)
+	},
+	loadImages: function(e) {
+		function t(t) {
+			a++, a >= e.length && (demo.Default.loaded = !0)
+		}
+		demo.Default.images = {};
+		for (var a = 0, m = 0; m < e.length; m++) {
+			var o = new Image;
+			o.onload = t, o.src = e[m], demo.Default.images[e[m]] = o
+		}
+	}
+}, demo.Default.setupRoomFiled = function(e, t) {
+	
+	var m = (new Date).getTime();
+	console.log("time:  " + (m - p));
+	var t = t || new mono.Network3D,
+		a = new mono.PerspectiveCamera(30, 1.5, 30, 5e4);
+	a.setPosition(632.7, 468, 908.2), t.setCamera(a), a.lookAt(new mono.Vec3(0, 0, 0));
+	var m = t.getDefaultInteraction();
+	// m.fpsMode = true;
+	m.lookSpeed = 6;
+	m.yLowerLimitAngle=.4;
+	m.yUpLimitAngle=.4;
+	m.maxDistance=1500;
+	m.minDistance=500;
+	m.zoomSpeed=3;
+	m.panSpeed=2;
+	m.rotateSpeed = 2;
+	t.isSelectable = function(e) {
+		return !1
+	};
+	var o = document.getElementById(e);
+	o.appendChild(t.getRootView()),
+	setTimeout(function() {
+		$("#" + e).parent().parent().height($(window).height()-46)
+		t.adjustBounds($("#" + e).parent().width(), $("#" + e).parent().parent().height());
+	}, 200), 
+	$(window).resize(function() {
+		t.adjustBounds($("#" + e).parent().width(), $("#" + e).parent().parent().height())
+	}), 
+	t.getRootView().addEventListener("click", function(e) {
+		handleClick(e, t)
+	}), t.getRootView().addEventListener("dbclick", function(e) {
+		handleDoubleClick(e, t)
+	}), setupLights(t.getDataBox());
+	
+	var i = demo.Default.filterJson(t.getDataBox(), fieldJson.objects);
+	demo.Default.loadJson(t, i, fieldJson.clearColor);
+	
+},demo.Default.registerCreator("plant", function(e, t) {
+	var a = t.scale || [2, 2, 2],
+		m = (a[0], a[1], a[2], t.delay || !0),
+		o = t.translate || [0, 0, 0],
+		i = (o[0], o[1], o[2], function(t, a, m, o, i, n) {
+			var r = ((new Date).getTime(), demo.Default.createPlant(t, a, m, o, i, n));
+			e.add(r);
+			(new Date).getTime()
+		});
+	if (m) {
+		var n = function(e, t, a, m, o, n) {
+			return function() {
+				i(e, t, a, m, o, n)
+			}
+		};
+		setTimeout(n(o[0], o[1], o[2], a[0], a[1], a[2]), demo.Default.getRandomLazyTime())
+	} else i(o[0], o[1], o[2], a[0], a[1], a[2])
+}), demo.Default.registerCreator("tree", function(e, t) {
+	var a = t.scale || [2, 2, 2],
+		m = (a[0], a[1], a[2], t.delay || !0),
+		o = t.translate || [0, 0, 0],
+		i = (o[0], o[1], o[2], function(t, a, m, o, i, n) {
+			var r = ((new Date).getTime(), demo.Default.createTree(t, a, m, o, i, n));
+			e.add(r);
+			(new Date).getTime()
+		});
+	if (m) {
+		var n = function(e, t, a, m, o, n) {
+			return function() {
+				i(e, t, a, m, o, n)
+			}
+		};
+		setTimeout(n(o[0], o[1], o[2], a[0], a[1], a[2]), demo.Default.getRandomLazyTime())
+	} else i(o[0], o[1], o[2], a[0], a[1], a[2])
+}), demo.Default.registerFilter("plants", function(e, t) {
+	var a = [],
+		m = t.translates;
+	if (m)
+		for (var o = 0; o < m.length; o++) {
+			var i = m[o],
+				n = {
+					type: "plant",
+					floorShadow: !1,
+					scale: [2, 2, 2],
+					translate: i
+				};
+			demo.Default.copyProperties(t, n, ["type", "translates", "translate"]), a.push(n)
+		}
+	return a
+}), demo.Default.registerFilter("trees", function(e, t) {
+	var a = [],
+		m = t.translates;
+	if (m)
+		for (var o = 0; o < m.length; o++) {
+			var i = m[o],
+				n = {
+					type: "tree",
+					floorShadow: !0,
+					scale: [2, 2, 2],
+					translate: i
+				};
+			demo.Default.copyProperties(t, n, ["type", "translates", "translate"]), a.push(n)
+		}
+	return a
+}),demo.Default.registerFilter("wall", function(e, t) {
+	var a = [],
+		m = {
+			type: "path",
+			op: "+",
+			width: t.width || 20,
+			height: t.height || 200,
+			floorShadow: !0,
+			insideColor: t.insideColor || "#B8CAD5",
+			outsideColor: t.outsideColor || "#A5BDDD",
+			asideColor: t.asideColor || "#D6E4EC",
+			zsideColor: t.zsideColor || "#D6E4EC",
+			topColor: "#D6E4EC",
+			bottomColor: t.bottomColor || "red",
+			insideImage: t.insideImage,
+			outsideImage: t.outsideImage,
+			topImage: t.topImage,
+			bottomImage: t.bottomImage,
+			repeat: t.repeat,
+			translate: t.translate,
+			data: t.data
+		};
+	if (a.push(m), t.children) {
+		var o = demo.Default.filterJson(e, t.children);
+		a = a.concat(o)
+	}
+	for (var i = [], n = [], r = 0; r < a.length; r++) {
+		var s = a[r];
+		s.op ? i.push(s) : n.push(s)
+	}
+	var g = demo.Default.createCombo(i);
+	return t.style && g.s(t.style), e.add(g), m.shadowGhost = !0, n.push(m), n
+}), demo.Default.registerFilter("building-floor", function(e, t) {
+	var a = t.width || 842,
+		m = t.depth || 780;
+	return [{
+		type: "cube",
+		width: 290,
+		height: 5,
+		depth: 190,
+		translate: [190, -.5, 310],
+		op: "+",
+		style: {
+			"m.type": "phong",
+			"m.texture.image": "./js/3d/eim/images/grass.png",
+			"top.m.texture.repeat": new mono.Vec2(10, 10)
+		}
+	}, {
+		type: "cube",
+		width: 300,
+		height: 5,
+		depth: 190,
+		translate: [-195, -.5, 310],
+		op: "+",
+		style: {
+			"m.type": "phong",
+			"m.texture.image": "./js/3d/eim/images/grass.png",
+			"top.m.texture.repeat": new mono.Vec2(10, 10)
+		}
+	}, {
+		type: "cube",
+		width: 700,
+		height: 5,
+		depth: 65,
+		translate: [0, -.5, 420],
+		rotate: [0, -.08, 0],
+		op: "-",
+		style: {
+			"m.type": "phong",
+			"m.texture.image": "./js/3d/eim/images/grass.png",
+			"top.m.texture.repeat": new mono.Vec2(10, 10)
+		}
+	}, {
+		type: "cube",
+		width: 114,
+		height: 5,
+		depth: 23,
+		translate: [100, 0, 350],
+		rotate: [0, .01, 0],
+		op: "-",
+		style: {
+			"m.type": "phong",
+			"m.texture.image": "./js/3d/eim/images/grass.png"
+		}
+	}, {
+		type: "cube",
+		width: 70,
+		height: 5,
+		depth: 700,
+		translate: [405, -.5, 70],
+		op: "+",
+		style: {
+			"m.type": "phong",
+			"m.texture.image": "./js/3d/eim/images/grass.png",
+			"top.m.texture.repeat": new mono.Vec2(4, 16)
+		}
+	}, {
+		type: "cube",
+		width: 40,
+		height: 15,
+		depth: 84,
+		translate: [390, -.5, 282],
+		op: "-",
+		style: {
+			"m.type": "phong",
+			"m.texture.image": "./js/3d/eim/images/grass.png",
+			"top.m.texture.repeat": new mono.Vec2(4, 16)
+		}
+	}, {
+		type: "cube",
+		width: 56,
+		height: 15,
+		depth: 130,
+		translate: [394, -.5, -200],
+		op: "-",
+		style: {
+			"m.type": "phong",
+			"m.texture.image": "./js/3d/eim/images/grass.png",
+			"top.m.texture.repeat": new mono.Vec2(4, 16)
+		}
+	}, {
+		type: "cube",
+		width: 60,
+		height: 5,
+		depth: 660,
+		translate: [-400, -.5, -80],
+		op: "+",
+		style: {
+			"m.type": "phong",
+			"m.texture.image": "./js/3d/eim/images/grass.png",
+			"top.m.texture.repeat": new mono.Vec2(4, 16)
+		}
+	}, {
+		type: "cube",
+		width: 40,
+		height: 5,
+		depth: 400,
+		translate: [-390, -.5, -80],
+		op: "-",
+		style: {
+			"m.type": "phong",
+			"m.texture.image": "./js/3d/eim/images/grass.png",
+			"top.m.texture.repeat": new mono.Vec2(4, 16)
+		}
+	}, {
+		type: "cube",
+		width: 340,
+		height: 5,
+		depth: 180,
+		translate: [160, -.5, -190],
+		op: "+",
+		style: {
+			"m.type": "phong",
+			"m.texture.image": "./js/3d/eim/images/grass.png",
+			"top.m.texture.repeat": new mono.Vec2(10, 10)
+		}
+	}, {
+		type: "cube",
+		width: a,
+		height: 5,
+		depth: m,
+		translate: [0, -1, 0],
+		shadowHost: !0,
+		op: "+",
+		style: {
+			"m.color": "#ffffff",
+			"m.ambient": "#ffffff",
+			"m.specular": "#FFFFFF",
+			"m.type": "phong",
+			"m.texture.image": "./js/3d/eim/images/floor.jpg",
+			"top.m.texture.repeat": new mono.Vec2(40, 40),
+			"m.normalmap.image": "./js/3d/eim/images/floor_normalmap.jpg"
+		}
+	}, {
+		type: "cube",
+		width: 330,
+		height: 5,
+		depth: 400,
+		translate: [-285, -1, -700],
+		shadowHost: !0,
+		op: "+",
+		style: {
+			"m.color": "#ffffff",
+			"m.ambient": "#ffffff",
+			"m.specular": "#FFFFFF",
+			"m.type": "phong",
+			"m.texture.image": "./js/3d/eim/images/floor.jpg",
+			"top.m.texture.repeat": new mono.Vec2(30, 30),
+			"m.normalmap.image": "./js/3d/eim/images/floor_normalmap.jpg"
+		}
+	}, {
+		type: "cube",
+		width: a + 50,
+		height: 5,
+		depth: 120,
+		translate: [0, -1, 500],
+		rotate: [0, -.08, 0],
+		op: "-",
+		shadowHost: !0,
+		style: {
+			"m.color": "#ffffff",
+			"m.ambient": "#ffffff",
+			"m.specular": "#FFFFFF",
+			"m.type": "phong",
+			"m.texture.image": "./js/3d/eim/images/floor.jpg",
+			"top.m.texture.repeat": new mono.Vec2(30, 30),
+			"m.normalmap.image": "./js/3d/eim/images/floor_normalmap.jpg"
+		}
+	}, {
+		type: "cube",
+		width: a,
+		height: 5,
+		depth: 40,
+		translate: [0, 1, -480],
+		op: "+",
+		shadowHost: !0,
+		style: {
+			"m.color": "#ffffff",
+			"m.ambient": "#ffffff",
+			"m.specular": "#FFFFFF",
+			"m.type": "phong",
+			"m.transparent": !0,
+			"m.texture.image": "./js/3d/eim/images/water.jpg",
+			"top.m.texture.repeat": new mono.Vec2(30, 1),
+			"m.normalmap.image": "./js/3d/eim/images/floor_normalmap.jpg"
+		}
+	}]
+});
+var fieldJson = {
+	clearColor: "#ddd",
+	objects: [{
+		type: "cube",
+		width: 150,
+		height: 46,
+		depth: 60,
+		sideColor: "#759bc2",
+		topColor: "#759bc2",
+		translate: [-248, 0, -240],
+		style: {
+			"m.type": "phong",
+			"m.normalScale": new mono.Vec2(.2, .2)
+		},
+		client: {
+			type: "lab",
+			id: "LAB03",
+			"lazy.function": "loadBuilding2"
+		}
+	}, {
+		type: "cube",
+		width: 70,
+		height: 46,
+		depth: 100,
+		sideColor: "#759bc2",
+		topColor: "#759bc2",
+		translate: [-287, 0, -170],
+		style: {
+			type: "lab",
+			id: "LAB03",
+			"m.type": "phong",
+			"m.normalScale": new mono.Vec2(.2, .2)
+		},
+		client: {
+			type: "lab",
+			id: "LAB03",
+			"lazy.function": "loadBuilding2"
+		}
+	}, {
+		type: "cube",
+		width: 180,
+		height: 40,
+		depth: 50,
+		sideColor: "#759bc2",
+		topColor: "#759bc2",
+		translate: [103, 0, -91],
+		style: {
+			"m.type": "phong",
+			"m.normalScale": new mono.Vec2(.2, .2)
+		},
+		client: {
+			type: "lab",
+			id: "LAB02",
+			"lazy.function": "loadBuilding1"
+		}
+	}, {
+		type: "cube",
+		width: 654,
+		height: 40,
+		depth: 430,
+		translate: [0, 0, -60],
+		op: "+",
+		style: {
+			"m.type": "phong",
+			"m.color": "#56779e",
+			"m.ambient": "#56779e",
+			"m.specular": "#56779e",
+			"front.m.color": "#aebcc7"
+		}
+	}, {
+		type: "cube",
+		width: 16,
+		height: 20,
+		depth: 100,
+		translate: [331, 0, 60],
+		op: "+",
+		style: {
+			"m.type": "phong",
+			"m.color": "#56779e",
+			"m.ambient": "#56779e",
+			"m.specular": "#56779e",
+			"front.m.color": "#243040"
+		}
+	}, {
+		type: "cube",
+		width: 405,
+		height: 20,
+		depth: 40,
+		translate: [124, 0, -10],
+		style: {
+			"m.type": "phong",
+			"m.color": "#56779e",
+			"m.ambient": "#56779e",
+			"m.specular": "#56779e"
+		}
+	}, {
+		type: "cube",
+		width: 400,
+		height: 40,
+		depth: 320,
+		op: "-",
+		translate: [130, 0, -150],
+		style: {
+			"m.type": "phong",
+			"m.color": "#56779e",
+			"m.ambient": "#56779e",
+			"m.specular": "#56779e",
+			"front.m.color": "#5a6f84",
+			"left.m.color": "#5a6f84"
+		}
+	}, {
+		type: "cube",
+		width: 1,
+		height: 5,
+		depth: 270,
+		translate: [-70, 18, -130],
+		op: "-",
+		style: {
+			"m.type": "phong",
+			"m.texture.image": "./js/3d/eim/images/door-grass.png",
+			"m.transparent": !0,
+			"m.opacity": .8,
+			"m.envmap.image": ["./js/3d/eim/images/sky.png", "./js/3d/eim/images/sky.png", "./js/3d/eim/images/sky.png", "./js/3d/eim/images/sky.png", "./js/3d/eim/images/sky.png", "./js/3d/eim/images/sky.png"]
+		}
+	}, {
+		type: "cube",
+		width: 652,
+		height: 5,
+		depth: 145,
+		op: "-",
+		translate: [0, 40, 82.5],
+		rotate: [.05, 0, 0],
+		sideColor: "#FFFFFF",
+		style: {
+			"bottom.m.texture.image": "./js/3d/eim/images/building_top.png",
+			"bottom.m.texture.repeat": new mono.Vec2(14, 2),
+			"left.m.color": "#6186a8",
+			"front.m.color": "#6186a8"
+		}
+	}, {
+		type: "cube",
+		width: 652,
+		height: 5,
+		depth: 145,
+		op: "-",
+		translate: [0, 40, 82.5],
+		rotate: [-.05, 0, 0],
+		sideColor: "#FFFFFF",
+		style: {
+			"bottom.m.texture.image": "./js/3d/eim/images/building_top2.png",
+			"bottom.m.texture.repeat": new mono.Vec2(14, 2),
+			"left.m.color": "#6186a8",
+			"front.m.color": "#6186a8"
+		}
+	}, {
+		type: "cube",
+		width: 652,
+		height: 5,
+		depth: 145,
+		op: "-",
+		translate: [0, 40, -63.5],
+		rotate: [.05, 0, 0],
+		sideColor: "#FFFFFF",
+		style: {
+			"bottom.m.texture.image": "./js/3d/eim/images/building_top.png",
+			"bottom.m.texture.repeat": new mono.Vec2(14, 2),
+			"left.m.color": "#6186a8",
+			"front.m.color": "#6186a8"
+		}
+	}, {
+		type: "cube",
+		width: 652,
+		height: 5,
+		depth: 145,
+		op: "-",
+		translate: [0, 40, -63.5],
+		rotate: [-.05, 0, 0],
+		sideColor: "#FFFFFF",
+		style: {
+			"bottom.m.texture.image": "./js/3d/eim/images/building_top2.png",
+			"bottom.m.texture.repeat": new mono.Vec2(14, 2),
+			"left.m.color": "#6186a8",
+			"front.m.color": "#6186a8",
+			"front.m.color": "#6186a8"
+		}
+	}, {
+		type: "cube",
+		width: 652,
+		height: 5,
+		depth: 145,
+		op: "-",
+		translate: [0, 40, -208],
+		rotate: [.05, 0, 0],
+		sideColor: "#FFFFFF",
+		style: {
+			"bottom.m.texture.image": "./js/3d/eim/images/building_top.png",
+			"bottom.m.texture.repeat": new mono.Vec2(14, 2),
+			"left.m.color": "#6186a8",
+			"front.m.color": "#6186a8"
+		}
+	}, {
+		type: "cube",
+		width: 652,
+		height: 5,
+		depth: 145,
+		op: "-",
+		translate: [0, 40, -208],
+		rotate: [-.05, 0, 0],
+		sideColor: "#FFFFFF",
+		style: {
+			"bottom.m.texture.image": "./js/3d/eim/images/building_top2.png",
+			"bottom.m.texture.repeat": new mono.Vec2(14, 2),
+			"left.m.color": "#6186a8",
+			"front.m.color": "#6186a8"
+		}
+	}, {
+		type: "cube",
+		width: 329,
+		height: 50,
+		depth: 146,
+		translate: [158, 0, -191],
+		op: "+",
+		style: {
+			"m.type": "phong",
+			"m.color": "#bdc9c3",
+			"m.ambient": "#bdc9c3",
+			"m.specular": "#bdc9c3",
+			"right.m.texture.image": "./js/3d/eim/images/building.png",
+			"back.m.texture.image": "./js/3d/eim/images/building.png",
+			"back.m.texture.repeat": new mono.Vec2(4, 1),
+			"right.m.texture.repeat": new mono.Vec2(3, 1)
+		}
+	}, {
+		type: "cube",
+		width: 68,
+		height: 50,
+		depth: 1,
+		translate: [288.5, 0, -117.5],
+		style: {
+			"m.type": "phong",
+			"m.color": "#bdc9c3",
+			"m.ambient": "#bdc9c3",
+			"m.specular": "#bdc9c3",
+			"front.m.texture.image": "./js/3d/eim/images/building.png",
+			"front.m.texture.repeat": new mono.Vec2(2, 1),
+			"right.m.texture.image": "./js/3d/eim/images/building.png",
+			"right.m.texture.repeat": new mono.Vec2(.01, 1)
+		}
+	}, {
+		type: "cube",
+		width: 309,
+		height: 50,
+		depth: 100,
+		translate: [100, 0, -160],
+		op: "-",
+		style: {
+			"m.texture.image": "./js/3d/eim/images/building.png",
+			"m.texture.repeat": new mono.Vec2(6, 1)
+		}
+	}, {
+		type: "cube",
+		width: 325,
+		height: 4,
+		depth: 51,
+		translate: [158, 46, -237],
+		op: "-",
+		style: {
+			"bottom.m.texture.image": "./js/3d/eim/images/building_side.png",
+			"bottom.m.texture.repeat": new mono.Vec2(40, 6)
+		}
+	}, {
+		type: "cube",
+		width: 67,
+		height: 4,
+		depth: 160,
+		translate: [288.5, 46, -182.5],
+		op: "-",
+		style: {
+			"bottom.m.texture.image": "./js/3d/eim/images/building_side.png",
+			"bottom.m.texture.repeat": new mono.Vec2(8, 14)
+		}
+	}, {
+		type: "cube",
+		width: 20,
+		height: 10,
+		depth: 20,
+		translate: [270, 46, -250],
+		op: "+",
+		style: {
+			"m.type": "phong",
+			"m.color": "#bdc9c3",
+			"m.ambient": "#bdc9c3",
+			"m.specular": "#bdc9c3",
+			"bottom.m.texture.image": "./js/3d/eim/images/building_side.png",
+			"bottom.m.texture.repeat": new mono.Vec2(8, 14)
+		}
+	}, {
+		type: "cube",
+		width: 19,
+		height: 3,
+		depth: 19,
+		translate: [270, 55, -250],
+		op: "-",
+		style: {
+			"m.type": "phong",
+			"bottom.m.texture.image": "./js/3d/eim/images/building_side.png",
+			"bottom.m.texture.repeat": new mono.Vec2(8, 14)
+		}
+	}, {
+		type: "cube",
+		width: 320,
+		height: 33,
+		depth: 160,
+		translate: [160, 0, -140],
+		op: "+",
+		style: {
+			"m.type": "phong",
+			"m.texture.image": "./js/3d/eim/images/building.png",
+			"m.texture.repeat": new mono.Vec2(8, 1),
+			"top.m.texture.repeat": new mono.Vec2(19, 10),
+			"top.m.texture.image": "./js/3d/eim/images/building_side.png",
+			"m.normalScale": new mono.Vec2(.2, .2),
+			"m.reflectRatio": .8
+		}
+	}, {
+		type: "cube",
+		width: 120,
+		height: 33,
+		depth: 100,
+		translate: [265, 0, -68],
+		op: "-",
+		style: {
+			"m.type": "phong",
+			"m.texture.image": "./js/3d/eim/images/building.png",
+			"m.texture.repeat": new mono.Vec2(4, 1),
+			"top.m.texture.repeat": new mono.Vec2(4, 1),
+			"m.normalmap.image": "./js/3d/eim/images/building_normalmap.png",
+			"m.normalScale": new mono.Vec2(.2, .2)
+		}
+	}, {
+		type: "cube",
+		width: 320,
+		height: 2,
+		depth: 160,
+		translate: [160, 34, -140],
+		op: "+",
+		style: {
+			"m.texture.image": "./js/3d/eim/images/metal.png",
+			"m.transparent": !0,
+			"left.m.lightmap.image": "./js/3d/eim/room/images/inside_lightmap.png",
+			"right.m.lightmap.image": "./js/3d/eim/room/images/outside_lightmap.png",
+			"front.m.lightmap.image": "./js/3d/eim/room/images/outside_lightmap.png",
+			"back.m.lightmap.image": "./js/3d/eim/room/images/inside_lightmap.png"
+		}
+	}, {
+		type: "cube",
+		width: 120,
+		height: 2,
+		depth: 100,
+		translate: [265, 34, -68],
+		op: "-",
+		style: {
+			"m.texture.image": "./js/3d/eim/images/door-grass.png",
+			"m.transparent": !0,
+			"m.opacity": 1,
+			"m.envmap.image": ["./js/3d/eim/images/sky.png", "./js/3d/eim/images/sky.png", "./js/3d/eim/images/sky.png", "./js/3d/eim/images/sky.png", "./js/3d/eim/images/sky.png", "./js/3d/eim/images/sky.png"]
+		}
+	}, {
+		type: "annotation",
+		label: "结构试验室",
+		text: "【点击下方进入】结构试验室",
+		translate: [100, 60, -80],
+		client: {
+			type: "lab",
+			id: "LAB03",
+			"lazy.function": "loadBuilding2"
+		}
+	}, {
+		type: "annotation",
+		label: "PS整车排放及性能试验室",
+		text: "【点击下方进入】PS整车排放及性能试验室",
+		translate: [-310, 70, -130],
+		client: {
+			type: "lab",
+			id: "LAB03",
+			"lazy.function": "loadBuilding1"
+		}
+	}, {
+		type: "cube",
+		width: 110,
+		height: 48,
+		depth: 30,
+		op: "+",
+		translate: [150, 0, 170],
+		style: {
+			"m.type": "phong",
+			"m.texture.image": "./js/3d/eim/images/bdoor.png",
+			"m.texture.repeat": new mono.Vec2(.2, 1),
+			"front.m.texture.image": "./js/3d/eim/images/bdoor.png",
+			"front.m.texture.repeat": new mono.Vec2(1, 1),
+			"top.m.texture.image": "./js/3d/eim/images/building_side.png",
+			"top.m.texture.repeat": new mono.Vec2(1, 1),
+			"left.m.lightmap.image": "./js/3d/eim/room/images/inside_lightmap.png",
+			"right.m.lightmap.image": "./js/3d/eim/room/images/outside_lightmap.png",
+			"front.m.lightmap.image": "./js/3d/eim/room/images/outside_lightmap.png",
+			"back.m.lightmap.image": "./js/3d/eim/room/images/inside_lightmap.png"
+		}
+	}, {
+		type: "cube",
+		width: 108,
+		height: 1,
+		depth: 28,
+		op: "-",
+		translate: [150.5, 47, 170.5],
+		style: {
+			"m.color": "#FFFFFF",
+			"m.ambient": "#FFFFFF",
+			"m.specular": "#FFFFFF",
+			"m.type": "phong",
+			"m.texture.image": "./js/3d/eim/images/building_side.png",
+			"m.texture.repeat": new mono.Vec2(20, 4),
+			"front.m.texture.image": "./js/3d/eim/images/building_side.png",
+			"front.m.texture.repeat": new mono.Vec2(1, 1),
+			"front.m.normalmap.image": "./js/3d/eim/images/bdoor_normalmap.png",
+			"front.m.normalScale": new mono.Vec2(.3, .3),
+			"left.m.lightmap.image": "./js/3d/eim/room/images/inside_lightmap.png",
+			"right.m.lightmap.image": "./js/3d/eim/room/images/outside_lightmap.png",
+			"front.m.lightmap.image": "./js/3d/eim/room/images/outside_lightmap.png",
+			"back.m.lightmap.image": "./js/3d/eim/room/images/inside_lightmap.png"
+		}
+	}, {
+		type: "cube",
+		width: 108,
+		height: 48,
+		depth: 30,
+		op: "+",
+		translate: [-150, 0, 170],
+		style: {
+			"m.color": "#FFFFFF",
+			"m.ambient": "#FFFFFF",
+			"m.specular": "#FFFFFF",
+			"m.type": "phong",
+			"m.texture.image": "./js/3d/eim/images/bdoor.png",
+			"m.texture.repeat": new mono.Vec2(.2, 1),
+			"front.m.texture.image": "./js/3d/eim/images/bdoor.png",
+			"front.m.texture.repeat": new mono.Vec2(1, 1),
+			"top.m.texture.image": "./js/3d/eim/images/building_side.png",
+			"left.m.lightmap.image": "./js/3d/eim/room/images/inside_lightmap.png",
+			"right.m.lightmap.image": "./js/3d/eim/room/images/outside_lightmap.png",
+			"front.m.lightmap.image": "./js/3d/eim/room/images/outside_lightmap.png",
+			"back.m.lightmap.image": "./js/3d/eim/room/images/inside_lightmap.png"
+		}
+	}, {
+		type: "cube",
+		width: 108,
+		height: 1,
+		depth: 28,
+		op: "-",
+		translate: [-150.5, 47, 170.5],
+		style: {
+			"m.color": "#FFFFFF",
+			"m.ambient": "#FFFFFF",
+			"m.specular": "#FFFFFF",
+			"m.type": "phong",
+			"m.texture.image": "./js/3d/eim/images/building_side.png",
+			"m.texture.repeat": new mono.Vec2(20, 4),
+			"front.m.texture.image": "./js/3d/eim/images/building_side.png",
+			"front.m.texture.repeat": new mono.Vec2(1, 1),
+			"front.m.normalmap.image": "./js/3d/eim/images/bdoor_normalmap.png",
+			"front.m.normalScale": new mono.Vec2(.3, .3),
+			"left.m.lightmap.image": "./js/3d/eim/room/images/inside_lightmap.png",
+			"right.m.lightmap.image": "./js/3d/eim/room/images/outside_lightmap.png",
+			"front.m.lightmap.image": "./js/3d/eim/room/images/outside_lightmap.png",
+			"back.m.lightmap.image": "./js/3d/eim/room/images/inside_lightmap.png"
+		}
+	}, {
+		type: "cube",
+		width: 650,
+		height: 38,
+		depth: 26,
+		translate: [0, 0, 168],
+		op: "+",
+		style: {
+			"m.type": "phong",
+			"m.color": "#FFFFFF",
+			"m.ambient": "#FFFFFF",
+			"m.specular": "#FFFFFF",
+			"m.texture.image": "./js/3d/eim/images/building_side.png",
+			"m.texture.repeat": new mono.Vec2(120, 12),
+			"front.m.texture.image": "./js/3d/eim/images/building.png",
+			"front.m.texture.repeat": new mono.Vec2(20, 1),
+			"right.m.texture.image": "./js/3d/eim/images/building.png",
+			"right.m.texture.repeat": new mono.Vec2(2, 1),
+			"left.m.texture.image": "./js/3d/eim/images/building.png",
+			"left.m.texture.repeat": new mono.Vec2(2, 1),
+			"left.m.lightmap.image": "./js/3d/eim/room/images/inside_lightmap.png",
+			"right.m.lightmap.image": "./js/3d/eim/room/images/outside_lightmap.png",
+			"front.m.lightmap.image": "./js/3d/eim/room/images/outside_lightmap.png",
+			"back.m.lightmap.image": "./js/3d/eim/room/images/inside_lightmap.png"
+		}
+	}, {
+		type: "cube",
+		width: 648,
+		height: 3,
+		depth: 24,
+		translate: [0, 35, 167.5],
+		op: "-",
+		style: {
+			"m.type": "phong",
+			"m.color": "#FFFFFF",
+			"m.ambient": "#FFFFFF",
+			"m.specular": "#FFFFFF",
+			"m.texture.image": "./js/3d/eim/images/building_side.png",
+			"m.texture.repeat": new mono.Vec2(120, 6),
+			"front.m.texture.image": "./js/3d/eim/images/building_side.png",
+			"front.m.texture.repeat": new mono.Vec2(20, 1),
+			"right.m.texture.image": "./js/3d/eim/images/building_side.png",
+			"right.m.texture.repeat": new mono.Vec2(1, 1),
+			"left.m.lightmap.image": "./js/3d/eim/room/images/inside_lightmap.png",
+			"right.m.lightmap.image": "./js/3d/eim/room/images/outside_lightmap.png",
+			"front.m.lightmap.image": "./js/3d/eim/room/images/outside_lightmap.png",
+			"back.m.lightmap.image": "./js/3d/eim/room/images/inside_lightmap.png"
+		}
+	}, {
+		type: "cube",
+		width: 130,
+		height: 54,
+		depth: 80,
+		op: "+",
+		translate: [-90, 0, -370],
+		style: {
+			"m.type": "phong",
+			"m.color": "#FFFFFF",
+			"m.ambient": "#FFFFFF",
+			"m.specular": "#FFFFFF",
+			"m.texture.image": "./js/3d/eim/images/building_side.png",
+			"m.texture.repeat": new mono.Vec2(30, 10)
+		}
+	}, {
+		type: "cube",
+		width: 30,
+		height: 44,
+		depth: 80,
+		op: "+",
+		translate: [-18, 0, -370],
+		style: {
+			"m.type": "phong",
+			"m.color": "#FFFFFF",
+			"m.ambient": "#FFFFFF",
+			"m.specular": "#FFFFFF",
+			"m.texture.image": "./js/3d/eim/images/building_side.png",
+			"m.texture.repeat": new mono.Vec2(30, 10)
+		}
+	}, {
+		type: "cube",
+		width: 30,
+		height: 66,
+		depth: 20,
+		op: "+",
+		translate: [-78, 0, -339],
+		style: {
+			"m.type": "phong",
+			"m.color": "#ccdfe8",
+			"m.ambient": "#ccdfe8",
+			"m.specular": "#ccdfe8",
+			"m.texture.image": "./js/3d/eim/images/building_side.png",
+			"m.texture.repeat": new mono.Vec2(30, 10)
+		}
+	}, {
+		type: "cube",
+		width: 129,
+		height: 3,
+		depth: 79,
+		op: "-",
+		translate: [-90, 51, -370],
+		style: {
+			"m.type": "phong",
+			"m.color": "#FFFFFF",
+			"m.ambient": "#FFFFFF",
+			"m.specular": "#FFFFFF",
+			"m.texture.image": "./js/3d/eim/images/building_side.png",
+			"m.texture.repeat": new mono.Vec2(30, 10)
+		}
+	}, {
+		type: "cube",
+		width: 29,
+		height: 3,
+		depth: 79,
+		op: "-",
+		translate: [-18, 41, -370],
+		style: {
+			"m.type": "phong",
+			"m.color": "#FFFFFF",
+			"m.ambient": "#FFFFFF",
+			"m.specular": "#FFFFFF",
+			"m.texture.image": "./js/3d/eim/images/building_side.png",
+			"m.texture.repeat": new mono.Vec2(30, 10)
+		}
+	}, {
+		type: "cube",
+		width: 29,
+		height: 1,
+		depth: 19,
+		op: "-",
+		translate: [-78, 65, -339],
+		style: {
+			"m.type": "phong",
+			"m.color": "#ccdfe8",
+			"m.ambient": "#ccdfe8",
+			"m.specular": "#ccdfe8",
+			"m.texture.image": "./js/3d/eim/images/building_side.png",
+			"m.texture.repeat": new mono.Vec2(30, 10)
+		}
+	}, {
+		type: "cube",
+		width: 130,
+		height: 30,
+		depth: 50,
+		translate: [-273, 0, -380],
+		style: {
+			"m.type": "phong",
+			"m.color": "#FFFFFF",
+			"m.ambient": "#FFFFFF",
+			"m.specular": "#FFFFFF",
+			"m.texture.image": "./js/3d/eim/images/building_side.png",
+			"m.texture.repeat": new mono.Vec2(30, 10),
+			"left.m.lightmap.image": "./js/3d/eim/room/images/inside_lightmap.png",
+			"right.m.lightmap.image": "./js/3d/eim/room/images/outside_lightmap.png",
+			"front.m.lightmap.image": "./js/3d/eim/room/images/outside_lightmap.png",
+			"back.m.lightmap.image": "./js/3d/eim/room/images/inside_lightmap.png"
+		}
+	}, {
+		type: "cube",
+		width: 90,
+		height: 34,
+		depth: 70,
+		op: "+",
+		translate: [250, 0, -380],
+		style: {
+			"m.type": "phong",
+			"m.color": "#FFFFFF",
+			"m.ambient": "#FFFFFF",
+			"m.specular": "#FFFFFF",
+			"m.texture.image": "./js/3d/eim/images/building_side.png",
+			"m.texture.repeat": new mono.Vec2(30, 8)
+		}
+	}, {
+		type: "cube",
+		width: 89,
+		height: 10,
+		depth: 69,
+		op: "-",
+		translate: [250, 24, -380],
+		style: {
+			"m.type": "phong",
+			"m.color": "#FFFFFF",
+			"m.ambient": "#FFFFFF",
+			"m.specular": "#FFFFFF",
+			"m.texture.image": "./js/3d/eim/images/building_side.png",
+			"m.texture.repeat": new mono.Vec2(30, 8)
+		}
+	}, {
+		type: "cube",
+		width: 40,
+		height: 34,
+		depth: 70,
+		translate: [380, 0, -380],
+		op: "+",
+		style: {
+			"m.type": "phong",
+			"m.color": "#FFFFFF",
+			"m.ambient": "#FFFFFF",
+			"m.specular": "#FFFFFF",
+			"m.texture.image": "./js/3d/eim/images/building_side.png",
+			"m.texture.repeat": new mono.Vec2(30, 8)
+		}
+	}, {
+		type: "cube",
+		width: 39,
+		height: 10,
+		depth: 69,
+		translate: [380, 24, -380],
+		op: "-",
+		style: {
+			"m.type": "phong",
+			"m.color": "#FFFFFF",
+			"m.ambient": "#FFFFFF",
+			"m.specular": "#FFFFFF",
+			"m.texture.image": "./js/3d/eim/images/building_side.png",
+			"m.texture.repeat": new mono.Vec2(30, 8)
+		}
+	}, {
+		type: "cube",
+		width: 64,
+		height: 24,
+		depth: 50,
+		translate: [328, 0, -386],
+		style: {
+			"m.type": "phong",
+			"m.color": "#FFFFFF",
+			"m.ambient": "#FFFFFF",
+			"m.specular": "#FFFFFF",
+			"m.texture.image": "./js/3d/eim/images/building_side.png",
+			"m.texture.repeat": new mono.Vec2(4, 4),
+			"front.m.texture.image": "./js/3d/eim/images/bdoor.png",
+			"front.m.texture.repeat": new mono.Vec2(.2, .5)
+		}
+	}, {
+		type: "cube",
+		width: 67,
+		height: 14,
+		depth: 60,
+		op: "+",
+		translate: [328, 24, -385],
+		style: {
+			"m.type": "phong",
+			"m.color": "#becdd4",
+			"m.ambient": "#becdd4",
+			"m.specular": "#becdd4",
+			"m.texture.image": "./js/3d/eim/images/building_side.png",
+			"m.texture.repeat": new mono.Vec2(30, 8)
+		}
+	}, {
+		type: "cube",
+		width: 67,
+		height: 14,
+		depth: 59,
+		op: "-",
+		translate: [328, 36, -385],
+		rotate: [0, 0, .1],
+		style: {
+			"m.type": "phong",
+			"m.color": "#a1c9ed",
+			"back.m.color": "#ffffff",
+			"m.ambient": "#a1c9ed",
+			"m.specular": "#a1c9ed",
+			"m.texture.repeat": new mono.Vec2(30, 8)
+		}
+	}, {
+		type: "cube",
+		width: 67,
+		height: 14,
+		depth: 59,
+		op: "-",
+		translate: [328, 36, -385],
+		rotate: [0, 0, -.1],
+		style: {
+			"m.type": "phong",
+			"m.color": "#6483a2",
+			"back.m.color": "#ffffff",
+			"m.ambient": "#6483a2",
+			"m.specular": "#6483a2",
+			"m.texture.repeat": new mono.Vec2(30, 8)
+		}
+	}, {
+		type: "cube",
+		width: 50,
+		height: 50,
+		depth: 150,
+		op: "+",
+		translate: [-400, 0, -330],
+		style: {
+			"m.type": "phong",
+			"m.color": "#FFFFFF",
+			"m.ambient": "#FFFFFF",
+			"m.specular": "#FFFFFF",
+			"m.texture.image": "./js/3d/eim/images/building_side.png",
+			"m.texture.repeat": new mono.Vec2(10, 30)
+		}
+	}, {
+		type: "cube",
+		width: 49,
+		height: 4,
+		depth: 149,
+		op: "-",
+		translate: [-400, 46, -330],
+		style: {
+			"m.type": "phong",
+			"m.color": "#FFFFFF",
+			"m.ambient": "#FFFFFF",
+			"m.specular": "#FFFFFF",
+			"m.texture.image": "./js/3d/eim/images/building_side.png",
+			"m.texture.repeat": new mono.Vec2(10, 30)
+		}
+	}, {
+		type: "cube",
+		width: 40,
+		height: 30,
+		depth: 100,
+		op: "+",
+		translate: [400, 0, 70],
+		style: {
+			"m.type": "phong",
+			"m.color": "#FFFFFF",
+			"m.ambient": "#FFFFFF",
+			"m.specular": "#FFFFFF",
+			"m.texture.image": "./js/3d/eim/images/building_side.png",
+			"m.texture.repeat": new mono.Vec2(10, 30),
+			"left.m.lightmap.image": "./js/3d/eim/room/images/inside_lightmap.png",
+			"right.m.lightmap.image": "./js/3d/eim/room/images/outside_lightmap.png",
+			"front.m.lightmap.image": "./js/3d/eim/room/images/outside_lightmap.png",
+			"back.m.lightmap.image": "./js/3d/eim/room/images/inside_lightmap.png"
+		}
+	}, {
+		type: "cube",
+		width: 40,
+		height: 24,
+		depth: 70,
+		op: "+",
+		translate: [400, 0, 190],
+		style: {
+			"m.type": "phong",
+			"m.color": "#FFFFFF",
+			"m.ambient": "#FFFFFF",
+			"m.specular": "#FFFFFF",
+			"m.texture.image": "./js/3d/eim/images/building_side.png",
+			"m.texture.repeat": new mono.Vec2(10, 30),
+			"left.m.lightmap.image": "./js/3d/eim/room/images/inside_lightmap.png",
+			"right.m.lightmap.image": "./js/3d/eim/room/images/outside_lightmap.png",
+			"front.m.lightmap.image": "./js/3d/eim/room/images/outside_lightmap.png",
+			"back.m.lightmap.image": "./js/3d/eim/room/images/inside_lightmap.png"
+		}
+	}, {
+		type: "cube",
+		width: 39,
+		height: 3,
+		depth: 99,
+		op: "-",
+		translate: [400, 27, 70],
+		style: {
+			"m.type": "phong",
+			"m.texture.image": "./js/3d/eim/images/building_side.png",
+			"m.texture.repeat": new mono.Vec2(10, 30)
+		}
+	}, {
+		type: "cube",
+		width: 39,
+		height: 3,
+		depth: 69,
+		op: "-",
+		translate: [400, 21, 190],
+		style: {
+			"m.type": "phong",
+			"m.texture.image": "./js/3d/eim/images/building_side.png",
+			"m.texture.repeat": new mono.Vec2(10, 30)
+		}
+	}, {
+		type: "cube",
+		width: 50,
+		height: 66,
+		depth: 190,
+		op: "+",
+		translate: [-168, 0, -668],
+		style: {
+			"m.type": "phong",
+			"m.color": "#a8b9c9",
+			"m.ambient": "#a8b9c9",
+			"m.specular": "#a8b9c9",
+			"front.m.color": "#a8b9c9"
+		}
+	}, {
+		type: "cube",
+		width: 100,
+		height: 40,
+		depth: 300,
+		op: "+",
+		translate: [-268, 0, -688],
+		style: {
+			"m.type": "phong",
+			"m.color": "#FFFFFF",
+			"m.ambient": "#FFFFFF",
+			"m.specular": "#FFFFFF",
+			"m.texture.image": "./js/3d/eim/images/building_side.png",
+			"m.texture.repeat": new mono.Vec2(8, 20)
+		}
+	}, {
+		type: "cube",
+		width: 100,
+		height: 80,
+		depth: 100,
+		op: "+",
+		translate: [-268, 0, -788],
+		style: {
+			"m.type": "phong",
+			"m.color": "#FFFFFF",
+			"m.ambient": "#FFFFFF",
+			"m.specular": "#FFFFFF",
+			"m.texture.image": "./js/3d/eim/images/building_side.png",
+			"m.texture.repeat": new mono.Vec2(8, 20)
+		}
+	}, {
+		type: "cube",
+		width: 49,
+		height: 10,
+		depth: 189,
+		op: "-",
+		translate: [-168, 64, -668],
+		rotate: [0, 0, .15],
+		style: {
+			"m.type": "phong",
+			"m.color": "#88afd8",
+			"m.ambient": "#88afd8",
+			"m.specular": "#88afd8",
+			"back.m.color": "#ffffff",
+			"left.m.color": "#ffffff"
+		}
+	}, {
+		type: "cube",
+		width: 49,
+		height: 10,
+		depth: 189,
+		op: "-",
+		translate: [-168, 64, -668],
+		rotate: [0, 0, -.15],
+		style: {
+			"m.type": "phong",
+			"m.color": "#6f92b8",
+			"m.ambient": "#6f92b8",
+			"m.specular": "#6f92b8",
+			"back.m.color": "#ffffff",
+			"left.m.color": "#ffffff"
+		}
+	}, {
+		type: "cube",
+		width: 99,
+		height: 4,
+		depth: 299,
+		op: "-",
+		translate: [-268, 36, -688],
+		style: {
+			"m.type": "phong",
+			"m.color": "#FFFFFF",
+			"m.ambient": "#FFFFFF",
+			"m.specular": "#FFFFFF",
+			"m.texture.image": "./js/3d/eim/images/building_side.png",
+			"m.texture.repeat": new mono.Vec2(8, 20)
+		}
+	}, {
+		type: "cube",
+		width: 99,
+		height: 4,
+		depth: 99,
+		op: "-",
+		translate: [-268, 76, -788],
+		style: {
+			"m.type": "phong",
+			"m.color": "#FFFFFF",
+			"m.ambient": "#FFFFFF",
+			"m.specular": "#FFFFFF",
+			"m.texture.image": "./js/3d/eim/images/building_side.png",
+			"m.texture.repeat": new mono.Vec2(8, 20),
+			"left.m.lightmap.image": "./js/3d/eim/room/images/inside_lightmap.png",
+			"right.m.lightmap.image": "./js/3d/eim/room/images/outside_lightmap.png",
+			"front.m.lightmap.image": "./js/3d/eim/room/images/outside_lightmap.png",
+			"back.m.lightmap.image": "./js/3d/eim/room/images/inside_lightmap.png"
+		}
+	}, {
+		type: "cube",
+		width: 20,
+		height: 15,
+		depth: 20,
+		translate: [0, 0, 309],
+		op: "+",
+		style: {
+			"m.type": "phong",
+			"m.texture.image": "./js/3d/eim/images/door-grass.png",
+			"m.opacity": .9,
+			"m.envmap.image": ["./js/3d/eim/images/sky.png", "./js/3d/eim/images/sky.png", "./js/3d/eim/images/sky.png", "./js/3d/eim/images/sky.png", "./js/3d/eim/images/sky.png", "./js/3d/eim/images/sky.png"]
+		}
+	}, {
+		type: "cylinder",
+		height: 15,
+		radius: 10,
+		translate: [0, 0, 319],
+		op: "+",
+		style: {
+			"m.type": "phong",
+			"m.texture.image": "./js/3d/eim/images/door-grass.png",
+			"m.opacity": .9,
+			"m.envmap.image": ["./js/3d/eim/images/sky.png", "./js/3d/eim/images/sky.png", "./js/3d/eim/images/sky.png", "./js/3d/eim/images/sky.png", "./js/3d/eim/images/sky.png", "./js/3d/eim/images/sky.png"]
+		}
+	}, {
+		type: "cube",
+		width: 22,
+		height: 15,
+		depth: 4,
+		translate: [0, 0, 300],
+		op: "+",
+		style: {
+			"m.type": "phong",
+			"m.color": "#dbdcd6",
+			"m.ambient": "#dbdcd6",
+			"m.specular": "#dbdcd6",
+			"m.texture.image": "./js/3d/eim/images/building_side.png",
+			"m.texture.repeat": new mono.Vec2(4, 6)
+		}
+	}, {
+		type: "cube",
+		width: 22,
+		height: 3,
+		depth: 22,
+		translate: [0, 12, 310],
+		op: "+",
+		style: {
+			"m.type": "phong",
+			"m.color": "#dbdcd6",
+			"m.ambient": "#dbdcd6",
+			"m.specular": "#dbdcd6",
+			"m.texture.image": "./js/3d/eim/images/building_side.png",
+			"m.texture.repeat": new mono.Vec2(4, 6)
+		}
+	}, {
+		type: "cylinder",
+		height: 3,
+		radius: 11,
+		translate: [0, 12, 320],
+		op: "+",
+		style: {
+			"m.type": "phong",
+			"m.color": "#dbdcd6",
+			"m.ambient": "#dbdcd6",
+			"m.specular": "#dbdcd6",
+			"m.texture.image": "./js/3d/eim/images/building_side.png",
+			"m.texture.repeat": new mono.Vec2(4, 6)
+		}
+	}, {
+		type: "cube",
+		width: 20,
+		height: 3.5,
+		depth: 22,
+		translate: [0, 14, 309.5],
+		op: "-",
+		style: {
+			"m.type": "phong",
+			"m.color": "#fff",
+			"m.ambient": "#fff",
+			"m.specular": "#fff",
+			"m.texture.image": "./js/3d/eim/images/building_side.png",
+			"m.texture.repeat": new mono.Vec2(4, 6)
+		}
+	}, {
+		type: "cylinder",
+		height: 3.5,
+		radius: 10,
+		translate: [0, 14, 320],
+		op: "-",
+		style: {
+			"m.type": "phong",
+			"m.color": "#fff",
+			"m.ambient": "#fff",
+			"m.specular": "#fff",
+			"m.texture.image": "./js/3d/eim/images/building_side.png",
+			"m.texture.repeat": new mono.Vec2(4, 6)
+		}
+	}, {
+		type: "cube",
+		width: 22,
+		height: 4,
+		depth: 22,
+		translate: [0, 3, 310],
+		op: "+",
+		style: {
+			"m.type": "phong",
+			"m.color": "#dbdcd6",
+			"m.ambient": "#dbdcd6",
+			"m.specular": "#dbdcd6",
+			"m.texture.image": "./js/3d/eim/images/building_side.png",
+			"m.texture.repeat": new mono.Vec2(4, 6)
+		}
+	}, {
+		type: "cylinder",
+		height: 4,
+		radius: 11,
+		translate: [0, 3, 320],
+		op: "+",
+		style: {
+			"m.type": "phong",
+			"m.color": "#dbdcd6",
+			"m.ambient": "#dbdcd6",
+			"m.specular": "#dbdcd6",
+			"m.texture.image": "./js/3d/eim/images/building_side.png",
+			"m.texture.repeat": new mono.Vec2(4, 6)
+		}
+	}, {
+		type: "cylinder",
+		height: 4,
+		radius: 50,
+		translate: [0, .2, 306],
+		op: "+",
+		style: {
+			"m.type": "phong",
+			"m.color": "#FFFFFF",
+			"m.ambient": "#FFFFFF",
+			"m.specular": "#FFFFFF",
+			"m.texture.image": "./js/3d/eim/images/floor-3.jpg",
+			"m.texture.repeat": new mono.Vec2(4, 6)
+		}
+	}, {
+		type: "cylinder",
+		height: 4,
+		radius: 60,
+		translate: [150, .2, 226],
+		op: "+",
+		style: {
+			"m.type": "phong",
+			"m.color": "#FFFFFF",
+			"m.ambient": "#FFFFFF",
+			"m.specular": "#FFFFFF",
+			"m.texture.image": "./js/3d/eim/images/floor-3.jpg",
+			"m.texture.repeat": new mono.Vec2(4, 6)
+		}
+	}, {
+		type: "cylinder",
+		height: 4,
+		radius: 60,
+		translate: [-150, .2, 226],
+		op: "+",
+		style: {
+			"m.type": "phong",
+			"m.color": "#FFFFFF",
+			"m.ambient": "#FFFFFF",
+			"m.specular": "#FFFFFF",
+			"m.texture.image": "./js/3d/eim/images/floor-3.jpg",
+			"m.texture.repeat": new mono.Vec2(4, 6)
+		}
+	}, {
+		type: "cylinder",
+		height: 4,
+		radius: 40,
+		translate: [-150, 1.2, 206],
+		op: "+",
+		style: {
+			"m.type": "phong",
+			"m.color": "#FFFFFF",
+			"m.ambient": "#FFFFFF",
+			"m.specular": "#FFFFFF",
+			"m.texture.image": "./js/3d/eim/images/floor-3.jpg",
+			"m.texture.repeat": new mono.Vec2(4, 6)
+		}
+	}, {
+		type: "cylinder",
+		height: 1,
+		radius: 20,
+		translate: [-150, 4.7, 206],
+		op: "-",
+		style: {
+			"m.type": "phong",
+			"m.color": "#FFFFFF",
+			"m.ambient": "#FFFFFF",
+			"m.specular": "#FFFFFF",
+			"m.texture.image": "./js/3d/eim/images/grass.png",
+			"m.texture.repeat": new mono.Vec2(4, 6)
+		}
+	}, {
+		type: "cube",
+		width: 80,
+		height: 2,
+		depth: 28.5,
+		translate: [-150, 4.5, 200],
+		op: "-",
+		style: {
+			"m.type": "phong",
+			"m.color": "#FFFFFF",
+			"m.ambient": "#FFFFFF",
+			"m.specular": "#FFFFFF",
+			"m.texture.image": "./js/3d/eim/images/floor-3.jpg",
+			"m.texture.repeat": new mono.Vec2(2, 2)
+		}
+	}, {
+		type: "cube",
+		width: 28,
+		height: 5,
+		depth: 30,
+		translate: [0, 0, 245],
+		sideColor: "#599cbf",
+		topColor: "#599cbf",
+		scale: [1, 1, 1],
+		style: {
+			"m.type": "phong",
+			"m.normalScale": new mono.Vec2(.2, .2),
+			"m.envmap.image": ["./js/3d/eim/images/sky.png", "./js/3d/eim/images/sky.png", "./js/3d/eim/images/sky.png", "./js/3d/eim/images/sky.png", "./js/3d/eim/images/sky.png", "./js/3d/eim/images/sky.png"]
+		}
+	}, {
+		type: "cylinder",
+		height: 5,
+		radius: 14,
+		translate: [0, 0, 260],
+		sideColor: "#599cbf",
+		topColor: "#599cbf",
+		scale: [1, 1, 1],
+		style: {
+			"m.type": "phong",
+			"m.normalScale": new mono.Vec2(.4, .4),
+			"m.envmap.image": ["./js/3d/eim/images/sky.png", "./js/3d/eim/images/sky.png", "./js/3d/eim/images/sky.png", "./js/3d/eim/images/sky.png", "./js/3d/eim/images/sky.png", "./js/3d/eim/images/sky.png"]
+		}
+	}, {
+		type: "cylinder",
+		height: 5,
+		radius: 14,
+		translate: [0, 0, 230],
+		sideColor: "#599cbf",
+		topColor: "#599cbf",
+		scale: [1, 1, 1],
+		style: {
+			"m.type": "phong",
+			"m.normalScale": new mono.Vec2(.4, .4),
+			"m.envmap.image": ["./js/3d/eim/images/sky.png", "./js/3d/eim/images/sky.png", "./js/3d/eim/images/sky.png", "./js/3d/eim/images/sky.png", "./js/3d/eim/images/sky.png", "./js/3d/eim/images/sky.png"]
+		}
+	}, {
+		type: "building-floor",
+		width: 900,
+		depth: 1e3
+	}, {
+		type: "wall",
+		width: .1,
+		height: 10,
+		translate: [0, 4, 0],
+		outsideColor: "#fff",
+		insideColor: "#fff",
+		topColor: "#fff",
+		op: "+",
+		scale: [1, 1, 1],
+		data: [
+			[440, -380],
+			[430, 450],
+			[-440, 450],
+			[-440, -300],
+			[-360, -300],
+			[-360, -320],
+			[-70, -332],
+			[-70, -322],
+			[70, -326],
+			[70, -330],
+			[170, -330],
+			[170, -346],
+			[370, -350],
+			[440, -380]
+		],
+		insideImage: "./js/3d/eim/images/blank.png",
+		outsideImage: "./js/3d/eim/images/fence2.png",
+		topImage: "./js/3d/eim/images/blank.png",
+		bottomImage: "./js/3d/eim/images/blank.png"
+	}, {
+		type: "path",
+		width: 20,
+		height: 4.6,
+		translate: [0, 0, 0],
+		outsideColor: "#808387",
+		insideColor: "#808387",
+		topColor: "#ffffff",
+		op: "+",
+		scale: [1, 1, 1],
+		data: [
+			[45, -280],
+			[140, -280],
+			[200, -310],
+			[335.1, -310]
+		],
+		topImage: "./js/3d/eim/images/floor.jpg",
+		repeat: new mono.Vec2(1, 1)
+	}, {
+		type: "path",
+		width: 20,
+		height: 4.6,
+		translate: [0, 0, 0],
+		outsideColor: "#808387",
+		insideColor: "#808387",
+		topColor: "#ffffff",
+		op: "+",
+		scale: [1, 1, 1],
+		data: [
+			[-45, -280],
+			[-140, -280],
+			[-200, -310],
+			[-345, -310]
+		],
+		topImage: "./js/3d/eim/images/floor.jpg",
+		repeat: new mono.Vec2(1, 1)
+	}, {
+		type: "trees",
+		floorShadow: !0,
+		scale: [.2, .1, .2],
+		translates: [
+			[325, 5, 294],
+			[310, 5, 294],
+			[285, 5, 294],
+			[265, 5, 294],
+			[235, 5, 294],
+			[215, 5, 294],
+			[195, 5, 294],
+			[155, 5, 272],
+			[135, 5, 264],
+			[105, 5, 264],
+			[325, 5, 330],
+			[310, 5, 330],
+			[285, 5, 330],
+			[265, 5, 330],
+			[235, 5, 330],
+			[215, 5, 330],
+			[195, 5, 330],
+			[175, 5, 320],
+			[155, 5, 336],
+			[135, 5, 336],
+			[115, 5, 336],
+			[95, 5, 336],
+			[80, 5, 336],
+			[-245, 5, 320],
+			[-225, 5, 320],
+			[-205, 5, 320],
+			[-185, 5, 320],
+			[-155, 5, 320],
+			[-135, 5, 320],
+			[-115, 5, 320],
+			[-80, 5, 320],
+			[-50, 5, 218],
+			[-70, 5, 218],
+			[-90, 5, 218],
+			[-110, 5, 218],
+			[50, 5, 218],
+			[70, 5, 218],
+			[90, 5, 218],
+			[110, 5, 218]
+		]
+	}]
+};

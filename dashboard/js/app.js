@@ -57,7 +57,7 @@ SeanApp.factory('settings', ['$rootScope', function($rootScope) {
         version:'3.0',
         api:{
             dashboard:"http://10.203.97.123:7003/pataceim-rest",
-            local:"http://10.6.96.47:8080/pataceim-rest",
+            local:"http://10.203.97.123:7003/pataceim-rest",
             //local:"http://10.203.97.123:7003/pataceim-rest",
         },
         debug: {
