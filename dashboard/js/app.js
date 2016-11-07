@@ -54,7 +54,7 @@ SeanApp.factory('settings', ['$rootScope', function($rootScope) {
         apiPath:'',
         jsPath:'',
         mode:'local',
-        version:'3.0',
+        version:'3.4',
         api:{
             dashboard:"http://10.203.97.123:7003/pataceim-rest",
             local:"http://10.203.97.123:7003/pataceim-rest",
@@ -180,7 +180,7 @@ initialization can be disabled and Layout.init() should be called on page load c
 /* Setup Layout Part - Header */
 SeanApp.controller('HeaderController', ['$rootScope','$scope','$http','$state', function($rootScope,$scope,$http,$state) {
     $scope.$on('$includeContentLoaded', function() {
-        Layout.initHeader(); // init header
+        // Layout.initHeader(); // init header
     });
     
     $scope.setDevice = function(type,id,name){
@@ -234,7 +234,7 @@ SeanApp.controller('ThemePanelController', ['$scope', function($scope) {
 /* Setup Layout Part - Footer */
 SeanApp.controller('FooterController', ['$scope', function($scope) {
     $scope.$on('$includeContentLoaded', function() {
-        Layout.initFooter(); // init footer
+        // Layout.initFooter(); // init footer
     });
 }]);
 
