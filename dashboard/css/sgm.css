@@ -182,7 +182,7 @@ th{
 }
 .portlet.patac-portlet{
 	padding: 12px 20px 15px;
-    background-color: rgba(0,0,0,0.2);
+    border: 1px solid #585858;
 }
 .page-content{
 	overflow: hidden;

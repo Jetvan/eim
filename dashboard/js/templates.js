@@ -143,7 +143,7 @@ try {
 }
 module.run(['$templateCache', function($templateCache) {
   $templateCache.put('views/dashboard.html',
-    '<div id="3d_view"style="width:100%;height:768px"></div>');
+    '<div id="3d_view"style="width:100%;height:606px"></div>');
 }]);
 })();
 
